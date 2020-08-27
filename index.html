@@ -14,9 +14,13 @@
 		</nav>
 		<div class="container">
     		<div class="blurb">
-			<h5><a href="1"></a>1</h5>
-			<h5><a href="2"></a>2</h5>
-			<h5><a href="3"></a>3</h5>
+			<ul class="posts">
+
+			  {% for post in site.posts %}
+			  <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></li>
+			  {% endfor %}
+    
+			</ul>
     		</div>
 		</div>
 	</body>
