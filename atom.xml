@@ -9,10 +9,6 @@ layout: feed
  <link href="http://modanesh.github.io/"/>
  <updated>{{ site.time | date_to_xmlschema }}</updated>
  <id>http://modanesh.github.io/</id>
- <author>
-   <name>Mohamad H. Danesh</name>
-   <email>mohamad4danesh@gmail.com</email>
- </author>
 
  {% for post in site.posts %}
  <entry>
