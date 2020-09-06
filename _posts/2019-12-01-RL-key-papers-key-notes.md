@@ -162,7 +162,7 @@ date: 2019-12-01
 	    
 	-   The reward function is known but the transition function is unknown.
 	    
-	-   ME-TRPO combines three modifications to the vanilla approach. First, they fit a set of dynamics models {fφ1 , . . . , fφK } (termed a model ensemble) using the same real world data. These models are trained via standard supervised learning, and they only differ by the initial weights and the order in which mini-batches are sampled. Second, they use Trust Region Policy Optimization (TRPO) to optimize the policy over the model ensemble. Third, they use the model ensemble to monitor the policy’s performance on validation data, and stops the current iteration when the policy stops improving.
+	-   ME-TRPO combines three modifications to the vanilla approach. First, they fit a set of dynamics models <i><b>{f<sub>φ1</sub> , . . . , f<sub>φK</sub>}</b></i> (termed a model ensemble) using the same real world data. These models are trained via standard supervised learning, and they only differ by the initial weights and the order in which mini-batches are sampled. Second, they use Trust Region Policy Optimization (TRPO) to optimize the policy over the model ensemble. Third, they use the model ensemble to monitor the policy’s performance on validation data, and stops the current iteration when the policy stops improving.
     
 
 -   [Sample-Efficient Reinforcement Learning with Stochastic Ensemble Value Expansion](https://arxiv.org/abs/1807.01675), algorithm: STEVE
@@ -196,11 +196,11 @@ date: 2019-12-01
 	    
 	-   To deal with sparse reward signals, it is important to consider exploration with the model, not just refinement of value estimates.
 	    
-	-   MVE forms TD targets by combining a short term value estimate formed by unrolling the model dynamics and a long term value estimate using the learned Qˆπθ− function.
+	-   MVE forms TD targets by combining a short term value estimate formed by unrolling the model dynamics and a long term value estimate using the learned <i><b>Q<sup>π</sup><sub>θ−</sub></b></i> function.
 	    
-	-   Replaces the standard Q-learning target with an improved target, computed by rolling the learned model out for H steps.
+	-   Replaces the standard Q-learning target with an improved target, computed by rolling the learned model out for <i><b>H</b></i> steps.
 	    
-	-   Relies on task-specific tuning of the rollout horizon H.
+	-   Relies on task-specific tuning of the rollout horizon <i><b>H</b></i>.
     
 
 -   [Neural Network Dynamics for Model-Based Deep Reinforcement Learning with Model-Free Fine-Tuning](https://arxiv.org/abs/1708.02596), algorithm: MBMF
@@ -214,7 +214,7 @@ date: 2019-12-01
 	    
 	-   The learned model-based controller provides good rollouts, which enable supervised initialization of a policy that can then be fine-tuned with model-free algorithms, such as policy gradients.
 	    
-	-   Section IV - A: how to learn the dynamics function which is f(st, at) and outputs the next state st+1. This function can be difficult to learn when the states st  and st+1  are too similar and the action has seemingly little effect on the output; this difficulty becomes more pronounced as the time between states ∆t becomes smaller and the state differences do not indicate the underlying dynamics well. They overcome this issue by instead learning a dynamics function that predicts the change in state st  over the time step duration of ∆t. Thus, the predicted next state is as follows: st+1 = st + f(st , at ). Note that increasing this ∆t increases the information available from each data point, and can help with not only dynamics learning but also with planning using the learned dynamics model.
+	-   Section IV - A: how to learn the dynamics function which is <i><b>f(s<sub>t</sub>, a<sub>t</sub>)</b></i> and outputs the next state <i><b>s<sub>t+1</sub></b></i>. This function can be difficult to learn when the states <i><b>s<sub>t</sub></b></i>  and <i><b>s<sub>t+1</sub></b></i>  are too similar and the action has seemingly little effect on the output; this difficulty becomes more pronounced as the time between states <i><b>∆t</b></i> becomes smaller and the state differences do not indicate the underlying dynamics well. They overcome this issue by instead learning a dynamics function that predicts the change in state st  over the time step duration of <i><b>∆t</b></i>. Thus, the predicted next state is as follows: <i><b>s<sub>t+1</sub> = s<sub>t</sub> + f(s<sub>t</sub> , a<sub>t</sub>)</b></i>. Note that increasing this ∆t increases the information available from each data point, and can help with not only dynamics learning but also with planning using the learned dynamics model.
     
 
 -   [Imagination-Augmented Agents for Deep Reinforcement Learning](https://arxiv.org/abs/1707.06203), algorithm: I2A
@@ -522,7 +522,7 @@ date: 2019-12-01
 	    
 	-   VALOR can attain qualitatively different behavior of VIC and DIAYN because of its trajectory-centric approach, and DIAYN learns more quickly because of its denser reward signal.
 	    
-	-   Learns a policy π where action distributions are conditioned on both the current state <i><b>s<sub>t</sub></b></i> and a context c</b></i> which is sampled at the start of an episode and kept fixed throughout. The context should uniquely specify a particular mode of behavior (also called a skill). But instead of using reward functions to ground contexts to trajectories, they want the meaning of a context to be arbitrarily assigned (‘discovered’) during training.
+	-   Learns a policy π where action distributions are conditioned on both the current state <i><b>s<sub>t</sub></b></i> and a context <i><b>c</b></i> which is sampled at the start of an episode and kept fixed throughout. The context should uniquely specify a particular mode of behavior (also called a skill). But instead of using reward functions to ground contexts to trajectories, they want the meaning of a context to be arbitrarily assigned (‘discovered’) during training.
 	    
 	-   VALOR is a variational option discovery method with two key decisions about the decoder:
 	    
@@ -658,7 +658,7 @@ date: 2019-12-01
 	    
 	-   Trains exemplar models for each state that distinguish that state from all other observed states.
 	    
-	-   Given a dataset X = {x1, ...xn}, an exemplar model consists of a set of n classifiers or discriminators {Dx1 , ....Dxn }, one for each data point. Each individual discriminator Dxi is trained to distinguish a single positive data point xi, the “exemplar,” from the other points in the dataset X.
+	-   Given a dataset <i><b>X = {x<sub>1</sub>, ...x<sub>n</sub>}</b></i>, an exemplar model consists of a set of <i><b>n</b></i> classifiers or discriminators <i><b>{D<sub>x<sub>1</sub></sub> , ....D<sub>x<sub>n</sub></sub>}</b></i>, one for each data point. Each individual discriminator <i><b>D<sub>x<sub>i</sub></sub></b></i> is trained to distinguish a single positive data point xi, the “exemplar,” from the other points in the dataset X.
 	    
 		-   In GANs, the generator plays an adversarial game with the discriminator by attempting to produce indistinguishable samples in order to fool the discriminator. However, in this work, the generator is rewarded for helping the discriminator rather than fooling it, so their algorithm plays a cooperative game instead of an adversarial one.
 	    
@@ -708,7 +708,7 @@ date: 2019-12-01
 	    
 	-   It should be trained on- line, using each sample exactly once.
 		    
-		-   The effective model step-size should decay at a rate of n^(−1).
+		-   The effective model step-size should decay at a rate of <b><i>n<sup>(−1)</sup></i></b>.
 	    
 
 	-   [VIME: Variational Information Maximizing Exploration](https://arxiv.org/abs/1605.09674), algorithm: VIME
@@ -788,7 +788,7 @@ date: 2019-12-01
 	    
 	-   Combines the sample-efficiency of off-policy experience replay with the time-efficiency of asynchronous algorithms.
 	    
-	-   The Reactor architecture represents both a policy π (a|x) and action-value function Q(x, a).
+	-   The Reactor architecture represents both a policy <i><b>π (a|x)</b></i> and action-value function <i><b>Q(x, a)</b></i>.
 	    
 	-   Temporal differences are temporally correlated, with correlation decaying on average with the time-difference between two transitions.
 	    
@@ -824,7 +824,7 @@ date: 2019-12-01
 	    
 	-   Entropy regularization helps improve exploration, while the relative entropy improves stability and allows for a faster learning rate. This combination is a key novelty.
 	    
-	-   ّt is beneficial to learn the parameter φ at least as fast as θ, and accordingly, given a mini-batch of episodes they perform a single gradient update on θ and possibly multiple gradient updates on φ.
+	-   It is beneficial to learn the parameter <i><b>φ</b></i> at least as fast as <i><b>θ</b></i>, and accordingly, given a mini-batch of episodes they perform a single gradient update on <i><b>θ</b></i> and possibly multiple gradient updates on <i><b>φ</b></i>.
 	    
 
 	-   [Bridging the Gap Between Value and Policy Based Reinforcement Learning](https://arxiv.org/abs/1702.08892), algorithm: PCM
@@ -947,7 +947,7 @@ date: 2019-12-01
 	    
 	-   Distributional Reinforcement Learning with Quantile Regression
 	    
-	-   Uses a similar neural network architecture as DQN, changing the output layer to be of size |A| × N, where N is a hyper-parameter giving the number of quantile targets.
+	-   Uses a similar neural network architecture as DQN, changing the output layer to be of size <i><b>\|A\| × N</b></i>, where <i><b>N</b></i> is a hyper-parameter giving the number of quantile targets.
 	    
 	-   Replaces the Huber loss used by DQN with a quantile Huber loss.
 	    
