@@ -1,4 +1,3 @@
 name: Mohamad H. Danesh's homepage
-markdown: kramdown:
-		  math_engine: mathjax
+markdown: kramdown
 permalink: /blog/:year/:month/:day/:title
