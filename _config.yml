@@ -1,4 +1,4 @@
 name: Mohamad H. Danesh's homepage
-markdown: kramdown
+markdown: kramdown:
+		  math_engine: mathjax
 permalink: /blog/:year/:month/:day/:title
-plugins: - jekyll-latex
