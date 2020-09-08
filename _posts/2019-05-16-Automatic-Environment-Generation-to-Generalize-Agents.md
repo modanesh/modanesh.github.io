@@ -26,11 +26,11 @@ pit range.
 The bipedal walker has a rather intricate walking mechanic which only allows for walking on terrains of limited difficulty. We needed an environment that was scalable linearly in terms of difficulty. We developed the 2D-Bike environment, with exactly this constraint in mind. In the base environment, an agent must learn to navigate a sufficiently
 smooth terrain as depicted bellow:
 
+<p style="text-align:center;">
+	<img src="../../../../images/cur_learning_rl_fig_1.png?raw=true" style="height: 250px;text-align:center;">
+	<figcaption>An agent in the 2D-Bike environment traversing a noisy terrain.</figcaption>
 
-![Alt text](../images/cur_learning_rl_fig_1.png?raw=true)
-
-<center><i>An agent in the 2D-Bike environment traversing a noisy
-terrain.</i></center>
+</p>
 
 The reward is a weighted sum of the distance covered and the average speed. Difficultness is scaled up according to the parameters listed be-
 low:
