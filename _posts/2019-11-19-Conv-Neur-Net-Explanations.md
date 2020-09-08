@@ -1,3 +1,9 @@
+---
+layout: post
+title: "Convolutional Neural Network Explanation Methods"
+date: 2019-05-16
+---
+
 ### Methods:
 
 -   Saliency Maps:
