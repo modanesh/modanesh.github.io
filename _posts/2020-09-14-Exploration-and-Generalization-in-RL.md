@@ -34,7 +34,7 @@ The aim is to flexibly learn bayes-optimal behavior for rapid online adaptation 
 There is a recurrent encoder which learns variational trajectory embeddings, known as belief. The point of having recurrent network is to maintain information through multiple steps. The belief has a lower dimensions compared to states and actions:  
 
 <p style="text-align:center;">
-        <img src="../../../../images/exp_gen_rl_3.png?raw=true" style="height: 250px;text-align:center;">
+        <img src="../../../../images/exp_gen_rl_3.png?raw=true" style="height: 150px;text-align:center;">
 </p>
 
 
@@ -44,14 +44,14 @@ Decoder:
 Learns to predict future states and rewards. The encoder-decoder pipeline forces the agent to maintain a belief that is relevant to predicting the future. 
 
 <p style="text-align:center;">
-        <img src="../../../../images/exp_gen_rl_4.png?raw=true" style="height: 250px;text-align:center;">
+        <img src="../../../../images/exp_gen_rl_4.png?raw=true" style="height: 130px;text-align:center;">
 </p>
 
 
 And finally the agent conditions policy based on its belief. The policy learns approximately bayes-optimal behavior given current belief.  
 
 <p style="text-align:center;">
-        <img src="../../../../images/exp_gen_rl_5.png?raw=true" style="height: 250px;text-align:center;">
+        <img src="../../../../images/exp_gen_rl_5.png?raw=true" style="height: 100px;text-align:center;">
 </p>
 
 
@@ -63,7 +63,7 @@ First insight:
 Selective noise injection is valuable, meaning that instead of applying regularization across to all the components, it applies the noise to the components that are most helpful. For example, it does not apply noise to the components regarding the exploration, because originally it has noise embedded in it (e.g. the behavior rollout policy). Doing this speeds up the learning process. 
 
 <p style="text-align:center;">
-        <img src="../../../../images/exp_gen_rl_6.png?raw=true" style="height: 250px;text-align:center;">
+        <img src="../../../../images/exp_gen_rl_6.png?raw=true" style="height: 100px;text-align:center;">
 </p>
 
 
