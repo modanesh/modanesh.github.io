@@ -57,7 +57,7 @@ And finally the agent conditions policy based on its belief. The policy learns a
 
 
 
-#### [Generalization in RL with selective noise injection and information bottleneck)](https://arxiv.org/abs/1910.12911):
+#### [Generalization in RL with selective noise injection and information bottleneck](https://arxiv.org/abs/1910.12911):
 
 First insight:
 Selective noise injection is valuable, meaning that instead of applying regularization across to all the components, it applies the noise to the components that are most helpful. For example, it does not apply noise to the components regarding the exploration, because originally it has noise embedded in it (e.g. the behavior rollout policy). Doing this speeds up the learning process. 
