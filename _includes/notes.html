@@ -1,0 +1,22 @@
+<div class="notes" style="margin-top: 50px;">
+  <h2 style="font-size: 2em; border-bottom: 1px solid #e8e8e8;font-weight: bold;">Notes and Summaries</h2>
+  {% if site.notes  %}
+    <div class="table-responsive">
+      <table class="table table-sm table-borderless">
+      {% assign notes = site.notes | reverse %}
+      {% for item in notes limit: site.notes_limit %}
+        <tr>
+<!--          <th scope="row">{{ item.date | date: "%b %-d, %Y" }}</th>-->
+          <td>
+            {% if item.inline -%}
+              {{ item.content | remove: '<p>' | remove: '</p>' | emojify }}
+            {%- else -%}
+              <a class="notes-title" href="{{ item.url | relative_url }}">{{ item.title }}</a>
+            {%- endif %}
+          </td>
+        </tr>
+      {%- endfor %}
+      </table>
+    </div>
+  {%- endif %}
+</div>
