@@ -3,8 +3,8 @@
 # -----------------------------------------------------------------------------
 
 title: blank # the website title (if blank, full name will be used instead)
-first_name: Mohamad
-middle_name: H.
+first_name: Mohamad H
+middle_name:
 last_name: Danesh
 email: mohamad4danesh@gmail.com
 description: > # the ">" symbol means to ignore newlines until "footer_text:"
@@ -106,8 +106,7 @@ youtube_id: # your youtube channel id (youtube.com/@<youtube_id>)
 discord_id: # your discord id (18-digit unique numerical identifier)
 zotero_username: # your zotero username
 
-contact_note: >
-  You can even add a little note about which of these is the best way to reach you.
+contact_note:
 
 # -----------------------------------------------------------------------------
 # Analytics and search engine verification
@@ -168,11 +167,11 @@ external_sources:
 # -----------------------------------------------------------------------------
 
 collections:
-  notes:
+  news:
     defaults:
       layout: post
     output: true
-    permalink: /notes/:path/
+    permalink: /news/:path/
   projects:
     output: true
     permalink: /projects/:path/
@@ -274,8 +273,8 @@ display_categories: ['blockquotes'] # these categories will be displayed on the 
 
 scholar:
 
-  last_name: [Danesh]
-  first_name: [Mohamad H.]
+  last_name: [Einstein]
+  first_name: [Albert, A.]
 
   style: apa
   locale: en
@@ -348,27 +347,27 @@ imagemagick:
 # -----------------------------------------------------------------------------
 
 jekyll-diagrams:
-    # configuration, see https://github.com/zhustec/jekyll-diagrams.
-    # feel free to comment out this section if not using jekyll diagrams.
+# configuration, see https://github.com/zhustec/jekyll-diagrams.
+# feel free to comment out this section if not using jekyll diagrams.
 
 
 # -----------------------------------------------------------------------------
 # Optional Features
 # -----------------------------------------------------------------------------
 
-enable_google_analytics:    true  # enables google analytics
+enable_google_analytics:    false  # enables google analytics
 enable_cronitor_analytics: false  # enables cronitor RUM analytics
 enable_google_verification: false  # enables google site verification
 enable_bing_verification:   false  # enables bing site verification
 enable_masonry:             true   # enables automatic project cards arrangement
 enable_math:                true   # enables math typesetting (uses MathJax)
 enable_tooltips:            false  # enables automatic tooltip links generated
-                                   # for each section titles on pages and posts
+# for each section titles on pages and posts
 enable_darkmode:            true   # enables switching between light/dark modes
 enable_navbar_social:       false  # enables displaying social links in the
-                                   # navbar on the about page
+# navbar on the about page
 enable_project_categories:  true   # enables categorization of projects into
-                                   # multiple categories
+# multiple categories
 enable_medium_zoom:         true   # enables image zoom feature (as on medium.com)
 enable_progressbar:         true   # enables a horizontal progress bar linked to the vertical scroll position
 
