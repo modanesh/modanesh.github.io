@@ -1,84 +1,109 @@
 ---
 ---
 
-@string{aps = {American Physical Society,}}
-
-@book{einstein1956investigations,
+@inproceedings{danesh2022leader,
+  title={LEADER: Learning Attention Over Driving Behaviors For Planning Under Uncertainty},
+  author={Danesh, Mohamad H and Cai, Panpan and Hsu, David},
+  booktitle={6th Annual Conference on Robot Learning},
+  year={2022},
+  organization={PMLR},
+  abbr={CoRL},
+  abstract={Uncertainty on human behaviors poses a significant challenge to autonomous driving in crowded urban environments. The partially observable Markov decision processes (POMDPs) offer a principled framework for planning under uncertainty, often leveraging Monte Carlo sampling to achieve online performance for complex tasks. However, sampling also raises safety concerns by potentially missing critical events. To address this, we propose a new algorithm, LEarning Attention over Driving bEhavioRs (LEADER), that learns to attend to critical human behaviors during planning. LEADER learns a neural network generator to provide attention over human behaviors in real-time situations. It integrates the attention into a belief-space planner, using importance sampling to bias reasoning towards critical events. To train the algorithm, we let the attention generator and the planner form a min-max game. By solving the min-max game, LEADER learns to perform risk-aware planning without human labeling.},
+  pdf={https://openreview.net/pdf?id=DE8rdNuGj_7},
+  arxiv={2209.11422},
+  code={https://github.com/modanesh/LEADER},
+  webpage={https://sites.google.com/view/leader-paper/home},
+  talk={https://youtu.be/56LzTZfwY2Q?t=2859},
+  selected={true},
+  oral={true},
+  awards={best paper awards finalist},
   bibtex_show={true},
-  title={Investigations on the Theory of the Brownian Movement},
-  author={Einstein, Albert},
-  year={1956},
-  publisher={Courier Corporation},
-  preview={brownian-motion.gif}
 }
 
-@article{einstein1950meaning,
-  abbr={AJP},
+
+@inproceedings{azran2022enhancing,
+  title={Enhancing Transfer of Reinforcement Learning Agents with Abstract Contextual Embeddings},
+  author={Azran, Guy and Danesh, Mohamad H and Albrecht, Stefano V and Keren, Sarah},
+  booktitle={Neural Information Processing Systems, nCSI Workshop},
+  year={2022},
+  organization={PMLR},
+    abbr={NeurIPS nCSI},
+    abstract={Deep reinforcement learning (DRL) algorithms have seen great success in perform- ing a plethora of tasks, but often have trouble adapting to changes in the environ- ment. We address this issue by using reward machines (RM), a graph-based ab- straction of the underlying task to represent the current setting or context. Using a graph neural network (GNN), we embed the RMs into deep latent vector represen- tations and provide it to the agent to enhance its ability to adapt to new contexts. To the best of our knowledge, this is the first work to embed contextual abstractions and let the agent decide how to use them. Our preliminary empirical evaluation demonstrates improved sample efficiency of our approach upon context transfer on a set of grid navigation tasks.},
+    pdf={https://ncsi.cause-lab.net/pdf/nCSI_13.pdf},
+    selected={false},
+    bibtex_show={true},
+}
+
+
+@inproceedings{danesh2018tracking,
+  title={Tracking Moving Objects in Multi-Camera Environments using Appearance Features},
+  author={Danesh, Mohamad H and Hasheminejad, Mahsa and Nickabadi, Ahmad},
+  booktitle={2018 International Computer Conference (CSICC)},
+  year={2018},
+  abbr={CSICC},
   bibtex_show={true},
-  title={The meaning of relativity},
-  author={Einstein, Albert and Taub, AH},
-  journal={American Journal of Physics},
-  volume={18},
-  number={6},
-  pages={403--404},
-  year={1950},
-  publisher={American Association of Physics Teachers}
 }
 
-@article{PhysRev.47.777,
-  abbr={PhysRev},
-  title={Can Quantum-Mechanical Description of Physical Reality Be Considered Complete?},
-  author={Einstein, A. and Podolsky, B. and Rosen, N.},
-  abstract={In a complete theory there is an element corresponding to each element of reality. A sufficient condition for the reality of a physical quantity is the possibility of predicting it with certainty, without disturbing the system. In quantum mechanics in the case of two physical quantities described by non-commuting operators, the knowledge of one precludes the knowledge of the other. Then either (1) the description of reality given by the wave function in quantum mechanics is not complete or (2) these two quantities cannot have simultaneous reality. Consideration of the problem of making predictions concerning a system on the basis of measurements made on another system that had previously interacted with it leads to the result that if (1) is false then (2) is also false. One is thus led to conclude that the description of reality as given by a wave function is not complete.},
-  journal={Phys. Rev.},
-  volume={47},
-  issue={10},
-  pages={777--780},
-  numpages={0},
-  year={1935},
-  month={May},
-  publisher=aps,
-  doi={10.1103/PhysRev.47.777},
-  url={http://link.aps.org/doi/10.1103/PhysRev.47.777},
-  html={https://journals.aps.org/pr/abstract/10.1103/PhysRev.47.777},
-  pdf={example_pdf.pdf},
-  altmetric={248277},
-  dimensions={true},
-  selected={true}
-}
-
-@article{einstein1905molekularkinetischen,
-  title={{\"U}ber die von der molekularkinetischen Theorie der W{\"a}rme geforderte Bewegung von in ruhenden Fl{\"u}ssigkeiten suspendierten Teilchen},
-  author={Einstein, A.},
-  journal={Annalen der physik},
-  volume={322},
-  number={8},
-  pages={549--560},
-  year={1905},
-  publisher={Wiley Online Library}
-}
-
-@article{einstein1905movement,
-  abbr={Ann. Phys.},
-  title={Un the movement of small particles suspended in statiunary liquids required by the molecular-kinetic theory 0f heat},
-  author={Einstein, A.},
-  journal={Ann. Phys.},
-  volume={17},
-  pages={549--560},
-  year={1905}
-}
-
-@article{einstein1905electrodynamics,
-  title={On the electrodynamics of moving bodies},
-  author={Einstein, A.},
-  year={1905}
-}
-
-@book{przibram1967letters,
+@inproceedings{danesh2021re,
+  title={Re-understanding Finite-State Representations of Recurrent Policy Networks},
+  author={Danesh, Mohamad H and Koul, Anurag and Fern, Alan and Khorram, Saeed},
+  booktitle={International Conference on Machine Learning},
+  pages={2388--2397},
+  year={2021},
+  organization={PMLR},
+  abbr={ICML},
+  abstract={We introduce an approach for understanding control policies represented as recurrent neural networks. Recent work has approached this problem by transforming such recurrent policy networks into finite-state machines (FSM) and then analyzing the equivalent minimized FSM. While this led to interesting insights, the minimization process can obscure a deeper understanding of a machine’s operation by merging states that are semantically distinct. To address this issue, we introduce an analysis approach that starts with an unminimized FSM and applies more-interpretable reductions that preserve the key decision points of the policy. We also contribute an attention tool to attain a deeper understanding of the role of observations in the decisions. Our case studies on 7 Atari games and 3 control benchmarks demonstrate that the approach can reveal insights that have not been previously noticed.},
+  pdf={http://proceedings.mlr.press/v139/danesh21a/danesh21a.pdf},
+  arxiv={2006.03745},
+  code={https://github.com/modanesh/Differential_IG},
+  slides={https://slideslive.com/38958800/reunderstanding-finitestate-representations-of-recurrent-policy-networks?ref=speaker-80465-latest},
+  talk={https://slideslive.com/38958800/reunderstanding-finitestate-representations-of-recurrent-policy-networks?ref=speaker-80465-latest},
+  selected={true},
   bibtex_show={true},
-  title={Letters on wave mechanics},
-  author={Einstein, Albert and Schrödinger, Erwin and Planck, Max and Lorentz, Hendrik Antoon and Przibram, Karl},
-  year={1967},
-  publisher={Vision},
-  preview={wave-mechanics.gif}
+}
+
+@inproceedings{danesh2021out,
+  title={Out-of-Distribution Dynamics Detection: RL-Relevant Benchmarks and Results},
+  author={Danesh, Mohamad H and Fern, Alan},
+  booktitle={International Conference on Machine Learning, UDL Workshop},
+  year={2021},
+  organization={PMLR},
+  abbr={ICML UDL},
+  abstract={We study the problem of out-of-distribution dynamics (OODD) detection, which involves detecting when the dynamics of a temporal process change compared to the training-distribution dynamics. This is relevant to applications in control, reinforcement learning (RL), and multi-variate time-series, where changes to test time dynamics can impact the performance of learning controllers/predictors in unknown ways. This problem is particularly important in the context of deep RL, where learned controllers often overfit to the training environment. Currently, however, there is a lack of established OODD benchmarks for the types of environments commonly used in RL research. Our first contribution is to design a set of OODD benchmarks derived from common RL environments with varying types and intensities of OODD. Our second contribution is to design a strong OODD baseline approach based on recurrent implicit quantile networks (RIQNs), which monitors autoregressive prediction errors for OODD detection. Our final contribution is to evaluate the RIQN approach on the benchmarks to provide baseline results for future comparison.},
+  pdf={https://arxiv.org/pdf/2107.04982.pdf},
+  arxiv={2107.04982},
+  baseline={https://github.com/modanesh/recurrent_implicit_quantile_networks},
+  benchmark={https://github.com/modanesh/anomalous_rl_envs},
+  slides={https://slideslive.com/38962856/outofdistribution-dynamics-detection-rlrelevant-benchmarks-and-results?ref=speaker-80465-latest},
+  talk={https://slideslive.com/38962856/outofdistribution-dynamics-detection-rlrelevant-benchmarks-and-results?ref=speaker-80465-latest},
+  selected={true},
+  bibtex_show={true},
+  oral={true},
+}
+
+@article{khorram2021stochastic,
+  title={Stochastic Block-ADMM for Training Deep Networks},
+  author={Khorram, Saeed and Fu, Xiao and Danesh, Mohamad H and Qi, Zhongang and Fuxin, Li},
+  journal={arXiv preprint arXiv:2105.00339},
+  year={2021},
+  abstract={In this paper, we propose Stochastic Block-ADMM as an approach to train deep neural networks in batch and online settings. Our method works by splitting neural networks into an arbitrary number of blocks and utilizes auxiliary variables to connect these blocks while optimizing with stochastic gradient descent. This allows training deep networks with non-differentiable constraints where conventional backpropagation is not applicable. An application of this is supervised feature disentangling, where our proposed DeepFacto inserts a non-negative matrix factorization (NMF) layer into the network. Since backpropagation only needs to be performed within each block, our approach alleviates vanishing gradients and provides potentials for parallelization. We prove the convergence of our proposed method and justify its capabilities through experiments in supervised and weakly-supervised settings.},
+  pdf={https://arxiv.org/pdf/2105.00339.pdf},
+  arxiv={2105.00339},
+  selected={true},
+  bibtex_show={true},
+}
+
+@inproceedings{danesh2021reducing,
+  title={Reducing Neural Network Parameter Initialization Into an SMT Problem (Student Abstract)},
+  author={Danesh, Mohamad H},
+  booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume={35},
+  number={18},
+  pages={15775--15776},
+  year={2021},
+  abbr={AAAI},
+  abstract={Training a neural network (NN) depends on multiple factors, including but not limited to the initial weights. In this paper, we focus on initializing deep NN parameters such that it performs better, comparing to random or zero initialization. We do this by reducing the process of initialization into an SMT solver. Previous works consider certain activation functions on small NNs, however the studied NN is a deep network with different activation functions. Our experiments show that the proposed approach for parameter initialization achieves better performance comparing to randomly initialized networks.},
+  pdf={https://arxiv.org/pdf/2011.01191.pdf},
+  arxiv={2011.01191},
+  bibtex_show={true},
 }
