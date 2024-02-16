@@ -24,6 +24,9 @@
           {%- else -%}
             <abbr class="badge">{{entry.abbr}}</abbr>
           {%- endif -%}
+        {%- if entry.oral %}
+          <abbr class="badge">Oral</abbr>
+        {%- endif %}
         {%- endif -%}
         </div>
 
