@@ -22,7 +22,7 @@ $$Z(x,a) = R(x,a) + \gamma Z(X', A')$$
 According to this equation, there are three random variables that affect the value distribution: reward function, transition function, and next state-action value distribution. Distributional RL has studied before, but it was limited to specific cases like risk-sensitive policies or theoretical analysis.
 
 
-### Prerequisites
+## Prerequisites
 
 KL divergence: sum of log probability ratios of two probability distributions. For two distributions with non-overlapping supports, it'll be infinite.
 
@@ -31,7 +31,7 @@ Total variation: how much probability mass two distributions disagree. It's done
 Wasserstein: The area (integral) between the CDFs of two random variables. The three properties of the Wasserstein metric is very useful for the RL case.
 
 
-### C51 [1]
+## C51 [1]
 In common RL, the Bellman operator has the alpha-contraction property which basically means that by applying the Bellman operator, our estimation of the value function gets closer to the optimal one. But in dist RL, that's not as straight forward as common RL. In policy evaluation, the distributional Bellman operator is an alpha-contraction only in a maximal form of the Wasserstein metric. In policy improvement, things are messier and it requires more investigation. An example is provided further in the paper that discusses this issue. Using value distributions over value functions offers a few benefits like preserving the multimodality of returns, and decreasing the bad effects of learning from a non stationary policy, which all leads to more stability in learning.
 
 MDP setting definition is:
@@ -89,7 +89,7 @@ In experiments: there are sources of stochasticity even in deterministic Atari e
 The distinction we wish to make is that learning distributions matters in the presence of approximation.
 
 
-### QR-DQN [2]
+## QR-DQN [2]
 Using kl divergence in C51 left a theory-practice gap open which in this paper they talk about and try to address. One interesting point they raise is that since they didn't follow the theory they provided, it's hard to justify the improvements in performance they reported which actually is a fair point if you think about it.
 
 The contributions of this paper are: first, instead of having a set of fixed location atoms, they parameterize the value distribution using a set of fixed probabilities with adjustable locations. Doing this they will be able to use Wasserstein metric and so close the gap. Second, in order to have Wasserstein metric, they use quantile regression. Third, they provide the contraction property for their overall algorithm.
@@ -114,7 +114,7 @@ Comparing QR-DQN with plain DQN: everything is the same except two things: outpu
 
 Their experimental results are good, nothing surprising reported.
 
-### IQN [3]
+## IQN [3]
 Compared to QR-DQN, there are two major differences: instead of using the quantile divided by the same probability, the probabilities are randomly sampled implicitly, and also the network architecture is different. IQN also uses the quantile regression technique as QR-DQN. As an example: let's say the number of quantiles is 4. In this case, the quantile value of QR-DQN is [0.25, 0.5, 0.75, 1], and QR-DQN derives a support corresponding to the median of the quantile to minimize the Wasserstein distance. That is, we estimate the supports corresponding to [0.125, 0.375, 0.625, 0.875].
 However, in IQN, the quantile value $\tau$ is randomly sampled between 0 and 1. If there are 4 quantiles, let's say that 4 randomly extracted values between 0 and 1 are [0.12, 0.32, 0.78, 0.92]. Sampling like this from the value distribution gives the opportunity to measure the level of risk the policy takes.
 
@@ -135,7 +135,7 @@ Types of risks (fig 3): Risk-averse > Neutral > Risk-seeking. About this, the lo
 One interesting point is that in table 1, the mean and median of scores to compare different algorithms are based on different experiment setups. I mean for DQN, PER, and c51 scores are only for 1 seed but for IQN report are for 5 seeds. Which is not fair (?).
 
 
-### References
+## References
 
 [1] Marc G Bellemare, Will Dabney, and Rémi Munos. A distributional perspective on reinforcement learning. In Proceedings of the 34th International Conference on Machine Learning-Volume 70,  pages 449–458. JMLR. org, 2017.
 
