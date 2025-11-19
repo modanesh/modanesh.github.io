@@ -65,20 +65,12 @@ params:
           imageWidth: 160
           imageHeight: 160
           buttons:
-            - name: Papers
-              url: papers/
-            - name: Data
-              url: data/
-            - name: Books
-              url: books/
-            - name: Courses
-              url: courses/
-            - name: Tags
-              url: tags/
-            - name: Archive
-              url: archive/
             - name: Blog
-              url: https://en.wikipedia.org/wiki/Moritz-Maria_von_Igelfeld_(character)
+              url: blogs/
+            - name: Get in touch
+              url: get_in_touch/
+            - name: List 100
+              url: 100/
 
     socialIcons:
         - name: Email
