@@ -96,12 +96,12 @@ $Normal(0,1)$
 distribution is used as prior. When not much data are seen, the effect of the prior is more dominant, which explains why the $Uniform$ distribution is faster to converge. Oppositely, after a few training iterations, the effect of the prior diminished and the generator can overcome the effect of a bad prior. Figure 2 shows how to change the performance according to the prior distribution set on the generator. The target distribution being uniform, we can see that the convergence speed evolving in the same way as in Figure 1. The effect of the prior is dominant when a few samples are seen and become less dominant over time.
 
 <p style="text-align:center;">
-	<img src="/content/blogs/b-gan/priors.png?raw=true" style="height: 250px;text-align:left;">
+	<img src="priors.png?raw=true" style="height: 250px;text-align:left;">
     <figcaption style="text-align:center;width: 70%;margin-left: auto;margin-right: auto;">Figure 1: Evolution of the Jensen-Shannon divergence measure on multiple training of a Bayesian GAN trained on 3 different distributions for sampling the noise $\textbf{z}$ input of the generator.</figcaption>
 </p>
 
 <p style="text-align:center;">
-	<img src="/content/blogs/b-gan/priors_g.png?raw=true" style="height: 250px;text-align:left;">
+	<img src="priors_g.png?raw=true" style="height: 250px;text-align:left;">
     <figcaption style="text-align:center;width: 70%;margin-left: auto;margin-right: auto;">Figure 2: Evolution of the Jensen-Shannon divergence measure on multiple training of a Bayesian GAN trained on 3 different distributions for sampling the weights of the generator.</figcaption>
 </p>
 
@@ -109,10 +109,10 @@ distribution is used as prior. When not much data are seen, the effect of the pr
 Our experiments were to analyze the limitations (Saatci & Wilson, 2017), which include the number of hidden layers in the generator and discriminator networks, the number of generator and discriminator features, different datasets with more variety in data, and a number of labeled samples. Due to computational limitations (Saatci & Wilson, 2017), the results of experiments on different GAN architectures have not been examined. We have addressed this limitation. According to Figure 3, by just adding two more hidden layers, the generated data distribution is closer to the original data. Also, considering the Jensen-Shannon divergence (Fuglede & Topse, 2004), the Bayesian GAN with more hidden layers showed better convergence.
 
 <p style="text-align:center;">
-	<img src="/content/blogs/b-gan/orig.png?raw=true" style="height: 250px;text-align:left;">
-	<img src="/content/blogs/b-gan/syn2l.png?raw=true" style="height: 250px;text-align:left;">
-	<img src="/content/blogs/b-gan/syn4l.png?raw=true" style="height: 250px;text-align:left;">
-	<img src="/content/blogs/b-gan/syn-js.png?raw=true" style="height: 250px;text-align:left;">
+	<img src="orig.png?raw=true" style="height: 250px;text-align:left;">
+	<img src="syn2l.png?raw=true" style="height: 250px;text-align:left;">
+	<img src="syn4l.png?raw=true" style="height: 250px;text-align:left;">
+	<img src="syn-js.png?raw=true" style="height: 250px;text-align:left;">
     <figcaption style="text-align:center;width: 70%;margin-left: auto;margin-right: auto;">Figure 3: Experiments done on synthetic data with different number of hidden layers on 1000 iterations. (a) the original data distribution, (b) the generated data distribution with 2 hidden layers (c) the generated data distribution with 4 hidden layers. (d) The divergence is computed using kernel density estimates. It can be seen that the Bayesian GAN is more effective with 4 hidden layers.</figcaption>
 </p>
 
@@ -120,8 +120,8 @@ Our experiments were to analyze the limitations (Saatci & Wilson, 2017), which i
 In another experiment, we examined different numbers of features for each of the networks. For this purpose, features of sizes 64, 96, and 128 have been examined. The results of generator loss and discriminator loss are represented in Figure 4.
 
 <p style="text-align:center;">
-	<img src="/content/blogs/b-gan/gen_features.png?raw=true" style="height: 250px;text-align:left;">
-	<img src="/content/blogs/b-gan/disc_features.png?raw=true" style="height: 250px;text-align:left;">
+	<img src="gen_features.png?raw=true" style="height: 250px;text-align:left;">
+	<img src="disc_features.png?raw=true" style="height: 250px;text-align:left;">
     <figcaption style="text-align:center;width: 70%;margin-left: auto;margin-right: auto;">Figure 4: Test set loss in 50,000 iterations, trained on CIFAR-10 dataset. (a) Shows that With more features in the network, generator loss decreases faster. (b) Shows that when there are more features, discriminator performs better. By calculating the standard deviation, which is a measure useful for quantifying the amount of variation of a set of data values, it can be shown that the discriminator network with a feature vector of size 128 has the least standard deviation which is 0.39. The discriminator loss for a feature vector of size 96 is 0.52 and for a feature vector of size 64 is 0.47.</figcaption>
 </p>
 
@@ -129,14 +129,14 @@ The experiments which were done to investigate the performance of the Bayesian G
 
 
 <p style="text-align:center;">
-	<img src="/content/blogs/b-gan/diff_datasets.png?raw=true" style="height: 250px;text-align:left;">
+	<img src="diff_datasets.png?raw=true" style="height: 250px;text-align:left;">
     <figcaption style="text-align:center;width: 70%;margin-left: auto;margin-right: auto;">Figure 5: The results of the test set accuracy on semi-supervised Bayesian GAN.</figcaption>
 </p>
 
 The last experiment we have done is targeting the number of given labeled samples. In this experiment, the CIFAR-10  dataset has been used. The results are depicted in Figure 6. As it was anticipated, the Bayesian GAN got far better accuracy when it had more samples of data.
 
 <p style="text-align:center;">
-	<img src="/content/blogs/b-gan/diff_n.png?raw=true" style="height: 250px;text-align:left;">
+	<img src="diff_n.png?raw=true" style="height: 250px;text-align:left;">
     <figcaption style="text-align:center;width: 70%;margin-left: auto;margin-right: auto;">Figure 6: With more input labeled samples, the Bayesian GAN performed better, almost got twice the accuracy with number of samples equals to 16K.</figcaption>
 </p>
 
