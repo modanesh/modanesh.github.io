@@ -38,7 +38,7 @@ where the $p(\theta_g|\alpha_g)$ and $p(\theta_d|\alpha_d)$ are the priors over 
 
 $$p(\theta_g| \textbf{z}, \theta_d) \propto  \Big( \prod_{i=1}^{n_g} \sum_{y=1}^K D(G( \textbf{z}^{(i)} ; \theta_g)=y; \theta_d) \Big) p(\theta_g| \alpha_g)$$
 
-$$p(\theta_d| \textbf{z}, \textbf{x}, \textbf{y}_s, \theta_g) \propto \prod_{i=1}^{n_d} \sum_{y=1}^K D(\textbf {x}^{(i)} = \textbf{y} ; \theta_d)  \nonumber \times \prod_{i=1}^{n_g}(1-D(G(z^{(i)};\theta_g);\theta_d)) \nonumber \times \prod_{i=1}^{n_s} D(\textbf{x}_s^{(i)} = \textbf{y}_s^{(i)}; \theta_d) \times p(\theta_d|\alpha_d)$$
+$$p(\theta_d| \textbf{z}, \textbf{x}, \textbf{y}_ s, \theta_g) \propto \prod_{i=1}^{n_d} \sum_{y=1}^K D(\textbf {x}^{(i)} = \textbf{y} ; \theta_d)  \nonumber \times \prod_{i=1}^{n_g}(1-D(G(z^{(i)};\theta_g);\theta_d)) \nonumber \times \prod_{i=1}^{n_s} D(\textbf{x}_ s^{(i)} = \textbf{y}_ s^{(i)}; \theta_d) \times p(\theta_d|\alpha_d)$$
 
 Here, from the perspective of the generator wants to fool the
 discriminator so that its samples are from the real $K$ classes
@@ -78,10 +78,10 @@ $p(\theta_g|\alpha_g)$
 becomes less dominant when more data is added to the likelihood. However, we claim that it is advantageous to use a prior more representative of the ideal distribution in order to approximate the posterior distribution more efficiently. Such as proposed in the work of (Kilcher et al., 2017), using a flexible prior distribution can increase the modeling power of a generative model. In their work, they estimate a prior distribution on the latent variable $z$ using the data by introducing a generator reversal algorithm. They show that constructing a new prior $p(z)$ from the data instead of using a standard normal distribution is a better-suited choice for various reasons such as: having a better generative model and better modeling performances of the latent structure, more semantically appropriate output. We use the insight of their technique to approximate the best latent variable prior $p(z)$, however, finding a better prior on the weights of the networks is a more difficult task. Since we do not have any intuition on the type of distribution the weights should model, we designed a simple test case where we evaluate the effect of the prior on a Bayesian GAN.
 
 <b>Synthetic dataset</b>: We do not have the possibility to use the data since they do not give any information about the prior distribution of the weights or of the latent variable $\textbf{z}$. To alleviate this problem, we defined an arbitrary weights assignment on a generator that will represent the target model taken from a ground truth distribution
-$p^*(\theta_g | \alpha_g)$
+$p^*(\theta_ g | \alpha_ g)$
 , and we do the same with
 $p^*\textbf{z})$
-. Once a generator is sampled, we draw $N$ samples from $p^*\textbf{z}$ and pass them through the target generator. The resulting output for each noisy sample will provide a ground truth sample that will form the new training set. When a new dataset is generated, we can train a Bayesian GAN to model the target distribution. We provide an evaluation of training after different variations of the prior $p(\textbf{z}$ and $p(\theta_g| \alpha_g)$.
+. Once a generator is sampled, we draw $N$ samples from $p^*\textbf{z}$ and pass them through the target generator. The resulting output for each noisy sample will provide a ground truth sample that will form the new training set. When a new dataset is generated, we can train a Bayesian GAN to model the target distribution. We provide an evaluation of training after different variations of the prior $p(\textbf{z}$ and $p(\theta_ g| \alpha_ g)$.
 
 <b>Results</b>: We generated a dataset where
 $p^*(\theta_g| \alpha_g)$
