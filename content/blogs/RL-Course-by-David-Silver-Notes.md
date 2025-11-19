@@ -7,7 +7,7 @@ showToc: true
 disableAnchoredHeadings: false
 ---
 
-### Lecture 1: Introduction to Reinforcement Learning
+## Lecture 1: Introduction to Reinforcement Learning
 
 -   Planning: rules of the game are given, perfect model inside agent's head, plan ahead to find optimal policy(look ahead search or tree search).
 
@@ -42,7 +42,7 @@ disableAnchoredHeadings: false
 
 Reinforcement learning is the science of decision making.
 
-### Lecture 2: Markov Decision Process
+## Lecture 2: Markov Decision Process
 
 -   Partial ordering over policies:
 
@@ -50,7 +50,7 @@ Reinforcement learning is the science of decision making.
 
 -   Action-Value function Q is the same as value function, but also takes action as input:
 
-    $$Q_\pi (s, a) = \mathbb{E}_\pi [G_t | S_t = s, A_t = a] = \mathbb{E}_\pi [R_{t+1} + \gamma * Q_\pi (S_{t+1}, A_{t+1}) | S_t = s, A_t = a]$$
+    $$Q_\pi (s, a) = E_\pi [G_t | S_t = s, A_t = a] = E_\pi [R_{t+1} + \gamma * Q_\pi (S_{t+1}, A_{t+1}) | S_t = s, A_t = a]$$
 
 -   Policy is a distribution over actions given states:
     $$\pi (a | s) = P [ A_t = a | S_t = s]$$
@@ -62,7 +62,7 @@ Reinforcement learning is the science of decision making.
 -   The returns are random samples, the value function is an expectation over there random samples.
 
 -   Value function:
-    $$v_\pi (s) = \mathbb{E}_\pi [G_t | S_t = s] = \mathbb{E}_\pi [R_{t+1} + \gamma * v_\pi (S_{t+1}) | S_t = s]$$
+    $$v_\pi (s) = E_\pi [G_t | S_t = s] = E_\pi [R_{t+1} + \gamma * v_\pi (S_{t+1}) | S_t = s]$$
 
     It also can be expressed using matrices:
     $$v_\pi = R_\pi + \gamma * \rho_\pi * v$$
@@ -83,7 +83,7 @@ Reinforcement learning is the science of decision making.
 
 
 -   Reward function:
-    $$R = \mathbb{E} [R_{t+1} | S_t = s, A_t = a]$$
+    $$R = E [R_{t+1} | S_t = s, A_t = a]$$
 
 -   Sample episodes from a MDP: different iterations over different states in each episode.
 
@@ -94,7 +94,7 @@ Reinforcement learning is the science of decision making.
 
 -   Almost all RL problems can be modeled using MDPs.
 
-### Lecture 3: Planning by Dynamic Programming
+## Lecture 3: Planning by Dynamic Programming
 
 -   Value Iteration:
 
@@ -120,7 +120,7 @@ Reinforcement learning is the science of decision making.
 
     -   Evaluate the policy:  
                                 
-        $$V_\pi (s) = \mathbb{E} [ R_{t+1} + \gamma * R_{t+2} + ... | S_t = s ]$$
+        $$V_\pi (s) = E [ R_{t+1} + \gamma * R_{t+2} + ... | S_t = s ]$$
 	    
 	-   Improve the policy: $$\pi' = greedy ( V_\pi )$$
 	    
@@ -160,7 +160,7 @@ Reinforcement learning is the science of decision making.
 	    
 	-   Programming: a mapping, e.g. a policy.
 
-### Lecture 4: Model-Free Prediction
+## Lecture 4: Model-Free Prediction
 
 -   Bootstrapping: update involves estimated rewards.
 
@@ -189,7 +189,7 @@ Reinforcement learning is the science of decision making.
 	    
 	-   $$TD(\lambda)$$: looks into $$\lambda$$ steps of the future to update. Also $$\lambda$$ can be defined as averaging over all n-step returns.
 
-### Lecture 5: Model Free Control
+## Lecture 5: Model Free Control
 
 -   On-policy Learning:
 
@@ -246,7 +246,7 @@ Reinforcement learning is the science of decision making.
 		    
 		-   Converges to the optimal action-value function.
 
-### Lecture 6: Value Function Approximation
+## Lecture 6: Value Function Approximation
 
 -   Large scale RL problems because of the huge state spaces become non-tabular.
 
@@ -275,7 +275,7 @@ Reinforcement learning is the science of decision making.
 	    
 	-   Example: experience replay in DQN.
 
-### Lecture 7: Policy Gradient Methods
+## Lecture 7: Policy Gradient Methods
 
 - Policy gradient methods optimize the policy directly, instead of the value function.
 
@@ -327,7 +327,7 @@ Reinforcement learning is the science of decision making.
 	    
 	-   Critic estimates the advantage function.
 
-### Lecture 8: Integrating Learning and Planning
+## Lecture 8: Integrating Learning and Planning
 
 -   So far, the course covered model-free RL.
 
@@ -359,7 +359,7 @@ Reinforcement learning is the science of decision making.
     -   Simulates episodes of experience from now with the model.
     -   Applies model-free RL to simulated episodes.
 
-### Lecture 9: Exploration and Exploitation
+## Lecture 9: Exploration and Exploitation
 
 -   Three methods of exploration and exploitation:
 
@@ -419,7 +419,7 @@ Reinforcement learning is the science of decision making.
 	    
 	-   Augmented MDP: includes information state so that $$S' = (S , I)$$.
 
-### Lecture 10: Classic Games
+## Lecture 10: Classic Games
 
 -   Nash equilibrium is a joint policy for all players, so a way for others to pick actions such that every single player is playing the best response to all other players, i.e. no player would choose from Nash.
 
