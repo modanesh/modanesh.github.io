@@ -35,7 +35,7 @@ params:
     ShowBreadCrumbs: false
     ShowCodeCopyButtons: true
     ShowAllPagesInArchive: false
-    MainSections: ["books","courses","papers","data"]
+    MainSections: ["blogs","get_in_touch","100"]
     ShowToc: false
     disableScrollToTop: true
     TocOpen: true
@@ -76,7 +76,7 @@ params:
           url: https://www.linkedin.com/in/mohamad-h-danesh/
 
     assets:
-        disableScrollBarStyle: true
+        disableScrollBarStyle: false
     cover:
         hiddenInList: false
         hiddenInSingle: true
