@@ -78,23 +78,23 @@ $p(\theta_g|\alpha_g)$
 becomes less dominant when more data is added to the likelihood. However, we claim that it is advantageous to use a prior more representative of the ideal distribution in order to approximate the posterior distribution more efficiently. Such as proposed in the work of (Kilcher et al., 2017), using a flexible prior distribution can increase the modeling power of a generative model. In their work, they estimate a prior distribution on the latent variable $z$ using the data by introducing a generator reversal algorithm. They show that constructing a new prior $p(z)$ from the data instead of using a standard normal distribution is a better-suited choice for various reasons such as: having a better generative model and better modeling performances of the latent structure, more semantically appropriate output. We use the insight of their technique to approximate the best latent variable prior $p(z)$, however, finding a better prior on the weights of the networks is a more difficult task. Since we do not have any intuition on the type of distribution the weights should model, we designed a simple test case where we evaluate the effect of the prior on a Bayesian GAN.
 
 <b>Synthetic dataset</b>: We do not have the possibility to use the data since they do not give any information about the prior distribution of the weights or of the latent variable $\textbf{z}$. To alleviate this problem, we defined an arbitrary weights assignment on a generator that will represent the target model taken from a ground truth distribution
-$p^* (\theta_g | \alpha_g)$
+$p^* (\theta\_g | \alpha\_g)$
 , and we do the same with
-$p^*(\mathbf{z})$. Once a generator is sampled, we draw $N$ samples from $p^*(\mathbf{z})$ and pass them through the target generator. The resulting output for each noisy sample will provide a ground truth sample that will form the new training set. When a new dataset is generated, we can train a Bayesian GAN to model the target distribution. We provide an evaluation of training after different variations of the prior $p(\textbf{z})$ and $p(\theta_ g| \alpha_ g)$.
+$p^*(\mathbf{z})$. Once a generator is sampled, we draw $N$ samples from $p^*(\mathbf{z})$ and pass them through the target generator. The resulting output for each noisy sample will provide a ground truth sample that will form the new training set. When a new dataset is generated, we can train a Bayesian GAN to model the target distribution. We provide an evaluation of training after different variations of the prior $p(\textbf{z})$ and $p(\theta\_ g| \alpha\_ g)$..
 
 <b>Results</b>: We generated a dataset where
-$p^*(\theta_g| \alpha_g)$
+$p^*(\theta\_g| \alpha\_g)$
 and $p^*(\mathbf{z})$ follow both a uniform distribution $Uniform(-1,1)$. We trained a Bayesian GAN where we varied the prior on $p^*(\mathbf{z})$, the results are shown in Figure 1. We can see that the prior has an influence on the performances, particularly on the convergence speed. However, the stability of the convergence is more stable after a few iterations when a
 $Normal(0,1)$
 distribution is used as prior. When not much data are seen, the effect of the prior is more dominant, which explains why the Uniform distribution is faster to converge. Oppositely, after a few training iterations, the effect of the prior diminished and the generator can overcome the effect of a bad prior. Figure 2 shows how to change the performance according to the prior distribution set on the generator. The target distribution being uniform, we can see that the convergence speed evolving in the same way as in Figure 1. The effect of the prior is dominant when a few samples are seen and become less dominant over time.
 
 <p style="text-align:center;">
-	<img src="project_assets/priors.png?raw=true" style="height: 250px;text-align:left;">
+	<img src="project_assets/priors.png?raw=true" style="height: 250px;text-align:left;display: block;margin-left: auto;margin-right: auto;">
     <figcaption style="text-align:center;width: 70%;margin-left: auto;margin-right: auto;">Figure 1: Evolution of the Jensen-Shannon divergence measure on multiple training of a Bayesian GAN trained on 3 different distributions for sampling the noise $\textbf{z}$ input of the generator.</figcaption>
 </p>
 
 <p style="text-align:center;">
-	<img src="project_assets/priors_g.png?raw=true" style="height: 250px;text-align:left;">
+	<img src="project_assets/priors_g.png?raw=true" style="height: 250px;text-align:left;display: block;margin-left: auto;margin-right: auto;">
     <figcaption style="text-align:center;width: 70%;margin-left: auto;margin-right: auto;">Figure 2: Evolution of the Jensen-Shannon divergence measure on multiple training of a Bayesian GAN trained on 3 different distributions for sampling the weights of the generator.</figcaption>
 </p>
 
@@ -102,10 +102,10 @@ distribution is used as prior. When not much data are seen, the effect of the pr
 Our experiments were to analyze the limitations (Saatci & Wilson, 2017), which include the number of hidden layers in the generator and discriminator networks, the number of generator and discriminator features, different datasets with more variety in data, and a number of labeled samples. Due to computational limitations (Saatci & Wilson, 2017), the results of experiments on different GAN architectures have not been examined. We have addressed this limitation. According to Figure 3, by just adding two more hidden layers, the generated data distribution is closer to the original data. Also, considering the Jensen-Shannon divergence (Fuglede & Topse, 2004), the Bayesian GAN with more hidden layers showed better convergence.
 
 <p style="text-align:center;">
-	<img src="project_assets/orig.png?raw=true" style="height: 250px;text-align:left;">
-	<img src="project_assets/syn2l.png?raw=true" style="height: 250px;text-align:left;">
-	<img src="project_assets/syn4l.png?raw=true" style="height: 250px;text-align:left;">
-	<img src="project_assets/syn-js.png?raw=true" style="height: 250px;text-align:left;">
+	<img src="project_assets/orig.png?raw=true" style="height: 250px;text-align:left;display: block;margin-left: auto;margin-right: auto;">
+	<img src="project_assets/syn2l.png?raw=true" style="height: 250px;text-align:left;display: block;margin-left: auto;margin-right: auto;">
+	<img src="project_assets/syn4l.png?raw=true" style="height: 250px;text-align:left;display: block;margin-left: auto;margin-right: auto;">
+	<img src="project_assets/syn-js.png?raw=true" style="height: 250px;text-align:left;display: block;margin-left: auto;margin-right: auto;">
     <figcaption style="text-align:center;width: 70%;margin-left: auto;margin-right: auto;">Figure 3: Experiments done on synthetic data with different number of hidden layers on 1000 iterations. (a) the original data distribution, (b) the generated data distribution with 2 hidden layers (c) the generated data distribution with 4 hidden layers. (d) The divergence is computed using kernel density estimates. It can be seen that the Bayesian GAN is more effective with 4 hidden layers.</figcaption>
 </p>
 
@@ -113,8 +113,8 @@ Our experiments were to analyze the limitations (Saatci & Wilson, 2017), which i
 In another experiment, we examined different numbers of features for each of the networks. For this purpose, features of sizes 64, 96, and 128 have been examined. The results of generator loss and discriminator loss are represented in Figure 4.
 
 <p style="text-align:center;">
-	<img src="project_assets/gen_features.png?raw=true" style="height: 250px;text-align:left;">
-	<img src="project_assets/disc_features.png?raw=true" style="height: 250px;text-align:left;">
+	<img src="project_assets/gen_features.png?raw=true" style="height: 250px;text-align:left;display: block;margin-left: auto;margin-right: auto;">
+	<img src="project_assets/disc_features.png?raw=true" style="height: 250px;text-align:left;display: block;margin-left: auto;margin-right: auto;">
     <figcaption style="text-align:center;width: 70%;margin-left: auto;margin-right: auto;">Figure 4: Test set loss in 50,000 iterations, trained on CIFAR-10 dataset. (a) Shows that With more features in the network, generator loss decreases faster. (b) Shows that when there are more features, discriminator performs better. By calculating the standard deviation, which is a measure useful for quantifying the amount of variation of a set of data values, it can be shown that the discriminator network with a feature vector of size 128 has the least standard deviation which is 0.39. The discriminator loss for a feature vector of size 96 is 0.52 and for a feature vector of size 64 is 0.47.</figcaption>
 </p>
 
@@ -122,14 +122,14 @@ The experiments which were done to investigate the performance of the Bayesian G
 
 
 <p style="text-align:center;">
-	<img src="project_assets/diff_datasets.png?raw=true" style="height: 250px;text-align:left;">
+	<img src="project_assets/diff_datasets.png?raw=true" style="height: 250px;text-align:left;display: block;margin-left: auto;margin-right: auto;">
     <figcaption style="text-align:center;width: 70%;margin-left: auto;margin-right: auto;">Figure 5: The results of the test set accuracy on semi-supervised Bayesian GAN.</figcaption>
 </p>
 
 The last experiment we have done is targeting the number of given labeled samples. In this experiment, the CIFAR-10  dataset has been used. The results are depicted in Figure 6. As it was anticipated, the Bayesian GAN got far better accuracy when it had more samples of data.
 
 <p style="text-align:center;">
-	<img src="project_assets/diff_n.png?raw=true" style="height: 250px;text-align:left;">
+	<img src="project_assets/diff_n.png?raw=true" style="height: 250px;text-align:left;display: block;margin-left: auto;margin-right: auto;">
     <figcaption style="text-align:center;width: 70%;margin-left: auto;margin-right: auto;">Figure 6: With more input labeled samples, the Bayesian GAN performed better, almost got twice the accuracy with number of samples equals to 16K.</figcaption>
 </p>
 
