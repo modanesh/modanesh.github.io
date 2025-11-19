@@ -124,7 +124,7 @@ Risk in RL: let's consider two actions each with a normal value distribution, bu
 
 Implicit Quantile Networks (implementation): Looking at the figure 1, the result obtained through the convolution function ($\psi$) and the result obtained through the embedding function ($\phi$) for $\tau$ are element-wise multiplied. And by performing a fully-connected layer operation on the result, we finally get the value distribution for action $a$.
 
-Embedding function ($\phi$) (equation 4): The role of this function is to return an embedding sampled $\tau$ as a vector. The function for embedding tau is an $n$ cosine basis function .
+Embedding function ($\phi$) (equation 4): The role of this function is to return an embedding sampled $\tau$ as a vector. The function for embedding $\tau$ is an $n$ cosine basis function .
 
 Quantile huber loss (equation 3): Quantile Huber Loss used in QR-DQN is used as it is. But, in this paper, the equation is expressed as eq 3. The only point about this equation is that $N$ is the number of $\tau$ samples sampled for the online network, and $N'$ is the number of $\tau$ samples sampled for the target network. The rest is the same as QR-DQN.
 
