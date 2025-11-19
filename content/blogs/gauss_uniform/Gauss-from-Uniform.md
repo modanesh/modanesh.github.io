@@ -56,7 +56,8 @@ $$\frac{erf^{-1^{''}}(0)}{2!}x^2 + ...$$
 
 In the first term, we have $erf^{-1}(0) = 0$. So to approximate the $erf^{-1}$, we should calculate the rest of the
 terms of the Taylor series. The derivatives of $erf^{-1}$ are:
-$$erf^{-1^{'}}(x) = \frac{\sqrt{\pi}}{2} e^{(erf^{-1}(x))^2}$$\\
+$$erf^{-1^{'}}(x) = \frac{\sqrt{\pi}}{2} e^{(erf^{-1}(x))^2}$$
+
 $$erf^{-1^{''}}(x) = \frac{\sqrt{\pi}}{2} e^{(erf^{-1}(x))^2} 2 erf^{-1}(x) erf^{-1^{'}}(x) = (erf^{-1^{'}}(x))^2 2 erf^{-1}(x)$$
 
 When deriving higher derivatives of the $erf^{-1}$, starting from the second derivative, each derivate of order $n$
@@ -105,10 +106,10 @@ Implementation of the algorithm can be found here:
 
 Figure bellow shows the output of an example run of the provided code:
 <p style="text-align:center;">
-	<img src="/assets/gauss-normal/1.png?raw=true" style="height: 250px;text-align:left;">
-    <img src="/assets/gauss-normal/2.png?raw=true" style="height: 250px;text-align:right;">
-    <img src="/assets/gauss-normal/3.png?raw=true" style="height: 250px;text-align:right;">
-    <img src="/assets/gauss-normal/4.png?raw=true" style="height: 250px;text-align:right;">
+	<img src="project_assets/1.png?raw=true" style="height: 250px;text-align:left;">
+    <img src="project_assets/2.png?raw=true" style="height: 250px;text-align:right;">
+    <img src="project_assets/3.png?raw=true" style="height: 250px;text-align:right;">
+    <img src="project_assets/4.png?raw=true" style="height: 250px;text-align:right;">
     <figcaption style="text-align:center;width: 70%;margin-left: auto;margin-right: auto;">An example run of the Box-Muller algorithm. The two top figures represent the histogram plot of 1000 samples drawn from a uniform distribution. The two histogram plots on the bottom represent their corresponding Box-Muller transformations into Gaussian distributions.</figcaption>
 </p>
 
@@ -140,8 +141,8 @@ Ziggurat implementation is available here:
 
 Figure bellow shows an example output of running the code:
 <p style="text-align:center;">
-	<img src="/assets/gauss-normal/z1.png?raw=true" style="height: 250px;text-align:left;">
-    <img src="/assets/gauss-normal/z2.png?raw=true" style="height: 250px;text-align:right;">
+	<img src="project_assets/z1.png?raw=true" style="height: 250px;text-align:left;">
+    <img src="project_assets/z2.png?raw=true" style="height: 250px;text-align:right;">
     <figcaption style="text-align:center;width: 70%;margin-left: auto;margin-right: auto;">An example run of the Ziggurat algorithm. The left plot shows the histogram plot of 1000 samples drawn from a uniform distribution. The right plot shows the corresponding accepted samples (Gaussian distribution).</figcaption>
 </p>
 
