@@ -24,9 +24,9 @@ params:
     author: Mohamad H. Danesh
     googleAnalyticsID: "UA-143609193-1"
     DateFormat: "January 2006"
-    defaultTheme: light
+    defaultTheme: dark
     hideFooter: false
-    disableThemeToggle: true
+    disableThemeToggle: false
     ShowShareButtons: false
     ShowReadingTime: false
     disableSpecial1stPost: true
@@ -76,7 +76,7 @@ params:
           url: https://www.linkedin.com/in/mohamad-h-danesh/
 
     assets:
-        disableScrollBarStyle: false
+        disableScrollBarStyle: true
     cover:
         hiddenInList: false
         hiddenInSingle: true
