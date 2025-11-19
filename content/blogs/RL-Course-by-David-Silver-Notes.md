@@ -67,7 +67,7 @@ Reinforcement learning is the science of decision making.
     It also can be expressed using matrices:
     $$v_\pi = R_\pi + \gamma * \rho_\pi * v$$
 
--   Total discounted reward from state $$t$$:
+-   Total discounted reward from state $t$:
     $$G_t = R_{t+1} + \gamma * R_{t+2} + \gamma^2 * R_{t+3} ... + \gamma^{T-1} * R_T$$
 
 -   Why having discount factor?
@@ -99,9 +99,9 @@ Reinforcement learning is the science of decision making.
 -   Value Iteration:
 
 
-	-   Goal: find optimal policy $$\pi$$
+	-   Goal: find optimal policy $\pi$
 	    
-	-   Start with an arbitrary value function: $$v_1$$  and apply Bellman backup to get to  $$v_2$$  and finally $$v^*$$
+	-   Start with an arbitrary value function: $v_1$  and apply Bellman backup to get to  $v_2$  and finally $v^*$
 	    
 	-   Unlike policy iteration, there is no explicit policy.
 	    
@@ -115,14 +115,14 @@ Reinforcement learning is the science of decision making.
 -   Policy Iteration:
 
 
-	-   Given a policy $$\pi$$ (any policy works):
+	-   Given a policy $\pi$ (any policy works):
 	    
 
     -   Evaluate the policy:  
                                 
         $$V_\pi (s) = \mathbb{E} [ R_{t+1} + \gamma * R_{t+2} + ... | S_t = s ]$$
 	    
-	-   Improve the policy: $$\pi' = greedy ( V_\pi )$$
+	-   Improve the policy: $\pi' = greedy ( V_\pi )$
 	    
 	-   Will converge.
 
@@ -130,16 +130,16 @@ Reinforcement learning is the science of decision making.
 -   Policy Evaluation:
 
 
-	-   Start with an arbitrary value function: $$v_1$$  and apply Bellman backup to get to $$v_2$$  and finally $$v_\pi$$
+	-   Start with an arbitrary value function: $v_1$  and apply Bellman backup to get to $v_2$  and finally $v_\pi$
 	    
 	-   Use both synchronous and asynchronous backups.
 	    
 	-   Will converge.
 	    
-	-   $$V^{k+1} = R^\pi + \gamma * P^\pi * V^k$$
+	-   $V^{k+1} = R^\pi + \gamma * P^\pi * V^k$
 
 
--   Input: $$MDP(S, A, P, R, \gamma)$$ - Output: optimal value function $$V^*$$ and optimal policy $$\pi^*$$
+-   Input: $MDP(S, A, P, R, \gamma)$ - Output: optimal value function $V^*$ and optimal policy $\pi^*$
 
 -   In planning full knowledge of MDP is given. We want to solve the MPD, i.e. finding a policy.
 
@@ -187,19 +187,19 @@ Reinforcement learning is the science of decision making.
 	    
 	-   Exploits Markov property. Implicitly building MDP structure and solving for that MDP structure(refer to the AB example). More efficient in Markov environments.
 	    
-	-   $$TD(\lambda)$$: looks into $$\lambda$$ steps of the future to update. Also $$\lambda$$ can be defined as averaging over all n-step returns.
+	-   $TD(\lambda)$: looks into $\lambda$ steps of the future to update. Also $\lambda$ can be defined as averaging over all n-step returns.
 
 ## Lecture 5: Model Free Control
 
 -   On-policy Learning:
 
 
-	-   Learn about policy $$\pi$$ from experience sampled from $$\pi$$
+	-   Learn about policy $\pi$ from experience sampled from $\pi$
 	    
-	-   $$\epsilon$$-greedy Exploration:
+	-   $\epsilon$-greedy Exploration:
 	    
 
-		-   With probability = $$1 - \epsilon$$ choose the greedy action. With probability = $$\epsilon$$ choose a random action.
+		-   With probability = $1 - \epsilon$ choose the greedy action. With probability = $\epsilon$ choose a random action.
 		    
 		-   Guarantees to have improvements.
 	    
@@ -215,7 +215,7 @@ Reinforcement learning is the science of decision making.
 	-   SARSA:
 	    
 
-		-   $$Q(S, A) \leftarrow Q(S, A) + \alpha * (R + \gamma * Q(S', A') - Q(S, A))$$
+		-   $Q(S, A) \leftarrow Q(S, A) + \alpha * (R + \gamma * Q(S', A') - Q(S, A))$
 		    
 		-   Converges to the optimal action-value function, under some conditions.
 
@@ -223,11 +223,11 @@ Reinforcement learning is the science of decision making.
 -   Off-policy Learning:
 
 
-	-   Learn about policy $$\pi$$ from experience sampled from $$\mu$$
+	-   Learn about policy $\pi$ from experience sampled from $\mu$
 	    
-	-   Evaluate target policy $$\pi (a | s)$$
-        to compute $$v_\pi (s)$$ or $$q_\pi (s, a)$$ while following the behavior policy 
-        $$\mu (a | s)$$
+	-   Evaluate target policy $\pi (a | s)$
+        to compute $v_\pi (s)$ or $q_\pi (s, a)$ while following the behavior policy 
+        $\mu (a | s)$
 	    
 	-   Can learn from observing human behaviors or other agents.
 	    
@@ -240,7 +240,7 @@ Reinforcement learning is the science of decision making.
 	-   Q-Learning:
 	    
 
-		-  $$ S'$$ is gathered using the behavior policy.
+		-  $ S'$ is gathered using the behavior policy.
 		    
 		-   $$Q(S, A) \leftarrow Q(S, A) + \alpha * (R + \gamma * Q(S, A') - Q(S, A))$$
 		    
@@ -250,18 +250,18 @@ Reinforcement learning is the science of decision making.
 
 -   Large scale RL problems because of the huge state spaces become non-tabular.
 
--   So far, we had $$V(s)$$ or $$Q(s, a)$$ But with large scale problems, calculating them takes too much memory and time. Solution: estimate the value function with function approximation:
+-   So far, we had $V(s)$ or $Q(s, a)$ But with large scale problems, calculating them takes too much memory and time. Solution: estimate the value function with function approximation:
 
-    $$v' (s, w) ≈ v_\pi (s)$$ or $$q' (s, a, w) ≈ q_\pi (s, a)$$
+    $v' (s, w) ≈ v_\pi (s)$ or $q' (s, a, w) ≈ q_\pi (s, a)$
 
-    Generalize from seen states to unseen ones. Update parameter $$w$$ using MC or TD learning.
+    Generalize from seen states to unseen ones. Update parameter $w$ using MC or TD learning.
 
 -   Incremental Methods:
 
 
 	-   Table lookup is a special case of linear value function approximation.
 	    
-	-   Target value function for MC is the return $$G_t$$ and for TD is the \lambda-return $$G^\lambda _t$$
+	-   Target value function for MC is the return $G_t$ and for TD is the \lambda-return $G^\lambda _t$
 	    
 	-   Gradient descent is simple and appealing.
 
@@ -271,7 +271,7 @@ Reinforcement learning is the science of decision making.
 
 	-   GD is not sample efficient.
 	    
-	-   Least squares algorithms find parameter vector $$w$$ minimizing sum squared error.
+	-   Least squares algorithms find parameter vector $w$ minimizing sum squared error.
 	    
 	-   Example: experience replay in DQN.
 
@@ -289,9 +289,9 @@ Reinforcement learning is the science of decision making.
 - Finite Difference Policy Gradient:
 
 
-	-   For each dimension in $$\theta$$ parameters, perturbing $$\theta$$ by small amount $$\epsilon$$ (look at the formula)
+	-   For each dimension in $\theta$ parameters, perturbing $\theta$ by small amount $\epsilon$ (look at the formula)
 	    
-	-   Uses $$n$$ evaluations to compute policy gradient in $$n$$ dimension.
+	-   Uses $n$ evaluations to compute policy gradient in $n$ dimension.
 	    
 	-   Simple, noisy, inefficient.
 	    
@@ -301,7 +301,7 @@ Reinforcement learning is the science of decision making.
 -   Monte-Carlo Policy Gradient:
 
 
-	-   Score function is $$∇_\theta log \pi_\theta (s, a)$$
+	-   Score function is $∇_\theta log \pi_\theta (s, a)$
 	    
 	-   In continuous action spaces, Gaussian policy should be used.
 	    
@@ -315,15 +315,15 @@ Reinforcement learning is the science of decision making.
 
 	-   Use a critic to estimate the action-value function.
 	    
-	-   Critic: updates action-value function parameters $$w$$
+	-   Critic: updates action-value function parameters $w$
 	    
-	-   Actor: updates policy parameters $$\theta$$ in direction suggested by critic.
+	-   Actor: updates policy parameters $\theta$ in direction suggested by critic.
 	    
 	-   Approximating the policy gradient introduces bias.
 	    
-	-   Using baseline function $$B$$ to reduce variance. Value function $$V$$ could be a good baseline.
+	-   Using baseline function $B$ to reduce variance. Value function $V$ could be a good baseline.
 	    
-	-   Using advantage function to reduce the variance: $$Q_\pi (s, a) - V_\pi (s)$$
+	-   Using advantage function to reduce the variance: $Q_\pi (s, a) - V_\pi (s)$
 	    
 	-   Critic estimates the advantage function.
 
@@ -343,8 +343,8 @@ Reinforcement learning is the science of decision making.
     -   Disadvantages:
         -   First learn a model, then construct a value function: two sources of approximation error.
     -   Model is a parametrized representation of the MDP, i.e. representing state transitions and rewards.
-    -   Learning $$s, a \rightarrow r$$ is a regression problem.
-    -   Learning $$s, a \rightarrow s'$$ is a density estimation problem.
+    -   Learning $s, a \rightarrow r$ is a regression problem.
+    -   Learning $s, a \rightarrow s'$ is a density estimation problem.
     -   Planning the MDP = Solving the MDP, i.e. figure out what's the best thing to do.
     -   Planning algorithms: value iteration, policy iteration, tree search, ...
 -   Integrated Architectures:
@@ -374,9 +374,9 @@ Reinforcement learning is the science of decision making.
 -   Types of exploration:
 
 
-	-   State-action exploration: e.g. pick different action $$A$$ each time in state $$S$$
+	-   State-action exploration: e.g. pick different action $A$ each time in state $S$
     
-	-   Parameter exploration: parameterize policy $$\pi (A | S , u)$$,
+	-   Parameter exploration: parameterize policy $\pi (A | S , u)$,
         e.g.  pick different parameters and try for a while.
 
 
@@ -387,18 +387,18 @@ Reinforcement learning is the science of decision making.
 	    
 	-   No state space, no transition function.
     
-	-   $$R (r) = P [ R = r | A = a ]$$ 
+	-   $R (r) = P [ R = r | A = a ]$ 
         is an unknown probability distribution over rewards.
 	    
 	-   Regret is a function of gaps and the counts.
 	    
-	-   \epsilon-greedy has linear total regret. To resolve this, pick a decay schedule for $$\epsilon_1, \epsilon_2$$, ... . However, it's not possible to use because $$V^*$$ is needed to calculate the gaps.
+	-   \epsilon-greedy has linear total regret. To resolve this, pick a decay schedule for $\epsilon_1, \epsilon_2$, ... . However, it's not possible to use because $V^*$ is needed to calculate the gaps.
 	    
 	-   One can transform multi-armed bandit problem into a sequential decision making problem.
 	    
 	-   Define an MDP over information states.
 	    
-	-   At each step, information state $$S'$$ summarizes all information accumulated so far.
+	-   At each step, information state $S'$ summarizes all information accumulated so far.
 	    
 	-   MDP can then be solved by RL.
 
@@ -406,18 +406,18 @@ Reinforcement learning is the science of decision making.
 -   Contextual Bandits:
 
 
-	-   $$S = P [ S ]$$ is an unknown distribution over states(or "contexts").
+	-   $S = P [ S ]$ is an unknown distribution over states(or "contexts").
 	    
-	-   $$R (r) = P [ R = r | S = s, A = a ]$$ 
+	-   $R (r) = P [ R = r | S = s, A = a ]$ 
         is an unknown probability distribution over rewards.
 
 
 -   MDPs:
 
 
-	-   For unknown or poorly estimated states, replace reward function with $$r_max$$ Means to be very optimistic about uncertain states.
+	-   For unknown or poorly estimated states, replace reward function with $r_max$ Means to be very optimistic about uncertain states.
 	    
-	-   Augmented MDP: includes information state so that $$S' = (S , I)$$
+	-   Augmented MDP: includes information state so that $S' = (S , I)$
 
 ## Lecture 10: Classic Games
 
@@ -425,4 +425,4 @@ Reinforcement learning is the science of decision making.
 
 -   Single-Agent and Self-Play Reinforcement Learning: Nash equilibrium is fixed-point of self-play RL. Experience is generated by playing games between agents. Each agent learns best response to other players. One player’s policy determines another player’s environment.
 
--   Two-Player Zero-Sum Games: A two-player game has two (alternating) players: $$R_1 + R_2 = 0$$
+-   Two-Player Zero-Sum Games: A two-player game has two (alternating) players: $R_1 + R_2 = 0$
