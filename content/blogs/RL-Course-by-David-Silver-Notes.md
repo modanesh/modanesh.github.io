@@ -139,7 +139,7 @@ Reinforcement learning is the science of decision making.
 	-   $V^{k+1} = R^\pi + \gamma * P^\pi * V^k$
 
 
--   Input: $MDP(S, A, P, R, \gamma)$ - Output: optimal value function $V^*$ and optimal policy $\pi^*$
+-   Input: $MDP(S, A, P, R, \gamma)$ - Output: optimal value function $V^ *$ and optimal policy $\pi^ *$
 
 -   In planning full knowledge of MDP is given. We want to solve the MPD, i.e. finding a policy.
 
