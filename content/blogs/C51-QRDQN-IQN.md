@@ -44,7 +44,7 @@ $$Q^\pi(x,a) = \mathbb{E} R(x,a) + \gamma \mathbb{E}_{P, \pi} Q^{\pi}(x', a')$$
 
 We have the definition for optimal value function which has this max operator for taking the next action:
 
-$$Q^{*}(x,a) = \mathbb{E} R(x,a) + \gamma \mathbb{E}_{P} max\_{a' \in A} Q^{*}(x', a')$$
+$$Q^* (x,a) = \mathbb{E} R(x,a) + \gamma \mathbb{E}_{P} max\_{a' \in A} Q^* (x', a')$$
 
 This equation has a unique fixed point which is very important. It means that starting from any arbitrary value function, by iteratively updating the value function this way, we would end up having the optimal unique value function.
 
