@@ -44,7 +44,7 @@ $$Q^\pi(x,a) = \mathbb{E} R(x,a) + \gamma \mathbb{E}_{P, \pi} Q^{\pi}(x', a')$$
 
 We have the definition for optimal value function which has this max operator for taking the next action:
 
-$$Q^{*}(x,a) = \mathbb{E} R(x,a) + \gamma \mathbb{E}_{P} \max_{a' \in A} Q^{*}(x', a')$$
+$$Q^{*}(x,a) = \mathbb{E} R(x,a) + \gamma \mathbb{E}_{P} max_{a' \in A} Q^{*}(x', a')$$
 
 This equation has a unique fixed point which is very important. It means that starting from any arbitrary value function, by iteratively updating the value function this way, we would end up having the optimal unique value function.
 
@@ -52,7 +52,7 @@ And the definition for Bellman operator and optimality Bellman operator. They ba
 
 $$\mathrm{T}^{\pi} Q(x,a) := \mathbb{E} R(x,a) + \gamma \mathbb{E}_{P, \pi} Q(x',a')$$
 
-$$\mathrm{T} Q(x,a) := \mathbb{E} R(x,a) + \gamma \mathbb{E}_{P} \max_{a'\in A} Q(x',a')$$
+$$\mathrm{T} Q(x,a) := \mathbb{E} R(x,a) + \gamma \mathbb{E}_{P} max_{a'\in A} Q(x',a')$$
 
 The Wasserstein metric which for two CDFs (probability that $U$ will have a value less than or equal to $y$) is defined as:
 
@@ -70,7 +70,7 @@ This Wasserstein metric has three important properties that are useful and discu
 
 The maximal form of the Wasserstein metric for value distributions are (supremum is least upper bound):
 
-$$\overline{d}_p (Z_1, Z_2) := \sup_{x,a} d_p(Z_1(x,a),Z_2(x,a))$$
+$$d_p (Z_1, Z_2) := sup_{x,a} d_p(Z_1(x,a),Z_2(x,a))$$
 
 Policy evaluation: distributional Bellman operator is a gamma contraction in $d_p$. It can be concluded that the sequence of value functions under policy $\pi$ converges to $Z_\pi$ in $d_p$ (for $1 \leq p \leq \infty$). It's important that it only works for Wasserstein metric, not any other metrics. But further in the paper for practical usage they switch to kl divergence.
 
@@ -80,7 +80,7 @@ Now to approximate the value distribution, they propose a method to have a discr
 
 To solve this issue, the Bellman update is projected into the sampled discrete distribution (fig 1 $\phi$ operator). This projection step is simply a linear interpolation to the closest neighbor. And now since we have overlapping distributions, we can use KL divergence as the metric (and loss):
 
-$$D_{KL} (\Phi \hat{\mathrm{T}} Z_{\tilde{theta}} (x,a) || Z_\theta (x,a)) $$
+$$D_{KL} (\Phi \hat{\mathrm{T}} Z_{\tilde{\theta}} (x,a) || Z_\theta (x,a)) $$
 
 Which is in contrast to what they've talked about in most of the paper.
 
@@ -98,7 +98,7 @@ They raise the concern about C51's performance saying that although it still wer
 
 Up to here they talk about the Wasserstein metric and bellman operator's contraction property under this metric. But Wasserstein metric cannot be used according to theorem 1: let $\hat{y}$ be the empirical distribution draw from $B$. And let $b_\mu$ be a distribution parameterized by $\mu$. Then, the minimum of the expected sample loss is in general different from the minimum of the true Wasserstein loss.
 
-Figure 2: it shows the Wasserstein metric between two random variables. There are 4 quantiles q1, q2, q3, q4. And their median is named as $\hat{tau}_1, \hat{tau}_2, \hat{tau}_3, \hat{tau}_4$. The sum of the red shaded regions is the wasserstein metric. If $n$ were bigger, the wasserstein metric would decrease because our estimation would be closer to the real distribution.
+Figure 2: it shows the Wasserstein metric between two random variables. There are 4 quantiles q1, q2, q3, q4. And their median is named as $\hat{\tau}_1, \hat{\tau}_2, \hat{\tau}_3, \hat{\tau}_4$. The sum of the red shaded regions is the wasserstein metric. If $n$ were bigger, the wasserstein metric would decrease because our estimation would be closer to the real distribution.
 
 Further, they introduce their method. Having $N$ quantiles, each with a weight of $1/N$. So If the atoms are $N$ then the $i$-th atom corresponds to a quantile of $\tau_i$.
 
