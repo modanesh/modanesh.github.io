@@ -142,7 +142,7 @@ Ziggurat implementation is available here:
 Figure bellow shows an example output of running the code:
 <p style="text-align:center;">
 	<img src="project_assets/z1.png?raw=true" style="height: 250px;text-align:left;display: block;margin-left: auto;margin-right: auto;">
-    <img src="project_assets/z2.png?raw=true" style="height: 250px;text-align:right;">
+    <img src="project_assets/z2.png?raw=true" style="height: 250px;text-align:right;display: block;margin-left: auto;margin-right: auto;">
     <figcaption style="text-align:center;width: 70%;margin-left: auto;margin-right: auto;">An example run of the Ziggurat algorithm. The left plot shows the histogram plot of 1000 samples drawn from a uniform distribution. The right plot shows the corresponding accepted samples (Gaussian distribution).</figcaption>
 </p>
 
