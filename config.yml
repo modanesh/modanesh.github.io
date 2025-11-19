@@ -1,5 +1,5 @@
 baseURL: "https://modanesh.github.io/"
-title: Moritz-Maria von Igelfeld
+title: Mohamad H. Danesh
 theme: PaperMod
 
 enableInlineShortcodes: true
@@ -29,9 +29,9 @@ menu:
           weight: 6
 
 params:
-    description: "This website hosts Moritz-Maria von Igelfeld's research papers, books, course materials, data, curriculum vitae, and contact information."
-    author: Moritz-Maria von Igelfeld
-    # googleAnalyticsID: "G-XXXXX"
+    description: "This website hosts Mohamad H. Danesh's stuff."
+    author: Mohamad H. Danesh
+    googleAnalyticsID: "UA-143609193-1"
     DateFormat: "January 2006"
     defaultTheme: light
     hideFooter: false
@@ -55,8 +55,13 @@ params:
     profileMode:
           enabled: true
           title: Professor Dr von Igelfeld
-          subtitle: "I am a Professor in the Institute of Romance Philology at the University of Regensburg, Germany. My research focuses on Portuguese irregular verbs. I was a doctoral student of Professor Dr Dieter Vogelsang in Munich, and later a second assistant of Professor Walter Schoeffler-Henschell at the University of Wiesbaden."
-          imageUrl: "picture.jpeg"
+          subtitle: "I'm a PhD student at **McGill University**, advised by [Prof. Hsiu-Chin Lin](https://sites.google.com/site/hsiuchinlin/home?authuser=0), focusing on safe robot learning. Before McGill, I worked as a research engineer at [Ivy](https://lets-unify.ai/), where we developed tools to integrate popular ML frameworks like TensorFlow, PyTorch, JAX, and NumPy, enabling complex computational graphs to run seamlessly on various devices. Earlier, I spent a year as a visiting researcher at the [AdaComp Lab](https://adacomp.comp.nus.edu.sg/) at the National University of Singapore, collaborating with [Prof. Panpan Cai](https://cindycia.github.io/) and [Prof. David Hsu](https://www.comp.nus.edu.sg/~dyhsu/) on robust planning for self-driving vehicles under uncertainty. I also hold a master's degree from Oregon State University, where I worked with [Prof. Alan Fern](https://web.engr.oregonstate.edu/~afern/) on explainable and robust RL.
+
+          My research primarily focuses on robot learning, from improving safety to generalization. Currently, I am exploring how RL and world models can be effectively applied in robotics.
+
+          I am open to collaborations. Feel free to reach out via email for projects or research opportunities. You can also visit my [get in touch](https://modanesh.github.io/get_in_touch/) page.
+          "
+          imageUrl: "prof.jpg"
           imageWidth: 160
           imageHeight: 160
           buttons:
@@ -76,28 +81,17 @@ params:
               url: https://en.wikipedia.org/wiki/Moritz-Maria_von_Igelfeld_(character)
 
     socialIcons:
-        - name: CV
-          url: cv.pdf
         - name: Email
-          url: mailto:igelfeld@regensburg.edu
-        - name: Zoom
-          url: https://www.zoom.us/my/igelfeld
-        - name: Location
-          url: location/
-        - name: Office Hours
-          url: officehours/
+          url: mailto:mohamad.danesh@mail.mcgill.ca
         - name: Google Scholar
-          url: https://scholar.google.com/citations?user=cL23w-4AAAAJ
+          url: https://scholar.google.com/citations?user=AsqcJtAAAAAJ
         - name: GitHub
-          url: https://github.com/pmichaillat
-        - name: Substack
-          url: https://pmichaillat.substack.com
-        - name: YouTube
-          url: https://www.youtube.com/@pmichaillat
+          url: https://github.com/modanesh
         - name: Twitter
-          url: https://x.com/pmichaillat
-        - name: Bluesky
-          url: https://bsky.app/profile/pmichaillat.bsky.social
+          url: https://x.com/mo_danesh
+        - name: LinkedIn
+          url: https://www.linkedin.com/in/mohamad-h-danesh/
+        - name:
 
     assets:
         disableScrollBarStyle: true
