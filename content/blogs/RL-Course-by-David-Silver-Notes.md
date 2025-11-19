@@ -261,7 +261,7 @@ Reinforcement learning is the science of decision making.
 
 	-   Table lookup is a special case of linear value function approximation.
 	    
-	-   Target value function for MC is the return $G_t$ and for TD is the \lambda-return $G^\lambda _t$
+	-   Target value function for MC is the return $G_t$ and for TD is the $\lambda$-return $G^\lambda _t$
 	    
 	-   Gradient descent is simple and appealing.
 
@@ -301,7 +301,7 @@ Reinforcement learning is the science of decision making.
 -   Monte-Carlo Policy Gradient:
 
 
-	-   Score function is $∇_\theta log \pi_\theta (s, a)$
+	-   Score function is $\bigtriangledown_\theta log \pi_\theta (s, a)$
 	    
 	-   In continuous action spaces, Gaussian policy should be used.
 	    
