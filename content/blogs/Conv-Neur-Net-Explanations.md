@@ -25,19 +25,19 @@ disableAnchoredHeadings: false
 -   Integrated Gradient:
 
 
-	-   Similarly to Gradient Input, computes the partial derivatives of the output with respect to each input feature. However, instead of evaluating the partial derivative at the provided input $$x$$ only, it computes its average value while the input varies along a linear path from a baseline $$x'$$ to $$x$$. The baseline is defined by the user and often chosen to be zero.
+	-   Similarly to Gradient Input, computes the partial derivatives of the output with respect to each input feature. However, instead of evaluating the partial derivative at the provided input $x$ only, it computes its average value while the input varies along a linear path from a baseline $x'$ to $x$. The baseline is defined by the user and often chosen to be zero.
 
 
 -   Layer-wise Relevance Propagation (LRP):
 
 
-	-   Considers a quantity $$r^l_i$$ , called "relevance" of unit $$i$$ of layer $$l$$. The algorithm starts at the output layer $$L$$, assigning the relevance of the target neuron $$c$$ equal to the activation of the neuron itself, and the relevance of all other neurons to zero. Then it proceeds layer by layer, redistributing the prediction score $$S_i$$ until the input layer is reached.
+	-   Considers a quantity $r^l_i$ , called "relevance" of unit $i$ of layer $l$. The algorithm starts at the output layer $L$, assigning the relevance of the target neuron $c$ equal to the activation of the neuron itself, and the relevance of all other neurons to zero. Then it proceeds layer by layer, redistributing the prediction score $S_i$ until the input layer is reached.
 
 
 -   DeepLIFT:
 
 
-	-   Similar to LRP, but the difference is that there is a baseline. The relevance of unit $$i$$ of layer $$l$$ for input $$x$$ is subtracted by the relevance of unit $$i$$ of layer $$l$$ for input $$x'$$ (baseline). Also, for redistributing the prediction score $$S_i$$, the baseline plays a role.
+	-   Similar to LRP, but the difference is that there is a baseline. The relevance of unit $i$ of layer $l$ for input $x$ is subtracted by the relevance of unit $i$ of layer $l$ for input $x'$ (baseline). Also, for redistributing the prediction score $S_i$, the baseline plays a role.
 
 
 ## Resources:
