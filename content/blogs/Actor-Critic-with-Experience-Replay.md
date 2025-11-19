@@ -35,7 +35,7 @@ $$\hat{g}^{imp} \left( \prod_{t=0}^{k} \rho_t \right) \sum_{t=0}^{k} \left( \sum
 
 It uses discounted rewards to reduce bias, but has a very high variance since it involves a product of many potentially unbounded importance weights. Truncating this product can prevent it from exploding. But this also adds bias. Then Degris suggested to use marginal value functions over the limiting distributions (The limiting distribution can be used on small, finite samples to approximate the true distribution of a random variable) to have this gradient expression:
 
-$$g^{marg} = \mathbb{E}_{x_t \sim \beta , a_t \sim \mu} [\rho_t \bigtriangledown\_\theta log \pi_\theta (a_t, x_t) Q^\pi (x_t, a_t)]$$
+$$g^{marg} = \mathbb{E}\_{x_t \sim \beta , a_t \sim \mu} [\rho_t \bigtriangledown\_\theta log \pi\_\theta (a_t, x_t) Q^\pi (x_t, a_t)]$$
 
 It depends on $Q_\pi$ and not on $Q_\mu$, consequently we must be able to estimate $Q_\pi$. And instead of having a long product, it has marginal importance weight which lowers the variance. In ACER, they use Retrace to estimate $Q_\pi$.
 
