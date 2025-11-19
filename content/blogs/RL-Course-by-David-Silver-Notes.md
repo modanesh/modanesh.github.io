@@ -50,7 +50,7 @@ Reinforcement learning is the science of decision making.
 
 -   Action-Value function Q is the same as value function, but also takes action as input:
 
-    $$Q_\pi (s, a) = E_\pi [G_t | S_t = s, A_t = a] = E_\pi [R_{t+1} + \gamma * Q_\pi (S_{t+1}, A_{t+1}) | S_t = s, A_t = a]$$
+    $$Q_\pi (s, a) = \mathbb{E} \pi [G_t | S_t = s, A_t = a] = \mathbb{E} \pi [R_{t+1} + \gamma * Q_\pi (S_{t+1}, A_{t+1}) | S_t = s, A_t = a]$$
 
 -   Policy is a distribution over actions given states:
     $$\pi (a | s) = P [ A_t = a | S_t = s]$$
@@ -62,7 +62,7 @@ Reinforcement learning is the science of decision making.
 -   The returns are random samples, the value function is an expectation over there random samples.
 
 -   Value function:
-    $$v_\pi (s) = E_\pi [G_t | S_t = s] = E_\pi [R_{t+1} + \gamma * v_\pi (S_{t+1}) | S_t = s]$$
+    $$v_\pi (s) = \mathbb{E} \pi [G_t | S_t = s] = \mathbb{E} \pi [R_{t+1} + \gamma * v_\pi (S_{t+1}) | S_t = s]$$
 
     It also can be expressed using matrices:
     $$v_\pi = R_\pi + \gamma * \rho_\pi * v$$
@@ -83,7 +83,7 @@ Reinforcement learning is the science of decision making.
 
 
 -   Reward function:
-    $$R = E [R_{t+1} | S_t = s, A_t = a]$$
+    $$R = \mathbb{E} [R_{t+1} | S_t = s, A_t = a]$$
 
 -   Sample episodes from a MDP: different iterations over different states in each episode.
 
@@ -120,7 +120,7 @@ Reinforcement learning is the science of decision making.
 
     -   Evaluate the policy:  
                                 
-        $$V_\pi (s) = E [ R_{t+1} + \gamma * R_{t+2} + ... | S_t = s ]$$
+        $$V_\pi (s) = \mathbb{E} [ R_{t+1} + \gamma * R_{t+2} + ... | S_t = s ]$$
 	    
 	-   Improve the policy: $$\pi' = greedy ( V_\pi )$$
 	    
