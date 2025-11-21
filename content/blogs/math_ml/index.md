@@ -39,33 +39,6 @@ disableAnchoredHeadings: false
     $$(AB)^T = B^TA^T$$
     A matrix is symmetric if $A=A^T$.
 
-*   **System of linear equations to matrix multiplication:**
-    $$
-    \begin{aligned}
-    2x_1 + 3x_2 + 5x_3 &= 1 \\\\
-    4x_1 - 2x_2 - 7x_3 &= 8 \\\\
-    9x_1 + 5x_2 - 3x_3 &= 2
-    \end{aligned}
-    $$
-    can be written as:
-    $$
-    \begin{bmatrix}
-        2 & 3 & 5 \\\\
-        4 & -2 & -7 \\\\
-        9 & 5 & -3
-    \end{bmatrix}
-    \begin{bmatrix}
-        x_1 \\\\
-        x_2 \\\\
-        x_3
-    \end{bmatrix}
-    =
-    \begin{bmatrix}
-        1\\\\
-        8\\\\
-        2
-    \end{bmatrix}
-    $$
 *   **Gaussian elimination**, also known as row reduction, is an algorithm in linear algebra for solving a system of linear equations. To perform row reduction on a matrix, one uses a sequence of elementary row operations to modify the matrix until the lower left-hand corner of the matrix is filled with zeros, as much as possible. There are three types of elementary row operations:
     *   Swapping two rows,
     *   Multiplying a row by a nonzero number,
