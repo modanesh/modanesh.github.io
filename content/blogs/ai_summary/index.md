@@ -16,13 +16,13 @@ disableAnchoredHeadings: false
 *   **Identity matrix:** in $\mathbb{R}^{n\times n}$ we define the I-matrix:
     $$
     \begin{bmatrix}
-        1 & 0 & ... & 0 & ... & 0\\
-        0 & 1 & ... & 0 & ... & 0\\
-        . & . & . & . & . & .\\
-        . & . & . & . & . & .\\
-        0 & 0 & ... & 1 & ... & 0\\
-        . & . & . & . & . & .\\
-        . & . & . & . & . & .\\
+        1 & 0 & ... & 0 & ... & 0\\\\
+        0 & 1 & ... & 0 & ... & 0\\\\
+        . & . & . & . & . & .\\\\
+        . & . & . & . & . & .\\\\
+        0 & 0 & ... & 1 & ... & 0\\\\
+        . & . & . & . & . & .\\\\
+        . & . & . & . & . & .\\\\
         0 & 0 & ... & 0 & ... & 1
     \end{bmatrix}
     $$
@@ -39,26 +39,26 @@ disableAnchoredHeadings: false
     $$(AB)^T = B^TA^T$$
     A matrix is symmetric if $A=A^T$.
 
-*   System of linear equations to matrix multiplication:
+*   **System of linear equations to matrix multiplication:**
     $$2x_1 + 3x_2 + 5x_3 = 1$$
     $$4x_1 - 2x_2 - 7x_3 = 8$$
     $$9x_1 + 5x_2 - 3x_3 = 2$$
     can be written as:
     $$
     \begin{bmatrix}
-        2 & 3 & 5 \\
-        4 & -2 & -7 \\
+        2 & 3 & 5 \\\\
+        4 & -2 & -7 \\\\
         9 & 5 & -3
     \end{bmatrix}
     \begin{bmatrix}
-        x_1 \\
-        x_2 \\
+        x_1 \\\\
+        x_2 \\\\
         x_3
     \end{bmatrix}
     =
     \begin{bmatrix}
-        1\\
-        8\\
+        1\\\\
+        8\\\\
         2
     \end{bmatrix}
     $$
@@ -102,14 +102,14 @@ disableAnchoredHeadings: false
 *   **Determinant and trace.** Determinants are only defined for square matrices $A \in \mathbb{R}^{n \times n}$. Determinant is a function that maps a matrix into a real number. It is calculated for $A \in \mathbb{R}^{2 \times 2}$ as:
     $$
     det(A) = \begin{bmatrix}
-        a_{11} & a_{12} \\
+        a_{11} & a_{12} \\\\
         a_{21} & a_{22}
     \end{bmatrix} = a_{11}a_{22} - a_{12}a_{21}
     $$
     The inverse of $A$ is
     $$
     A^{-1} = \frac{1}{a_{11}a_{22} - a_{12}a_{21}} \begin{bmatrix}
-        a_{11} & a_{12} \\
+        a_{11} & a_{12} \\\\
         a_{21} & a_{22}
     \end{bmatrix}
     $$
@@ -166,7 +166,7 @@ disableAnchoredHeadings: false
 *   The Hessian is the collection of all second-order partial derivatives. As an example
     $$
     H= \begin{bmatrix}
-        \frac{d^2f}{dx^2} & \frac{d^2f}{dxdy} \\
+        \frac{d^2f}{dx^2} & \frac{d^2f}{dxdy} \\\\
         \frac{d^2f}{dxdy} & \frac{d^2f}{dy^2}
     \end{bmatrix}
     $$
@@ -189,7 +189,12 @@ disableAnchoredHeadings: false
     where $a, b \in \mathbb{R}$ and $x \in \mathbb{R}$ are outcomes of the continuous random variable $X$.
     In contrast to discrete random variables, the probability of a continuous random variable $X$ taking a particular value $P (X = x)$ is zero.
 *   Sum rule (marginalization property):
-    $$p(x) = \begin{cases} \sum_{y \in Y} p(x,y) \qquad \text{if y is discrete}\\ \int_{y} p(x,y)dy \qquad \text{if y is continuous}\end{cases}$$
+    $$
+    p(x) = \begin{cases} 
+    \sum_{y \in Y} p(x,y) \qquad \text{if y is discrete}\\\\ 
+    \int_{y} p(x,y)dy \qquad \text{if y is continuous}
+    \end{cases}
+    $$
 *   Product rule:
     $$p(x,y)=p(y|x)p(x)$$
     Bayes' rule:
@@ -200,15 +205,20 @@ disableAnchoredHeadings: false
 *   **Mean** of a random variable $X$ with states $x \in \mathbb{R}^D$ is an average and is defined as
     $$
     E_X[x] = \begin{bmatrix}
-        E_{X_1} [x_1] \\
-        .\\
-        .\\
-        .\\
+        E_{X_1} [x_1] \\\\
+        .\\\\
+        .\\\\
+        .\\\\
         E_{X_D} [x_D]
     \end{bmatrix} \in \mathbb{R}^D
     $$
     where
-    $$E_{X_d} [x_d] := \begin{cases} \sum_{x_i \in X} x_i p(x_d=x_i) \qquad \text{if X is a discrete random variable}\\ \int_{X} x_d p(x_d) dx_d \qquad \text{if X is a continuous random variable}\end{cases}$$
+    $$
+    E_{X_d} [x_d] := \begin{cases} 
+    \sum_{x_i \in X} x_i p(x_d=x_i) \qquad \text{if X is a discrete random variable}\\\\ 
+    \int_{X} x_d p(x_d) dx_d \qquad \text{if X is a continuous random variable}
+    \end{cases}
+    $$
 *   Two random variables are independent iff
     $$p(x,y) = p(x)p(y)$$
     If $x,y$ are independent, then:
@@ -262,7 +272,9 @@ disableAnchoredHeadings: false
     One obvious, but not very practical, way of converting the constrained problem into an unconstrained one is to use an indicator function
     $$J(x) = f(x) + \sum_{i=1}^{m}1(g_i(x))$$
     where $1(z)$ is an infinite step function
-    $$1(z) = \begin{cases} 0 \qquad z \leq 0\\
+    $$
+    1(z) = \begin{cases} 
+    0 \qquad z \leq 0\\\\
     \infty \qquad otherwise \end{cases}$$
     This gives infinite penalty if the constraint is not satisfied, and hence would provide the same solution. However, this infinite step function is equally difficult to optimize. We can overcome this difficulty by introducing Lagrange multipliers. The idea of Lagrange multipliers is to replace the step function with a linear function. We do this by introducing the Lagrange multipliers $\lambda_i \geq 0$ corresponding to each inequality constraint respectively so that
     $$L(x, \lambda) = f(x) + \sum_{i=1}^{m}\lambda_i g_i(x) = f(x) + \lambda^Tg(x)$$
@@ -298,13 +310,13 @@ disableAnchoredHeadings: false
 *   linear regression offers us a way to fit nonlinear functions within the linear regression framework: Since "linear regression" only refers to "linear in the parameters", we can perform an arbitrary nonlinear transformation $\phi(x)$ of the inputs $x$ and then linearly combine the components of this transformation.
 
 ## 9. Dimensionality Reduction with Principal Component Analysis
-*   In PCA, we are interested in finding projections $\Tilde{x}_n$ of data points $x_n$ that are as similar to the original data points as possible, but which have a significantly lower intrinsic dimensionality.
+*   In PCA, we are interested in finding projections $\tilde{x}_n$ of data points $x_n$ that are as similar to the original data points as possible, but which have a significantly lower intrinsic dimensionality.
 *   The variance of the data projected onto a one-dimensional subspace equals the eigenvalue that is associated with the basis vector b1 that spans this subspace. Therefore, to maximize the variance of the low-dimensional code, we choose the basis vector associated with the largest eigenvalue of the data covariance matrix. This eigenvector is called the first principal component.
 *   In the following, we will go through the individual steps of PCA using a running example. We are given a two-dimensional dataset, and we want to use PCA to project it onto a one-dimensional subspace.
     *   **Mean subtraction**: We start by centering the data by computing the mean $\mu$ of the dataset and subtracting it from every single data point. This ensures that the dataset has mean 0. Mean subtraction is not strictly necessary but reduces the risk of numerical problems.
     *   **Standardization**: Divide the data points by the standard deviation $\sigma_d$ of the dataset for every dimension $d = 1,...,D$. Now the data is unit free, and it has variance 1 along each axis. This step completes the standardization of the data.
     *   **Eigendecomposition of the covariance matrix**: Compute the data covariance matrix and its eigenvalues and corresponding eigenvectors. Since the covariance matrix is symmetric, the spectral theorem states that we can find an ONB of eigenvectors.
-    *   **Projection**: We can project any data point $x_{*} \in \mathbb{R}^D$ onto the principal subspace: To get this right, we need to standardize $x_{*}$ using the mean $\mu_d$ and standard deviation $\sigma_d$ of the training data in the $d$th dimension, respectively.
+    *   **Projection**: We can project any data point $x_* \in \mathbb{R}^D$ onto the principal subspace: To get this right, we need to standardize $x_*$ using the mean $\mu_d$ and standard deviation $\sigma_d$ of the training data in the $d$th dimension, respectively.
 
 ## 10. Classification with Support Vector Machines
 *   The maximum likelihood view proposes a model based on a probabilistic view of the data distribution, from which an optimization problem is derived. In contrast, the SVM view starts by designing a particular function that is to be optimized during training, based on geometric intuitions.
