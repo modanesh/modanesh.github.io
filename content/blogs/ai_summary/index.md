@@ -40,9 +40,13 @@ disableAnchoredHeadings: false
     A matrix is symmetric if $A=A^T$.
 
 *   **System of linear equations to matrix multiplication:**
-    $$2x_1 + 3x_2 + 5x_3 = 1$$
-    $$4x_1 - 2x_2 - 7x_3 = 8$$
-    $$9x_1 + 5x_2 - 3x_3 = 2$$
+    $$
+    \begin{aligned}
+    2x_1 + 3x_2 + 5x_3 &= 1 \\\\
+    4x_1 - 2x_2 - 7x_3 &= 8 \\\\
+    9x_1 + 5x_2 - 3x_3 &= 2
+    \end{aligned}
+    $$
     can be written as:
     $$
     \begin{bmatrix}
