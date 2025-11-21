@@ -72,7 +72,7 @@ disableAnchoredHeadings: false
     *   **Iterative deepening DFS** combines the benefits of depth-first and breadth-first search. Like depth-first search, its memory requirements are modest: $O(bd)$ to be precise. Like breadth-first search, it is complete when the branching factor is finite and optimal when the path cost is a nondecreasing function of the depth of the node. Iterative deepening search may seem wasteful because states are generated multiple times. It turns out this is not too costly. The reason is that in a search tree with the same (or nearly the same) branching factor at each level, most of the nodes are in the bottom level, so it does not matter much that the upper levels are generated multiple times, which gives a time complexity of $O(b^d)$.
     *   **Bidirectional search** to run two simultaneous searches—one forward from the initial state and the other backward from the goal—hoping that the two searches meet in the middle. The motivation is that $b^{d/2} + b^{d/2}$ is much less than $b^d$. Bidirectional search is implemented by replacing the goal test with a check to see whether the frontiers of the two searches intersect; if they do, a solution has been found. The time complexity of bidirectional search using breadth-first searches in both directions is $O(b^{d/2})$. The space complexity is also $O(b^{d/2})$. We can reduce this by roughly half if one of the two searches is done by iterative deepening, but at least one of the frontiers must be kept in memory so that the intersection check can be done. This space requirement is the most significant weakness of bidirectional search.
     *   **Comparing uninformed search strategies**
-        ![Comparing Searches](figures/comparing_searches.png)
+        ![Comparing Searches](project_assets/comparing_searches.png)
 *   **Informed Search Strategies.** Most best-first algorithms include as a component of f a heuristic function, denoted $h(n)$:
     $h(n) = \text{estimated cost of the cheapest path from the state at node n to a goal state.}$
     (Notice that $h(n)$ takes a node as input, but, unlike $g(n)$, it depends only on the state at that node.) If $n$ is a goal node, then $h(n) = 0$.
@@ -178,7 +178,7 @@ disableAnchoredHeadings: false
     *   $\implies$ (implies). A sentence such as $(W_1 \wedge P_1) \implies W_2$ is called an implication (or conditional). Its premise or antecedent is $(W_1 \wedge P_1)$, and its conclusion or consequent is $W_2$. Implications are also known as rules or if–then statements.
     *   $\iff$ (if and only if). The sentence $W_1 \iff W_2$ is a biconditional.
 
-    ![BNF Logic](figures/bnf_logic.png)
+    ![BNF Logic](project_assets/bnf_logic.png)
 
     The semantics for propositional logic must specify how to compute the truth value of any sentence, given a model. We need to specify how to compute the truth of atomic sentences and how to compute the truth of sentences formed with each of the five connectives. Atomic sentences are easy:
     *   True is true in every model and False is false in every model.
@@ -192,14 +192,14 @@ disableAnchoredHeadings: false
 
 *   **Propositional Theorem Proving.** Logical equivalence: two sentences $\alpha$ and $\beta$ are logically equivalent if they are true in the same set of models. We write this as $\alpha \equiv \beta$. We can also say two sentences are logically equivalent if each of them entails the other. A sentence is valid if it is true in all models. A sentence is satisfiable if it is true in, or satisfied by, some model.
 *   **Inference and proofs.** The best-known rule is called **Modus Ponens**: whenever any sentences of the form $\alpha \implies \beta$ and $\alpha$ are given, then the sentence $\beta$ can be inferred. **And-Elimination**: from $\alpha \wedge \beta$, $\alpha$ can be inferred.
-    ![Logics](figures/logics.png)
+    ![Logics](project_assets/logics.png)
     One final property of logical systems is monotonicity, which says that the set of entailed sentences can only increase as information is added to the knowledge base.
 
 ## 8. First-Order Logic
 *   **Compositionality.** In a compositional language, the meaning of a sentence is a function of the meaning of its parts. For example, the meaning of $S_1 \wedge S_2$ is related to the meanings of $S_1$ and $S_2$.
 *   From the viewpoint of formal logic, representing the same knowledge in two different ways makes absolutely no difference; the same facts will be derivable from either representation. In practice, however, one representation might require fewer steps to derive a conclusion, meaning that a reasoner with limited resources could get to the conclusion using one representation but not the other.
 *   The primary difference between propositional and first-order logic lies in the ontological commitment made by each language—that is, what it assumes about the nature of reality. Mathematically, this commitment is expressed through the nature of the formal models with respect to which the truth of sentences is defined. For example, propositional logic assumes that there are facts that either hold or do not hold in the world. Each fact can be in one of two states: true or false, and each model assigns true or false to each proposition symbol. First-order logic assumes more; namely, that the world consists of objects with certain relations among them that do or do not hold. The formal models are correspondingly more complicated than those for propositional logic.
-    ![Logic Languages](figures/logic_langs.png)
+    ![Logic Languages](project_assets/logic_langs.png)
 *   **Models for first-order logic** are much more interesting. First, they have objects in them! The domain of a model is the set of objects or domain elements it contains. The domain is required to be nonempty—every possible world must contain at least one object. Mathematically speaking, it doesn’t matter what these objects are—all that matters is how many there are in each particular model.
 *   **Symbols and interpretations.** The basic syntactic elements of first-order logic are the symbols that stand for objects, relations, and functions. The symbols, therefore, come in three kinds: constant symbols, which stand for objects; predicate symbols, which stand for relations; and function symbols, which stand for functions. In addition to its objects, relations, and functions, each model includes an interpretation that specifies exactly which objects, relations and functions are referred to by the constant, predicate, and function symbols.
 *   **Terms** are logical expressions that refer to objects. Constant symbols are therefore terms, but it is not always convenient to have a distinct symbol to name every object.
