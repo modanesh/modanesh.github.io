@@ -6,7 +6,7 @@ author: ["Mohamad H. Danesh"]
 showToc: true
 disableAnchoredHeadings: false
 ---
-
+{% raw %}
 
 ## 1. Linear Algebra
 *   Linear algebra is the study of vectors and certain rules to manipulate vectors.
@@ -301,3 +301,6 @@ disableAnchoredHeadings: false
 *   The concept of the margin turns out to be highly pervasive in machine learning.
 *   In the case where data is not linearly separable, we may wish to allow some examples to fall within the margin region, or even to be on the wrong side of the hyperplane. The model that allows for some classification errors is called the soft margin SVM.
 *   The function of kernel is to take data as input and transform it into the required form. The kernel function is what is applied on each data instance to map the original non-linear observations into a higher-dimensional space in which they become separable.
+
+
+{% endraw %}
