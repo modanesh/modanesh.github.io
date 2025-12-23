@@ -9,9 +9,6 @@ disableAnchoredHeadings: false
 
 # Bridging the Reality Gap: A Survey of Domain Randomization and Future Horizons
 
-**Date:** January 2025
-**Category:** Sim-to-Real, Reinforcement Learning, Robotics
-
 Simulation is the bedrock of modern robotic learning. It allows us to train agents safely and parallelize data collection at scales impossible in the physical world. However, the "Reality Gap", the discrepancy between simulated physics and the real world, remains a formidable barrier. Policies trained in perfectly deterministic simulations often fail catastrophically when deployed on physical hardware.
 
 The dominant solution to this problem is **Domain Randomization (DR)**. By randomizing the physical parameters of the simulation (friction, mass, damping, etc.) during training, we force the agent to learn robust strategies that can generalize to the real world as just another "variation" of the simulation.
