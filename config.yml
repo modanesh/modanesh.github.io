@@ -13,7 +13,7 @@ taxonomies:
 menu:
     main:
         - name: Blog
-          url: blogs/
+          url: blog/
         - name: Get in touch
           url: get_in_touch/
         - name: List 100
@@ -35,7 +35,7 @@ params:
     ShowBreadCrumbs: false
     ShowCodeCopyButtons: true
     ShowAllPagesInArchive: false
-    MainSections: ["blogs","get_in_touch","100"]
+    MainSections: ["blog","get_in_touch","100"]
     ShowToc: false
     disableScrollToTop: true
     TocOpen: true
@@ -57,7 +57,7 @@ params:
           imageHeight: 160
           buttons:
             - name: Blog
-              url: blogs/
+              url: blog/
             - name: Get in touch
               url: get_in_touch/
             - name: List 100
