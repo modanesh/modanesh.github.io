@@ -79,7 +79,7 @@ Heterogeneous training is a stepping stone toward foundation models for robotics
 Our solution consists of key components to bridge the heterogeneity gap:
 
 <p style="text-align:center;">
-  <img src="project_assets/pipeline.png?raw=true" style="height: 400px; display: block; margin: 0 auto;">
+  <img src="project_assets/pipeline.png?raw=true" style="height: 600px; display: block; margin: 0 auto;">
 </p>
 
 ---
