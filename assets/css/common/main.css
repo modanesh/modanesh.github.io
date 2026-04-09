@@ -1,6 +1,6 @@
 .main {
     position: relative;
-    min-height: calc(100vh - var(--header-height) - var(--footer-height));
+    
     max-width: calc(var(--main-width) + var(--gap) * 2);
     margin: auto;
     padding: var(--gap);
@@ -74,4 +74,4 @@ div.highlight:hover .copy-code,
 pre:hover .copy-code {
     display: block;
 }
-.main { min-height: unset; }
+
