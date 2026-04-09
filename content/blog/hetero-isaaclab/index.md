@@ -1,7 +1,7 @@
 ---
 title: "Heterogeneous Environments in Isaac Lab"
 description: A technical guide to training universal robot control policies across multiple morphologies
-date: 2026-04-12
+date: 2026-04-09
 author: ["Mohamad H. Danesh"]
 showToc: true
 disableAnchoredHeadings: false
