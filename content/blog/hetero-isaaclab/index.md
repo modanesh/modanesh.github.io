@@ -503,7 +503,8 @@ In case you find this project useful for your research, please cite the followin
   author = {Danesh, Mohamad H.},
   year = {2026},
   url = {https://github.com/modanesh/Hetero-IsaacLab},
-  license = {BSD-3-Clause}
+  license = {BSD-3-Clause},
+  doi = {10.5281/zenodo.19488668}
 }
 
 @misc{danesh2026heterogeneous,
