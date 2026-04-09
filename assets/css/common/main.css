@@ -74,3 +74,4 @@ div.highlight:hover .copy-code,
 pre:hover .copy-code {
     display: block;
 }
+.main { min-height: unset; }
