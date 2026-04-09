@@ -8,7 +8,7 @@ disableAnchoredHeadings: false
 ---
 
 <p style="text-align:center;">
-  <img src="project_assets/hetero_isaaclab.gif?raw=true" style="height: 250px; text-align:center;">
+  <img src="project_assets/hetero_isaaclab.gif?raw=true" style="height: 400px; display: block; margin: 0 auto;">
 </p>
 
 
@@ -79,7 +79,7 @@ Heterogeneous training is a stepping stone toward foundation models for robotics
 Our solution consists of key components to bridge the heterogeneity gap:
 
 <p style="text-align:center;">
-  <img src="project_assets/pipeline.png?raw=true" style="height: 250px; text-align:center;">
+  <img src="project_assets/pipeline.png?raw=true" style="height: 400px; display: block; margin: 0 auto;">
 </p>
 
 ---
@@ -499,15 +499,13 @@ We welcome contributions, bug reports, and extensions. Areas of particular inter
 In case you find this project useful for your research, please cite the following:
 ```bibtex
 @software{heteroisaac,
+  title = {Hetero-Isaac: Heterogeneous Quadrupedal Simulation built atop Isaac Lab},
   author = {Danesh, Mohamad H.},
-  title     = {Hetero-Isaac: Heterogeneous Quadrupedal Simulation built atop Isaac Lab},
-  year      = {2026},
-  url =  {https://github.com/modanesh/Hetero-IsaacLab},
+  year = {2026},
+  url = {https://github.com/modanesh/Hetero-IsaacLab},
   license = {BSD-3-Clause}
 }
-```
 
-```bibtex
 @misc{danesh2026heterogeneous,
   title = {Training Morphology-Agnostic Locomotion Policies with Heterogeneous Robotic Environments in {Isaac Lab}},
   author = {Danesh, Mohamad H.},
