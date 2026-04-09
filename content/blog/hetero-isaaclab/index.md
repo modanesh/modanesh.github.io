@@ -499,20 +499,21 @@ We welcome contributions, bug reports, and extensions. Areas of particular inter
 In case you find this project useful for your research, please cite the following:
 ```bibtex
 @software{heteroisaac,
-  title = {Hetero-Isaac: Heterogeneous Quadrupedal Simulation built atop Isaac Lab},
-  author = {Danesh, Mohamad H.},
-  year = {2026},
-  url = {https://github.com/modanesh/Hetero-IsaacLab},
+  author  = {Danesh, Mohamad H.},
+  title   = {Hetero-Isaac: Heterogeneous Quadrupedal Simulation built atop Isaac Lab},
+  year    = {2026},
+  url     = {https://github.com/modanesh/Hetero-IsaacLab},
   license = {BSD-3-Clause},
-  doi = {10.5281/zenodo.19488668}
+  doi     = {10.5281/zenodo.19488668}
 }
 
 @misc{danesh2026heterogeneous,
-  title = {Training Morphology-Agnostic Locomotion Policies with Heterogeneous Robotic Environments in {Isaac Lab}},
-  author = {Danesh, Mohamad H.},
-  year = {2026},
+  title        = {Heterogeneous Environments in Isaac Lab},
+  author       = {Danesh, Mohamad H.},
+  year         = {2026},
   howpublished = {Technical Blog Post},
-  url = {https://modanesh.github.io/blog/hetero-isaaclab},
+  url          = {https://modanesh.github.io/blog/hetero-isaaclab},
+  doi          = {10.17605/OSF.IO/M4DGU}
 }
 ```
 
