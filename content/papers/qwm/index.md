@@ -151,7 +151,6 @@ hideMeta: true
 
 <div class="qwm-page">
 
-<div class="qwm-title">Toward Hardware-Agnostic Quadrupedal World Models<br>via Morphology Conditioning</div>
 <div class="qwm-venue">arXiv 2026</div>
 
 <div class="qwm-authors">
@@ -167,10 +166,6 @@ hideMeta: true
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
     arXiv
   </a>
-  <a class="qwm-link-btn" href="https://arxiv.org/pdf/2604.08780" target="_blank">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-    PDF
-  </a>
   <a class="qwm-link-btn disabled" href="#" title="Code coming soon">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
     Code (coming soon)
@@ -182,7 +177,7 @@ hideMeta: true
 <div class="qwm-section">
 <h2>Abstract</h2>
 <p class="qwm-abstract">
-World models trained on one quadrupedal platform typically fail on different hardware due to morphological differences in mass, link dimensions, and kinematic configuration. We present <strong>QWM</strong>, a framework that enables a single neural dynamics model to generalize across diverse quadrupedal robots without retraining. The key innovation is to <em>explicitly condition</em> the generative dynamics on the robot's engineering specifications — extracted directly from URDF/USD files — rather than inferring physical properties implicitly from interaction history. A Physical Morphology Encoder (PME) derives a compact embedding from kinematic, geometric, dynamic, and actuation features, which is injected into every recurrent step of a DreamerV3-based world model. An Adaptive Reward Normalizer (ARN) handles heterogeneous reward scales across platforms. We further introduce <strong>Hetero-Isaac</strong>, an extension to NVIDIA Isaac Lab enabling true heterogeneous training across different morphologies in parallel. QWM achieves zero-shot locomotion on unseen robots — including real-world deployment on Unitree Go1 and ANYmal-D — with performance approaching per-robot specialists, while eliminating the dangerous adaptation lag of implicit system identification approaches.
+World models promise a paradigm shift in robotics, where an agent learns the underlying physics of its environment once to enable efficient planning and behavior learning. However, current world models are often hardware-locked specialists: a model trained on a Boston Dynamics Spot robot fails catastrophically on a Unitree Go1 due to the mismatch in kinematic and dynamic properties, as the model overfits to specific embodiment constraints rather than capturing the universal locomotion dynamics. Consequently, a slight change in actuator dynamics or limb length necessitates training a new model from scratch. In this work, we take a step towards a framework for training a generalizable Quadrupedal World Model (QWM) that disentangles environmental dynamics from robot morphology. We address the limitations of implicit system identification, where treating static physical properties (like mass or limb length) as latent variables to be inferred from motion history creates an adaptation lag that can compromise zero-shot safety and efficiency. Instead, we explicitly condition the generative dynamics on the robot's engineering specifications. By integrating a physical morphology encoder and a reward normalizer, we enable the model to serve as a neural simulator capable of generalizing across morphologies. This capability unlocks zero-shot control across a range of embodiments. Since the policy is conditioned on generalizable latent dynamics provided by the world model, we can deploy the agent on entirely unseen quadrupeds without fine-tuning, adaptation, or warm-up periods. We introduce, for the first time, a world model that enables zero-shot generalization to new morphologies for locomotion. While we carefully study the limitations of our method, QWM operates as a distribution-bounded interpolator within the quadrupedal morphology family rather than a universal physics engine, this work represents a significant step toward morphology-conditioned world models for legged locomotion.
 </p>
 </div>
 
@@ -190,13 +185,15 @@ World models trained on one quadrupedal platform typically fail on different har
 <h2>Overview</h2>
 
 <figure class="qwm-fig">
-  <img src="https://arxiv.org/html/2604.08780/2604.08780v1/x1.png" alt="QWM framework overview">
-  <figcaption><strong>Figure 1.</strong> Overview of the QWM framework. Left (WM Learning): A single world model is trained across diverse morphologies. The Physical Morphology Encoder (PME) derives a static embedding μ from each robot's USD file, which explicitly conditions both the encoder and the recurrent dynamics. Right (Policy Learning): A policy is trained purely in imagination and deployed zero-shot on real hardware.</figcaption>
+  <img src="project_assets/overall.png" alt="QWM framework overview">
+  <figcaption> 
+    Overview of the QWM Framework. Left (WM Learning): We train a single generalizable WM across diverse morphologies. The <em style="color:#048004;">Physical Morphology Encoder (PME)</em> derives a static embedding $\mu$ from the robots' USD, which explicitly conditions both the encoder and the recurrent state $h_t$ via dashed lines. The model utilizes previous actions $a_t$ and discrete stochastic states $z_t$ to predict future states, rewards $\hat{r}_t$, and continuation probabilities $\hat{c}_t$. To handle heterogeneous reward scales, we employ an <em style="color:#048004;">Adaptive Reward Normalizer (ARN)</em> with standard <span style="color:#a608bf;">DreamerV3 backbone components</span>. $\|$ denotes the concatenation of features. Middle (Behavior Learning): Policies are learned entirely in imagination. By <span style="color:#048ab3;">freezing the components</span> in the generalized WM and injecting the $\mu$ of any robot, we can train an actor and critic specifically for a new morphology without any physical interaction. Right (Unified Deployment): By freezing the generalized WM and policy and injecting the $\mu$ of any target robot (e.g., ANYmal-B), the WM creates a morphology-aligned latent space that allows the policy to adapt its control strategy immediately without further training.
+  </figcaption>
 </figure>
 
 <figure class="qwm-fig">
-  <img src="https://arxiv.org/html/2604.08780/2604.08780v1/x2.png" alt="Heterogeneous robot cohort">
-  <figcaption><strong>Figure 2.</strong> The heterogeneous morphology cohort used in experiments, illustrating the variance in physical scale and configuration. QWM is trained on seven robots while holding out one for zero-shot evaluation.</figcaption>
+  <img src="project_assets/hetero_quads.png" alt="Heterogeneous robot cohort">
+  <figcaption>The heterogeneous morphology cohort used in experiments, illustrating the variance in physical scale and configuration. QWM is trained on seven robots while holding out one for zero-shot evaluation.</figcaption>
 </figure>
 </div>
 
@@ -210,7 +207,7 @@ World models trained on one quadrupedal platform typically fail on different har
 </div>
 
 <div class="qwm-highlight">
-  <strong>Morphology-Conditioned Recurrent Dynamics</strong> — The morphology embedding μ is injected at every recurrent step: <em>h<sub>t</sub> = f(h<sub>t−1</sub>, z<sub>t−1</sub>, a<sub>t−1</sub>, μ)</em>. This allows the recurrent state to focus on dynamic execution while explicit conditioning handles static embodiment properties.
+  <strong>Morphology-Conditioned Recurrent Dynamics</strong> — The morphology embedding $\mu$ is injected at every recurrent step: <em>h<sub>t</sub> = f(h<sub>t−1</sub>, z<sub>t−1</sub>, a<sub>t−1</sub>, $\mu$)</em>. This allows the recurrent state to focus on dynamic execution while explicit conditioning handles static embodiment properties.
 </div>
 
 <div class="qwm-highlight">
@@ -226,7 +223,7 @@ World models trained on one quadrupedal platform typically fail on different har
 
 <figure class="qwm-fig">
   <img src="https://arxiv.org/html/2604.08780/2604.08780v1/x5.png" alt="Real-world deployment on Unitree Go1 and ANYmal-D">
-  <figcaption><strong>Figure 5.</strong> Real-world deployment on Unitree Go1 and ANYmal-D. Both robots were held out during training. The frozen policy achieves stable zero-shot locomotion by simply injecting the correct morphology embedding μ.</figcaption>
+  <figcaption><strong>Figure 5.</strong> Real-world deployment on Unitree Go1 and ANYmal-D. Both robots were held out during training. The frozen policy achieves stable zero-shot locomotion by simply injecting the correct morphology embedding $\mu$.</figcaption>
 </figure>
 
 <p>Videos from real-world experiments:</p>
