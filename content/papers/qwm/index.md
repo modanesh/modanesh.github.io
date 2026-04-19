@@ -208,7 +208,7 @@ hideMeta: true
     </div>
     <div class="qwm-affil-item">
       <div class="qwm-affil-logo-wrap">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Universit%C3%A9-de-Montr%C3%A9al_%28logo%29.svg/330px-Universit%C3%A9-de-Montr%C3%A9al_%28logo%29.svg.png" alt="Université de Montréal">
+        <img src="https://upload.wikimedia.org/wikipedia/en/4/4b/Universite_de_Montreal_logo.svg" alt="Université de Montréal">
       </div>
       <span>Université de Montréal</span>
     </div>
@@ -268,6 +268,13 @@ World models promise a paradigm shift in robotics, where an agent learns the und
   <strong>Adaptive Reward Normalizer (ARN)</strong>: Quantile-based scaling using exponential moving averages tracks per-robot reward distributions, dynamically normalizing heterogeneous reward signals so no single morphology dominates training.
 </div>
 
+<p style="font-size:0.92rem;margin-top:1.2rem;">
+  Training QWM required running eight different robot morphologies in parallel within a single simulator, something Isaac Lab does not support out of the box.
+  To enable this, we built <strong>Hetero-Isaac</strong>, an extension to NVIDIA Isaac Lab that assigns distinct robot morphologies, collision geometries, and kinematic trees to different environment subsets while keeping all physics fidelity intact.
+  The full technical details of this infrastructure — including joint-order unification, index mapping, and padded reward functions, are described in the accompanying blog post:
+  <a href="/blog/hetero-isaaclab/">Heterogeneous Environments in Isaac Lab</a>.
+</p>
+
 </div>
 
 <div class="qwm-section">
@@ -275,21 +282,18 @@ World models promise a paradigm shift in robotics, where an agent learns the und
 
 <p>Both Unitree Go1 and ANYmal-D were <em>held out during training</em>. By injecting the correct morphology embedding, the frozen policy achieves stable locomotion on both platforms with zero falls across 20 trials (10 per platform, 60 seconds each).</p>
 
-<p>Videos from real-world experiments:</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+  <div>
+    <img src="project_assets/anymald.gif" alt="ANYmal-D zero-shot deployment" style="width:100%;border-radius:6px;">
+    <div style="text-align:center;font-size:0.82rem;color:var(--secondary);margin-top:0.4rem;"><strong>ANYmal-D</strong> — zero-shot, held out during training</div>
+  </div>
+  <div>
+    <img src="project_assets/go1.gif" alt="Unitree Go1 zero-shot deployment" style="width:100%;border-radius:6px;">
+    <div style="text-align:center;font-size:0.82rem;color:var(--secondary);margin-top:0.4rem;"><strong>Unitree Go1</strong> — zero-shot, held out during training</div>
+  </div>
+</div>
 
 <div class="qwm-video-grid">
-  <div class="qwm-video-placeholder">
-    <span class="qwm-vid-icon">▶</span>
-    <strong>ANYmal-D Deployment</strong><br>
-    Zero-shot locomotion on held-out platform
-    <br><br><em>(video coming soon)</em>
-  </div>
-  <div class="qwm-video-placeholder">
-    <span class="qwm-vid-icon">▶</span>
-    <strong>Unitree Go1 Deployment</strong><br>
-    Zero-shot locomotion on held-out platform
-    <br><br><em>(video coming soon)</em>
-  </div>
   <div>
     <img src="/blog/hetero-isaaclab/project_assets/hetero_isaaclab.gif" alt="Multi-Robot Training" style="width:100%;border-radius:6px;">
     <div style="text-align:center;font-size:0.82rem;color:var(--secondary);margin-top:0.4rem;">Hetero-Isaac: 8 robots training in parallel</div>
