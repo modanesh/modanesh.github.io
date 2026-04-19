@@ -302,6 +302,18 @@ World models promise a paradigm shift in robotics, where an agent learns the und
 </div>
 </div>
 
+<div class="qwm-section">
+
+<h3 style="font-size:1rem;font-weight:600;margin:1.2rem 0 0.6rem;">Multi-Morphology Mastery</h3>
+<p style="font-size:0.92rem;">A single QWM is trained simultaneously on the full heterogeneous cohort of eight quadrupeds and compared against world model baselines (DreamerV3, PWM, TWISTER) as well as a model-free oracle (PME-PPO).</p>
+
+<figure class="qwm-fig">
+  <img src="project_assets/learning_curves_spot.png" alt="Learning curves comparing QWM against baselines on heterogeneous robot cohort">
+  <figcaption>Learning curves comparing QWM against baselines trained simultaneously on the full heterogeneous cohort. Left: mean reward. Right: mean episode length. Shaded regions are standard deviation across 5 seeds.</figcaption>
+</figure>
+
+</div>
+
 <hr class="qwm-divider">
 
 <div class="qwm-section">
