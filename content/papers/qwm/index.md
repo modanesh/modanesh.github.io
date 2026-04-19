@@ -282,7 +282,7 @@ World models promise a paradigm shift in robotics, where an agent learns the und
 
 <p>Both Unitree Go1 and ANYmal-D were <em>held out during training</em>. By injecting the correct morphology embedding, the frozen policy achieves stable locomotion on both platforms with zero falls across 20 trials (10 per platform, 60 seconds each).</p>
 
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+<div style="display:flex;flex-direction:column;gap:1.2rem;">
   <div>
     <img src="project_assets/anymald.gif" alt="ANYmal-D zero-shot deployment" style="width:100%;border-radius:6px;">
     <div style="text-align:center;font-size:0.82rem;color:var(--secondary);margin-top:0.4rem;"><strong>ANYmal-D</strong> — zero-shot, held out during training</div>
@@ -291,15 +291,11 @@ World models promise a paradigm shift in robotics, where an agent learns the und
     <img src="project_assets/go1.gif" alt="Unitree Go1 zero-shot deployment" style="width:100%;border-radius:6px;">
     <div style="text-align:center;font-size:0.82rem;color:var(--secondary);margin-top:0.4rem;"><strong>Unitree Go1</strong> — zero-shot, held out during training</div>
   </div>
-</div>
-
-<div class="qwm-video-grid">
   <div>
     <img src="/blog/hetero-isaaclab/project_assets/hetero_isaaclab.gif" alt="Multi-Robot Training" style="width:100%;border-radius:6px;">
     <div style="text-align:center;font-size:0.82rem;color:var(--secondary);margin-top:0.4rem;">Hetero-Isaac: 8 robots training in parallel</div>
   </div>
   <div class="qwm-video-placeholder">
-    <span class="qwm-vid-icon">▶</span>
     <strong>Open-Loop Imagination</strong><br>
     Long-horizon dynamics prediction rollouts
     <br><br><em>(video coming soon)</em>

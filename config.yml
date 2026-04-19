@@ -12,6 +12,8 @@ taxonomies:
 
 menu:
     main:
+        - name: Papers
+          url: papers/
         - name: Blog
           url: blog/
         - name: Get in touch
@@ -56,6 +58,8 @@ params:
           imageWidth: 160
           imageHeight: 160
           buttons:
+            - name: Papers
+              url: papers/
             - name: Blog
               url: blog/
             - name: Get in touch
