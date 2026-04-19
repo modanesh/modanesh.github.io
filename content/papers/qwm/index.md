@@ -271,7 +271,7 @@ World models promise a paradigm shift in robotics, where an agent learns the und
 <p style="font-size:0.92rem;margin-top:1.2rem;">
   Training QWM required running eight different robot morphologies in parallel within a single simulator, something Isaac Lab does not support out of the box.
   To enable this, we built <strong>Hetero-Isaac</strong>, an extension to NVIDIA Isaac Lab that assigns distinct robot morphologies, collision geometries, and kinematic trees to different environment subsets while keeping all physics fidelity intact.
-  The full technical details of this infrastructure — including joint-order unification, index mapping, and padded reward functions, are described in the accompanying blog post:
+  The full technical details of this infrastructure, including joint-order unification, index mapping, and padded reward functions, are described in the accompanying blog post:
   <a href="/blog/hetero-isaaclab/">Heterogeneous Environments in Isaac Lab</a>.
 </p>
 
@@ -285,59 +285,22 @@ World models promise a paradigm shift in robotics, where an agent learns the und
 <div style="display:flex;flex-direction:column;gap:1.2rem;">
   <div>
     <img src="project_assets/anymald.gif" alt="ANYmal-D zero-shot deployment" style="width:100%;border-radius:6px;">
-    <div style="text-align:center;font-size:0.82rem;color:var(--secondary);margin-top:0.4rem;"><strong>ANYmal-D</strong> — zero-shot, held out during training</div>
+    <div style="text-align:center;font-size:0.82rem;color:var(--secondary);margin-top:0.4rem;"><strong>ANYmal-D</strong>: zero-shot, held out during training</div>
   </div>
   <div>
     <img src="project_assets/go1.gif" alt="Unitree Go1 zero-shot deployment" style="width:100%;border-radius:6px;">
-    <div style="text-align:center;font-size:0.82rem;color:var(--secondary);margin-top:0.4rem;"><strong>Unitree Go1</strong> — zero-shot, held out during training</div>
+    <div style="text-align:center;font-size:0.82rem;color:var(--secondary);margin-top:0.4rem;"><strong>Unitree Go1</strong>: zero-shot, held out during training</div>
   </div>
   <div>
     <img src="/blog/hetero-isaaclab/project_assets/hetero_isaaclab.gif" alt="Multi-Robot Training" style="width:100%;border-radius:6px;">
     <div style="text-align:center;font-size:0.82rem;color:var(--secondary);margin-top:0.4rem;">Hetero-Isaac: 8 robots training in parallel</div>
   </div>
-  <div class="qwm-video-placeholder">
-    <strong>Open-Loop Imagination</strong><br>
-    Long-horizon dynamics prediction rollouts
-    <br><br><em>(video coming soon)</em>
-  </div>
-</div>
-</div>
-
-<div class="qwm-section">
-<h2>Results</h2>
-
-<figure class="qwm-fig">
-  <img src="https://arxiv.org/html/2604.08780/2604.08780v1/x3.png" alt="Learning curves on heterogeneous robot cohort">
-  <figcaption><strong>Figure 3.</strong> Learning curves comparing QWM against world model baselines (DreamerV3, PWM, TWISTER) trained simultaneously on the full heterogeneous cohort. QWM achieves significantly faster convergence and higher stability. Shaded regions are standard deviation across 5 seeds.</figcaption>
-</figure>
-
-<figure class="qwm-fig">
-  <img src="https://arxiv.org/html/2604.08780/2604.08780v1/x4.png" alt="Long-horizon dynamics prediction">
-  <figcaption><strong>Figure 4.</strong> Long-horizon dynamics prediction. Left: Open-loop imagination rollouts vs. ground truth physics. QWM maintains tight synchronization across diverse scales. Right: Normalized Mean Squared Error (NMSE) over a 45-step horizon, QWM consistently outperforms baselines with minimal error accumulation.</figcaption>
-</figure>
-
-<div class="qwm-results-grid">
   <div>
-    <figure class="qwm-fig">
-      <img src="https://arxiv.org/html/2604.08780/2604.08780v1/x7.png" alt="Ablation study">
-      <figcaption><strong>Figure 7.</strong> Ablation study isolating contributions of PME, ARN, and conditioning locations.</figcaption>
-    </figure>
-  </div>
-  <div>
-    <figure class="qwm-fig">
-      <img src="https://arxiv.org/html/2604.08780/2604.08780v1/x8.png" alt="PCA of QWM latent states">
-      <figcaption><strong>Figure 8.</strong> PCA of QWM latent states, morphology clusters (a) vs. dynamic state gradients (b–e), showing the model cleanly separates embodiment identity from locomotion dynamics.</figcaption>
-    </figure>
+    <img src="project_assets/imag.gif" alt="Open-loop imagination rollouts" style="width:100%;border-radius:6px;">
+    <div style="text-align:center;font-size:0.82rem;color:var(--secondary);margin-top:0.4rem;">Open-loop imagination rollouts vs. ground truth physics</div>
   </div>
 </div>
-
-<figure class="qwm-fig">
-  <img src="https://arxiv.org/html/2604.08780/2604.08780v1/x6.png" alt="Morphological feature distance matrix">
-  <figcaption><strong>Figure 6.</strong> Morphological Feature Distance Matrix. Euclidean distances between z-score standardized PME features, showing the encoder correctly identifies physical families (e.g., ANYmal variants cluster together).</figcaption>
-</figure>
 </div>
-
-
 
 <hr class="qwm-divider">
 
