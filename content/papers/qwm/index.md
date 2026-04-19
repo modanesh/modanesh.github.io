@@ -36,9 +36,38 @@ hideMeta: true
 }
 .qwm-affiliations {
   text-align: center;
-  font-size: 0.82rem;
-  color: var(--secondary);
   margin-bottom: 1.4rem;
+}
+.qwm-affil-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1rem 2rem;
+}
+.qwm-affil-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.76rem;
+  color: var(--secondary);
+}
+.qwm-affil-logo-wrap {
+  background: #fff;
+  border-radius: 5px;
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  min-width: 80px;
+}
+.qwm-affil-logo-wrap img {
+  height: 22px;
+  width: auto;
+  max-width: 110px;
+  object-fit: contain;
 }
 .qwm-links {
   display: flex;
@@ -158,7 +187,32 @@ hideMeta: true
   Kirsty Ellis&nbsp;&nbsp;·&nbsp;&nbsp;Glen Berseth&nbsp;&nbsp;·&nbsp;&nbsp;Marco Hutter&nbsp;&nbsp;·&nbsp;&nbsp;Hsiu-Chin Lin
 </div>
 <div class="qwm-affiliations">
-  McGill University &nbsp;·&nbsp; ETH Zürich &nbsp;·&nbsp; Université de Montréal / Mila
+  <div class="qwm-affil-list">
+    <div class="qwm-affil-item">
+      <div class="qwm-affil-logo-wrap">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Mcgill_univ_ca_logo.png/250px-Mcgill_univ_ca_logo.png" alt="McGill University">
+      </div>
+      <span>McGill University</span>
+    </div>
+    <div class="qwm-affil-item">
+      <div class="qwm-affil-logo-wrap">
+        <img src="https://mila.quebec/sites/default/themes/mila_v1/logo.svg" alt="Mila">
+      </div>
+      <span>Mila – Quebec AI Institute</span>
+    </div>
+    <div class="qwm-affil-item">
+      <div class="qwm-affil-logo-wrap">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/99/ETH_Z%C3%BCrich_Logo_black.svg" alt="ETH Zürich">
+      </div>
+      <span>ETH Zürich</span>
+    </div>
+    <div class="qwm-affil-item">
+      <div class="qwm-affil-logo-wrap">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Universit%C3%A9-de-Montr%C3%A9al_%28logo%29.svg/330px-Universit%C3%A9-de-Montr%C3%A9al_%28logo%29.svg.png" alt="Université de Montréal">
+      </div>
+      <span>Université de Montréal</span>
+    </div>
+  </div>
 </div>
 
 <div class="qwm-links">
@@ -186,13 +240,13 @@ World models promise a paradigm shift in robotics, where an agent learns the und
 
 <figure class="qwm-fig">
   <img src="project_assets/overall.png" alt="QWM framework overview">
-  <figcaption> 
-    Overview of the QWM Framework. Left (WM Learning): We train a single generalizable WM across diverse morphologies. The <em style="color:#048004;">Physical Morphology Encoder (PME)</em> derives a static embedding $\mu$ from the robots' USD, which explicitly conditions both the encoder and the recurrent state $h_t$ via dashed lines. The model utilizes previous actions $a_t$ and discrete stochastic states $z_t$ to predict future states, rewards $\hat{r}_t$, and continuation probabilities $\hat{c}_t$. To handle heterogeneous reward scales, we employ an <em style="color:#048004;">Adaptive Reward Normalizer (ARN)</em> with standard <span style="color:#a608bf;">DreamerV3 backbone components</span>. $\|$ denotes the concatenation of features. Middle (Behavior Learning): Policies are learned entirely in imagination. By <span style="color:#048ab3;">freezing the components</span> in the generalized WM and injecting the $\mu$ of any robot, we can train an actor and critic specifically for a new morphology without any physical interaction. Right (Unified Deployment): By freezing the generalized WM and policy and injecting the $\mu$ of any target robot (e.g., ANYmal-B), the WM creates a morphology-aligned latent space that allows the policy to adapt its control strategy immediately without further training.
+  <figcaption>
+    Overview of the QWM Framework. Left (WM Learning): We train a single generalizable WM across diverse morphologies. The <em style="color:#048004;">Physical Morphology Encoder (PME)</em> derives a static embedding $\mu$ from the robots' USD, which explicitly conditions both the encoder and the recurrent state $h_t$ via dashed lines. The model utilizes previous actions $a_t$ and discrete stochastic states $z_t$ to predict future states, rewards $\hat{r}_t$, and continuation probabilities $\hat{c}_t$. To handle heterogeneous reward scales, we employ an <em style="color:#048004;">Adaptive Reward Normalizer (ARN)</em> with standard <span style="color:#a608bf;">DreamerV3 backbone components</span>. Middle (Behavior Learning): Policies are learned entirely in imagination. By <span style="color:#048ab3;">freezing the components</span> in the generalized WM and injecting the $\mu$ of any robot, we can train an actor and critic specifically for a new morphology without any physical interaction. Right (Unified Deployment): By freezing the generalized WM and policy and injecting the $\mu$ of any target robot (e.g., ANYmal-B), the WM creates a morphology-aligned latent space that allows the policy to adapt its control strategy immediately without further training.
   </figcaption>
 </figure>
 
 <figure class="qwm-fig">
-  <img src="project_assets/hetero_quads.png" alt="Heterogeneous robot cohort">
+  <img src="project_assets/hetero_quads.png" alt="Heterogeneous robot cohort" style="width: 50%; margin-left: auto; margin-right: auto; display: block;">
   <figcaption>The heterogeneous morphology cohort used in experiments, illustrating the variance in physical scale and configuration. QWM is trained on seven robots while holding out one for zero-shot evaluation.</figcaption>
 </figure>
 </div>
@@ -203,15 +257,15 @@ World models promise a paradigm shift in robotics, where an agent learns the und
 <p>QWM extends DreamerV3 with three targeted architectural changes to handle cross-morphology generalization:</p>
 
 <div class="qwm-highlight">
-  <strong>Physical Morphology Encoder (PME)</strong> — Extracts normalized features across four categories: kinematics &amp; topology (hip offset, limb lengths, knee configuration), geometry (stance dimensions), dynamics (log-scaled mass), and actuation (torque density). Processed by a dedicated 2-layer MLP that runs parallel to the proprioceptive encoder, preventing static context from being overwhelmed by dynamic signals.
+  <strong>Physical Morphology Encoder (PME)</strong>: Extracts normalized features across four categories: kinematics &amp; topology (hip offset, limb lengths, knee configuration), geometry (stance dimensions), dynamics (log-scaled mass), and actuation (torque density). Processed by a dedicated 2-layer MLP that runs parallel to the proprioceptive encoder, preventing static context from being overwhelmed by dynamic signals.
 </div>
 
 <div class="qwm-highlight">
-  <strong>Morphology-Conditioned Recurrent Dynamics</strong> — The morphology embedding $\mu$ is injected at every recurrent step: <em>h<sub>t</sub> = f(h<sub>t−1</sub>, z<sub>t−1</sub>, a<sub>t−1</sub>, $\mu$)</em>. This allows the recurrent state to focus on dynamic execution while explicit conditioning handles static embodiment properties.
+  <strong>Morphology-Conditioned Recurrent Dynamics</strong>: The morphology embedding $\mu$ is injected at every recurrent step: $h_t = f(h_{t-1}, z_{t-1}, a_{t-1}, \mu)$. This allows the recurrent state to focus on dynamic execution while explicit conditioning handles static embodiment properties.
 </div>
 
 <div class="qwm-highlight">
-  <strong>Adaptive Reward Normalizer (ARN)</strong> — Quantile-based scaling using exponential moving averages tracks per-robot reward distributions, dynamically normalizing heterogeneous reward signals so no single morphology dominates training.
+  <strong>Adaptive Reward Normalizer (ARN)</strong>: Quantile-based scaling using exponential moving averages tracks per-robot reward distributions, dynamically normalizing heterogeneous reward signals so no single morphology dominates training.
 </div>
 
 </div>
@@ -220,11 +274,6 @@ World models promise a paradigm shift in robotics, where an agent learns the und
 <h2>Real-World Experiments</h2>
 
 <p>Both Unitree Go1 and ANYmal-D were <em>held out during training</em>. By injecting the correct morphology embedding, the frozen policy achieves stable locomotion on both platforms with zero falls across 20 trials (10 per platform, 60 seconds each).</p>
-
-<figure class="qwm-fig">
-  <img src="https://arxiv.org/html/2604.08780/2604.08780v1/x5.png" alt="Real-world deployment on Unitree Go1 and ANYmal-D">
-  <figcaption><strong>Figure 5.</strong> Real-world deployment on Unitree Go1 and ANYmal-D. Both robots were held out during training. The frozen policy achieves stable zero-shot locomotion by simply injecting the correct morphology embedding $\mu$.</figcaption>
-</figure>
 
 <p>Videos from real-world experiments:</p>
 
@@ -241,11 +290,9 @@ World models promise a paradigm shift in robotics, where an agent learns the und
     Zero-shot locomotion on held-out platform
     <br><br><em>(video coming soon)</em>
   </div>
-  <div class="qwm-video-placeholder">
-    <span class="qwm-vid-icon">▶</span>
-    <strong>Multi-Robot Training</strong><br>
-    Hetero-Isaac: 8 robots training in parallel
-    <br><br><em>(video coming soon)</em>
+  <div>
+    <img src="/blog/hetero-isaaclab/project_assets/hetero_isaaclab.gif" alt="Multi-Robot Training" style="width:100%;border-radius:6px;">
+    <div style="text-align:center;font-size:0.82rem;color:var(--secondary);margin-top:0.4rem;">Hetero-Isaac: 8 robots training in parallel</div>
   </div>
   <div class="qwm-video-placeholder">
     <span class="qwm-vid-icon">▶</span>
@@ -266,7 +313,7 @@ World models promise a paradigm shift in robotics, where an agent learns the und
 
 <figure class="qwm-fig">
   <img src="https://arxiv.org/html/2604.08780/2604.08780v1/x4.png" alt="Long-horizon dynamics prediction">
-  <figcaption><strong>Figure 4.</strong> Long-horizon dynamics prediction. Left: Open-loop imagination rollouts vs. ground truth physics. QWM maintains tight synchronization across diverse scales. Right: Normalized Mean Squared Error (NMSE) over a 45-step horizon — QWM consistently outperforms baselines with minimal error accumulation.</figcaption>
+  <figcaption><strong>Figure 4.</strong> Long-horizon dynamics prediction. Left: Open-loop imagination rollouts vs. ground truth physics. QWM maintains tight synchronization across diverse scales. Right: Normalized Mean Squared Error (NMSE) over a 45-step horizon, QWM consistently outperforms baselines with minimal error accumulation.</figcaption>
 </figure>
 
 <div class="qwm-results-grid">
@@ -279,7 +326,7 @@ World models promise a paradigm shift in robotics, where an agent learns the und
   <div>
     <figure class="qwm-fig">
       <img src="https://arxiv.org/html/2604.08780/2604.08780v1/x8.png" alt="PCA of QWM latent states">
-      <figcaption><strong>Figure 8.</strong> PCA of QWM latent states — morphology clusters (a) vs. dynamic state gradients (b–e), showing the model cleanly separates embodiment identity from locomotion dynamics.</figcaption>
+      <figcaption><strong>Figure 8.</strong> PCA of QWM latent states, morphology clusters (a) vs. dynamic state gradients (b–e), showing the model cleanly separates embodiment identity from locomotion dynamics.</figcaption>
     </figure>
   </div>
 </div>
@@ -290,17 +337,7 @@ World models promise a paradigm shift in robotics, where an agent learns the und
 </figure>
 </div>
 
-<div class="qwm-section">
-<h2>Zero-Shot Generalization</h2>
 
-<p>QWM is evaluated in two generalization regimes:</p>
-
-<ul>
-  <li><strong>Morphological Interpolation</strong> (within training distribution): Unitree Go1 achieves 974.4 ± 6.2 episode length vs. 996.1 ± 1.1 for the specialist. ANYmal-D achieves 948.6 ± 12.1 vs. 981.3 ± 4.2.</li>
-  <li><strong>Real-World Transfer</strong>: ANYmal-D reaches 0.30 m/s linear tracking error vs. 0.28 for specialist; Go1 reaches 0.34 vs. 0.31. Zero falls across all 20 trials.</li>
-  <li><strong>Morphological Extrapolation</strong> (out of distribution): Performance degrades for geometric outliers (e.g., Unitree B2), confirming QWM acts as a distribution-bounded interpolator — a universal physics engine requires cohorts that span the full parameter space.</li>
-</ul>
-</div>
 
 <hr class="qwm-divider">
 
