@@ -284,11 +284,11 @@ World models promise a paradigm shift in robotics, where an agent learns the und
 
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
   <div>
-    <img src="/blog/hetero-isaaclab/project_assets/anymald.gif" alt="ANYmal-D zero-shot deployment" style="width:100%;border-radius:6px;">
+    <img src="project_assets/anymald.gif" alt="ANYmal-D zero-shot deployment" style="width:100%;border-radius:6px;">
     <div style="text-align:center;font-size:0.82rem;color:var(--secondary);margin-top:0.4rem;"><strong>ANYmal-D</strong> — zero-shot, held out during training</div>
   </div>
   <div>
-    <img src="/blog/hetero-isaaclab/project_assets/go1.gif" alt="Unitree Go1 zero-shot deployment" style="width:100%;border-radius:6px;">
+    <img src="project_assets/go1.gif" alt="Unitree Go1 zero-shot deployment" style="width:100%;border-radius:6px;">
     <div style="text-align:center;font-size:0.82rem;color:var(--secondary);margin-top:0.4rem;"><strong>Unitree Go1</strong> — zero-shot, held out during training</div>
   </div>
 </div>
