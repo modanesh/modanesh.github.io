@@ -4,6 +4,11 @@ date: 2026-04-09
 author: ["Mohamad H. Danesh", "Chenhao Li", "Amin Abyaneh", "Anas Houssaini", "Kirsty Ellis", "Glen Berseth", "Marco Hutter", "Hsiu-Chin Lin"]
 description: "QWM enables a single neural world model to control diverse quadrupedal robots without retraining, via explicit morphology conditioning on engineering specifications."
 tags: ["robotics", "world models", "quadrupeds", "locomotion", "zero-shot generalization"]
+cover:
+    image: "project_assets/overall.png"
+    alt: "QWM framework overview"
+    relative: true
+    hidden: true
 showToc: false
 disableAnchoredHeadings: true
 hideMeta: true
