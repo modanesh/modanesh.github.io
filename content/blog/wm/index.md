@@ -60,7 +60,7 @@ The honest counterargument is that pixels are a supervision signal that's hard t
 
 Here is the dirty secret of most latent world models actually deployed on hardware: their dynamics head is a regression mean-squared or L1 error to the next embedding. This is not a neutral choice, rather a theorem about what the model will become:
 
-$$g^{\star}=\arg\min_{g}\ \mathbb{E}\,\big\lVert g(z_{t},a_{t})-z_{t+1}\big\rVert_{2}^{2} \;\;\Longrightarrow\;\; g^{\star}(z_{t},a_{t})=\mathbb{E}\big[\,z_{t+1}\mid z_{t},a_{t}\,\big].$$
+$$g^{\star}=\arg\min_{g}\ \mathbb{E} \big\lVert g(z_{t},a_{t})-z_{t+1}\big\rVert_{2}^{2}   \Longrightarrow   g^{\star}(z_{t},a_{t})=\mathbb{E}\big[ z_{t+1}\mid z_{t},a_{t} \big].$$
 
 The optimal regressor is the conditional mean. And when the conditional $p(z_{t+1}\mid z_{t},a_{t})$ is multimodal, its mean sits in a probability desert, a point the world almost never visits.
 
@@ -68,7 +68,7 @@ Robot data, especially the human-collected demonstrations that increasingly feed
 
 The reason this hasn't been fixed by simply transplanting diffusion into the latent space is arithmetic. A sampling-based planner's appetite is multiplicative:
 
-$$\text{model queries per executed action}\;=\;\underbrace{N}_{\text{candidates}}\times\underbrace{H}_{\text{horizon}}\times\underbrace{I}_{\text{iterations}}\times\underbrace{K}_{\text{sampler steps}}.$$
+$$\text{model queries per executed action} = \underbrace{N}_{\text{candidates}}\times\underbrace{H}_{\text{horizon}}\times\underbrace{I}_{\text{iterations}}\times\underbrace{K}_{\text{sampler steps}}.$$
 
 A TD-MPC2-style loop already sits on the order of $10^{4}$ dynamics evaluations per *control step* at $K=1$, hand the head a fifty-step sampler and the robot stands still, thinking. So today you are quietly asked to choose: a model that is honest about uncertainty, or a model cheap enough to query ten thousand times before the gripper moves. I think this is the most consequential unforced error in the deployed stack, and I'll note only that the generative-modeling community has spent three years collapsing thousand-step samplers into a handful of steps, while a few probabilistic JEPA formulations have started to appear on the other side of the aisle. The two literatures are circling each other. Whoever closes the loop gets a world model that respects the multiplicity of futures without forfeiting the planning budget, and I'd bet on that combination over either purism.
 
@@ -76,7 +76,7 @@ A TD-MPC2-style loop already sits on the order of $10^{4}$ dynamics evaluations 
 
 There are two times a robot can use its imagination: at training time, and during inference. Dreamer made the first mode famous, roll the model forward in latent space, train an actor-critic inside the dream, deploy the resulting reflex. It put model-based RL in *Nature*, mined diamonds in Minecraft from scratch, and in its DayDreamer incarnation taught a real quadruped to walk in about an hour. The second mode keeps the model in the loop at decision time: TD-MPC2, DINO-WM, V-JEPA 2-AC, the MCTS-flavored visual planners, sample candidate action sequences, roll each through the model, act on the best one, re-plan. In symbols, the deliberative mode solves, at every single step,
 
-$$a^{\star}_{t:t+H-1}\;=\;\arg\max_{a_{t:t+H-1}}\ \sum_{k=0}^{H-1}\gamma^{k}\,\hat{r}\big(\hat{z}_{t+k},a_{t+k}\big)\;+\;\gamma^{H}\,V_{\psi}\big(\hat{z}_{t+H}\big),$$
+$$a^{\star}_{t:t+H-1} = \arg\max_{a_{t:t+H-1}}\ \sum_{k=0}^{H-1}\gamma^{k} \hat{r}\big(\hat{z}_{t+k},a_{t+k}\big) + \gamma^{H} V_{\psi}\big(\hat{z}_{t+H}\big),$$
 
 executes $a^{\star}_{t}$, and throws the rest away. The amortized mode is the degenerate case $H=0$: trust the proposal completely, spend nothing on search, and let the entire future live inside $V_{\psi}$, or inside the policy distilled from it.
 
@@ -90,7 +90,7 @@ A model trained on one robot learns that robot's physics the way a tailor learns
 
 But notice what that recipe asks the network to do: interpolate in *behavior* space across bodies. And here's my heterodox intuition, physics is polite to interpolation. Optimal behavior is not. Perturb a mass here, a length there, and tomorrow's accelerations change by a little: the dynamics are a continuous function of the body. The best behavior is under no such obligation,
 
-$$\mu \,\mapsto\, f(s,a;\mu)\ \text{ is smooth},\qquad \mu \,\mapsto\, \pi^{\star}_{\mu}=\arg\max_{\pi}\,J(\pi;\mu)\ \text{ need not be},$$
+$$\mu  \mapsto  f(s,a;\mu)\ \text{ is smooth},\qquad \mu  \mapsto  \pi^{\star}_{\mu}=\arg\max_{\pi} J(\pi;\mu)\ \text{ need not be},$$
 
 because $\arg\max$ is not a continuous operator. A centimeter of geometry can snap the best gait, contact schedule, or recovery reflex to something qualitatively different. Functions that vary smoothly are the ones neural networks interpolate gracefully, which suggests that knowledge of the body wants to live in the *dynamics model*, with behavior re-derived against it, rather than baked directly into a policy that must generalize a rougher function. The cross-embodiment world-model results trickling in. Particle-space dynamics that plan across robot hands they never trained on, world-action models adapting to a new robot from half an hour of play data, latent actions serving as an embodiment-agnostic interface, read to me like early confirmation that the model-based route inherits generalization the policy route has to fight for. I'd call this a conjecture the field hasn't tested at the scale it deserves: not "can one policy serve many bodies", which is clearly a yes, but *where the knowledge of the body should be stored* so that the next body is cheap. I know which way I'd bet.
 
@@ -102,7 +102,7 @@ Anyone who has run a real-robot experiment knows the shame of the denominator: t
 
 I think this is the sleeper application. The first place world models become economically indispensable rather than scientifically fashionable, precisely because the bar is lower in the right way. An evaluator doesn't need to be right about every future. But it needs its *ranking* of policies to correlate with reality, which is a far cheaper contract, the whole thing fits in one statistic,
 
-$$\rho\;=\;\operatorname{corr}_{\text{rank}}\big(\hat{s}_{\text{imagined}},\; s_{\text{real}}\big),$$
+$$\rho = \operatorname{corr}_{\text{rank}}\big(\hat{s}_{\text{imagined}},  s_{\text{real}}\big),$$
 
 estimable from a handful of real rollouts, which makes the judge auditable in a way the driver never is. But it comes with a built-in honesty problem that deserves more respect than it gets: the judge shares training distribution, and therefore blind spots, with the defendants. A policy that exploits the model's optimism will ace the imagined exam and faceplant on hardware, and the current crop of benchmarks already documents the gap between imagined and realized success. The discipline that makes this trustworthy is unglamorous, measure the rank correlation against real evaluations before you believe anything, watch how prediction error grows with horizon, treat a policy that drives the model off-distribution as a red flag rather than a high score,  and it's the same discipline as fault line 2 wearing a different hat: a model that knows what it doesn't know is worth more than a model that renders beautifully. Use the dream for triage, spend the real robot on the finalists, and never let the courtroom forget it is not the world.
 
