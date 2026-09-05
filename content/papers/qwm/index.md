@@ -185,7 +185,7 @@ hideMeta: true
 
 <div class="qwm-page">
 
-<div class="qwm-venue">arXiv 2026</div>
+<div class="qwm-venue">Conference on Robot Learning (CoRL) 2026</div>
 
 <div class="qwm-authors">
   Mohamad H. Danesh&nbsp;&nbsp;·&nbsp;&nbsp;Chenhao Li&nbsp;&nbsp;·&nbsp;&nbsp;Amin Abyaneh&nbsp;&nbsp;·&nbsp;&nbsp;Anas Houssaini<br>
@@ -225,9 +225,9 @@ hideMeta: true
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
     arXiv
   </a>
-  <a class="qwm-link-btn disabled" href="#" title="Code coming soon">
+  <a class="qwm-link-btn" href="https://github.com/modanesh/QWM" target="_blank">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-    Code (coming soon)
+    Code
   </a>
 </div>
 
@@ -323,16 +323,14 @@ World models promise a paradigm shift in robotics, where an agent learns the und
 
 <div class="qwm-section">
 <h2>BibTeX</h2>
-<div class="qwm-bibtex">@misc{danesh2026qwm,
+<div class="qwm-bibtex">@inproceedings{danesh2026qwm,
   title     = {Toward Hardware-Agnostic Quadrupedal World Models
                via Morphology Conditioning},
   author    = {Danesh, Mohamad H. and Li, Chenhao and Abyaneh, Amin
                and Houssaini, Anas and Ellis, Kirsty and Berseth, Glen
                and Hutter, Marco and Lin, Hsiu-Chin},
+  booktitle = {Conference on Robot Learning (CoRL)},
   year      = {2026},
-  eprint    = {2604.08780},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.RO},
   url       = {https://arxiv.org/abs/2604.08780}
 }</div>
 </div>
