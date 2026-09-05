@@ -58,8 +58,8 @@
 
 .entry-venue {
     display: inline-block;
-    margin: 8px 10px 0;
-    padding: 0.2rem 0.7rem;
+    margin: 8px 0 0;
+    padding: 0.2rem 0.6rem;
     border: 1px solid var(--darkcolor);
     border-radius: 999px;
     background: rgba(106, 123, 162, 0.12);
@@ -79,7 +79,7 @@
 }
 
 .entry-content {
-    margin: 20px 10px;
+    margin: 20px 0;
     color: var(--secondary);
     font-size: var(--entrysize);
     line-height: var(--lineheight);
