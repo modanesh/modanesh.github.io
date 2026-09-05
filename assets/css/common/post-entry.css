@@ -56,6 +56,28 @@
     line-height: var(--lineheight);
 }
 
+.entry-venue {
+    display: inline-block;
+    margin: 8px 10px 0;
+    padding: 0.2rem 0.7rem;
+    border: 1px solid var(--darkcolor);
+    border-radius: 999px;
+    background: rgba(106, 123, 162, 0.12);
+    color: var(--darkcolor);
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.dark .entry-venue {
+    background: rgba(106, 123, 162, 0.25);
+    color: var(--lightcolor);
+}
+
+.entry-venue + .entry-content {
+    margin-top: 12px;
+}
+
 .entry-content {
     margin: 20px 10px;
     color: var(--secondary);

@@ -64,6 +64,9 @@
       {{- end }}
     </h2>
   </header>
+  {{- with .Params.venue }}
+  <div class="entry-venue">{{ . }}</div>
+  {{- end }}
   {{- if (ne (.Param "hideSummary") true) }}
   <div class="entry-content">
     <p>{{ .Summary | plainify | htmlUnescape | truncate 700 "..." }}</p>

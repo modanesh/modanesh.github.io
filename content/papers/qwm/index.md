@@ -3,6 +3,8 @@ title: "Toward Hardware-Agnostic Quadrupedal World Models via Morphology Conditi
 date: 2026-04-09
 author: ["Mohamad H. Danesh", "Chenhao Li", "Amin Abyaneh", "Anas Houssaini", "Kirsty Ellis", "Glen Berseth", "Marco Hutter", "Hsiu-Chin Lin"]
 description: "QWM enables a single neural world model to control diverse quadrupedal robots without retraining, via explicit morphology conditioning on engineering specifications."
+venue: "CoRL 2026"
+summary: "A single neural world model that controls diverse quadrupedal robots without retraining, by explicitly conditioning the generative dynamics on each robot's engineering specifications — unlocking zero-shot deployment on entirely unseen morphologies."
 tags: ["robotics", "world models", "quadrupeds", "locomotion", "zero-shot generalization"]
 cover:
     image: "project_assets/overall.png"
