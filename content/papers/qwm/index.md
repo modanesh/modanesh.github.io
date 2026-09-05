@@ -29,9 +29,22 @@ hideMeta: true
 }
 .qwm-venue {
   text-align: center;
-  font-size: 1rem;
-  color: var(--secondary);
   margin-bottom: 1.2rem;
+}
+.qwm-venue-badge {
+  display: inline-block;
+  padding: 0.35rem 1rem;
+  border: 1px solid var(--darkcolor);
+  border-radius: 999px;
+  background: rgba(106, 123, 162, 0.12);
+  color: var(--darkcolor);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.dark .qwm-venue-badge {
+  background: rgba(106, 123, 162, 0.25);
+  color: var(--lightcolor);
 }
 .qwm-authors {
   text-align: center;
@@ -185,7 +198,7 @@ hideMeta: true
 
 <div class="qwm-page">
 
-<div class="qwm-venue">Conference on Robot Learning (CoRL) 2026</div>
+<div class="qwm-venue"><span class="qwm-venue-badge">Conference on Robot Learning (CoRL) 2026</span></div>
 
 <div class="qwm-authors">
   Mohamad H. Danesh&nbsp;&nbsp;·&nbsp;&nbsp;Chenhao Li&nbsp;&nbsp;·&nbsp;&nbsp;Amin Abyaneh&nbsp;&nbsp;·&nbsp;&nbsp;Anas Houssaini<br>
