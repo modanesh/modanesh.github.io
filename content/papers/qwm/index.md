@@ -43,7 +43,7 @@ hideMeta: true
   --q-blue: #1583ad;
   --q-purple: #9333b8;
   --q-radius: 14px;
-  --q-prose: 720px;
+  --q-prose: none;
   font-size: 16.5px;
   line-height: 1.68;
   color: var(--content);
@@ -152,7 +152,7 @@ hideMeta: true
 .qwm-root .qwm-fig--sm { max-width: 65%; margin-left: auto; margin-right: auto; }
 @media (max-width: 640px) { .qwm-root .qwm-fig--sm { max-width: 100%; } }
 .qwm-root .qwm-fig figcaption {
-  margin: 0.75rem auto 0; max-width: 780px;
+  margin: 0.75rem 0 0;
   font-size: 0.82rem; font-weight: 400; line-height: 1.55;
   color: var(--secondary); text-align: justify; text-justify: inter-word;
 }
@@ -216,8 +216,9 @@ hideMeta: true
 .qwm-card .ic svg { width: 19px; height: 19px; }
 .qwm-card h4 { margin: 0; font-size: 0.99rem; font-weight: 700; color: var(--primary); text-transform: none; }
 .qwm-card .abbr {
-  display: block; margin: 0.3rem 0 0.55rem; font-size: 0.74rem;
+  display: block; margin: 0.35rem 0 0.65rem; font-size: 0.95rem; font-weight: 600;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--c);
+  line-height: 1.4; overflow-wrap: break-word;
 }
 .qwm-card p { margin: 0; font-size: 0.845rem; color: var(--secondary); line-height: 1.62; }
 
@@ -246,6 +247,8 @@ hideMeta: true
 .qwm-video figcaption { margin: 0.6rem 0 0; font-size: 0.8rem; color: var(--secondary); text-align: justify; text-justify: inter-word; }
 .qwm-video--sm { max-width: 82%; margin-left: auto; margin-right: auto; }
 @media (max-width: 640px) { .qwm-video--sm { max-width: 100%; } }
+.qwm-video--split { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 680px) { .qwm-video--split { grid-template-columns: 1fr; } }
 
 /* tables */
 .qwm-root .qwm-tw {
@@ -285,7 +288,6 @@ hideMeta: true
 .qwm-root .qwm-details--abstract { margin: 1.8rem auto; }
 .qwm-root .qwm-details--abstract > summary { font-size: 1.05rem; font-weight: 700; padding: 1rem 1.2rem; }
 .qwm-root .qwm-details--abstract .qwm-abstract-body {
-  max-width: 760px; margin-inline: auto;
   padding: 0.2rem 1.2rem 1.2rem; font-size: 0.95rem; line-height: 1.7; color: var(--content);
 }
 .qwm-root .qwm-details--abstract .qwm-abstract-body b { color: var(--primary); }
@@ -495,15 +497,16 @@ $$h_t = f_\phi(h_{t-1},\, z_{t-1},\, a_{t-1},\, \mu) \qquad e_t = \mathrm{Linear
   <figcaption>Zero-shot deployment on the held-out Unitree Go1 and ANYmal-D, both walking in an indoor corridor.</figcaption>
 </figure>
 
-<figure class="qwm-video">
-  <video autoplay muted loop playsinline preload="metadata" poster="project_assets/anymald-poster.jpg"><source src="project_assets/anymald.mp4" type="video/mp4"></video>
-  <figcaption>ANYmal-D — zero-shot, held out during training</figcaption>
-</figure>
-
-<figure class="qwm-video">
-  <video autoplay muted loop playsinline preload="metadata" poster="project_assets/go1-poster.jpg"><source src="project_assets/go1.mp4" type="video/mp4"></video>
-  <figcaption>Unitree Go1 — zero-shot, held out during training</figcaption>
-</figure>
+<div class="qwm-video qwm-video--split">
+  <figure style="margin:0;">
+    <video autoplay muted loop playsinline preload="metadata" poster="project_assets/anymald-poster.jpg"><source src="project_assets/anymald.mp4" type="video/mp4"></video>
+    <figcaption>ANYmal-D — zero-shot, held out during training</figcaption>
+  </figure>
+  <figure style="margin:0;">
+    <video autoplay muted loop playsinline preload="metadata" poster="project_assets/go1-poster.jpg"><source src="project_assets/go1.mp4" type="video/mp4"></video>
+    <figcaption>Unitree Go1 — zero-shot, held out during training</figcaption>
+  </figure>
+</div>
 
 <div class="qwm-tw">
 <table class="qwm-t">
