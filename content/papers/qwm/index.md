@@ -93,20 +93,18 @@ hideMeta: true
   justify-content: center; align-items: center; margin: 0;
 }
 .qwm-affils .logo {
-  display: inline-flex; align-items: center; justify-content: center;
-  height: 40px; padding: 0 0.85rem;
+  display: flex; align-items: center; justify-content: center;
+  height: 40px; padding: 0 0.85rem; box-sizing: border-box;
   background: #fff; border-radius: 9px;
   border: 1px solid rgba(0, 0, 0, 0.07);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.14);
 }
-.qwm-affils .logo img { height: 19px; width: auto; max-width: 132px; display: block; }
-.qwm-affils .logo--udem { height: 46px; }
-.qwm-affils .logo--udem img { height: 32px; max-width: 96px; }
+.qwm-affils .logo img { height: 19px; width: auto; max-width: 132px; display: block; margin: 0; align-self: center; }
+.qwm-affils .logo--udem img { height: 26px; max-width: 78px; }
 @media (max-width: 460px) {
   .qwm-affils .logo { height: 33px; padding: 0 0.65rem; }
   .qwm-affils .logo img { height: 15px; max-width: 104px; }
-  .qwm-affils .logo--udem { height: 38px; }
-  .qwm-affils .logo--udem img { height: 26px; max-width: 78px; }
+  .qwm-affils .logo--udem img { height: 21px; max-width: 63px; }
 }
 
 .qwm-btns { display: flex; flex-wrap: wrap; gap: 0.55rem; justify-content: center; margin-top: 1.5rem; }
@@ -156,7 +154,7 @@ hideMeta: true
 .qwm-root .qwm-fig figcaption {
   margin: 0.75rem auto 0; max-width: 780px;
   font-size: 0.82rem; font-weight: 400; line-height: 1.55;
-  color: var(--secondary); text-align: center;
+  color: var(--secondary); text-align: justify; text-justify: inter-word;
 }
 .qwm-root .qwm-fig figcaption b { color: var(--primary); }
 
@@ -245,9 +243,7 @@ hideMeta: true
   display: block; width: 100%; height: auto;
   border-radius: var(--q-radius); border: 1px solid var(--border); background: #0d0d0d;
 }
-.qwm-video figcaption { margin: 0.6rem 0 0; font-size: 0.8rem; color: var(--secondary); text-align: center; }
-.qwm-video--split { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-@media (max-width: 680px) { .qwm-video--split { grid-template-columns: 1fr; } }
+.qwm-video figcaption { margin: 0.6rem 0 0; font-size: 0.8rem; color: var(--secondary); text-align: justify; text-justify: inter-word; }
 .qwm-video--sm { max-width: 82%; margin-left: auto; margin-right: auto; }
 @media (max-width: 640px) { .qwm-video--sm { max-width: 100%; } }
 
@@ -494,21 +490,20 @@ $$h_t = f_\phi(h_{t-1},\, z_{t-1},\, a_{t-1},\, \mu) \qquad e_t = \mathrm{Linear
 <p>The frozen zero-shot ANYmal-D and Go1 policies run directly on hardware — exact simulation weights, 50&nbsp;Hz inference on each robot's onboard computer, no real-world fine-tuning. QWM produces a high-frequency trot on the agile Go1 and a slower, grounded gait on the heavier ANYmal-D.</p>
 </div>
 
-<figure class="qwm-fig">
+<figure class="qwm-fig qwm-fig--sm">
   <a href="project_assets/real_robot.jpg" target="_blank" rel="noopener"><img src="project_assets/real_robot.jpg" alt="Zero-shot real-world deployment on Unitree Go1 and ANYmal-D"></a>
   <figcaption>Zero-shot deployment on the held-out Unitree Go1 and ANYmal-D, both walking in an indoor corridor.</figcaption>
 </figure>
 
-<div class="qwm-video qwm-video--split">
-  <figure style="margin:0;">
-    <video autoplay muted loop playsinline preload="metadata" poster="project_assets/anymald-poster.jpg"><source src="project_assets/anymald.mp4" type="video/mp4"></video>
-    <figcaption>ANYmal-D — zero-shot, held out during training</figcaption>
-  </figure>
-  <figure style="margin:0;">
-    <video autoplay muted loop playsinline preload="metadata" poster="project_assets/go1-poster.jpg"><source src="project_assets/go1.mp4" type="video/mp4"></video>
-    <figcaption>Unitree Go1 — zero-shot, held out during training</figcaption>
-  </figure>
-</div>
+<figure class="qwm-video">
+  <video autoplay muted loop playsinline preload="metadata" poster="project_assets/anymald-poster.jpg"><source src="project_assets/anymald.mp4" type="video/mp4"></video>
+  <figcaption>ANYmal-D — zero-shot, held out during training</figcaption>
+</figure>
+
+<figure class="qwm-video">
+  <video autoplay muted loop playsinline preload="metadata" poster="project_assets/go1-poster.jpg"><source src="project_assets/go1.mp4" type="video/mp4"></video>
+  <figcaption>Unitree Go1 — zero-shot, held out during training</figcaption>
+</figure>
 
 <div class="qwm-tw">
 <table class="qwm-t">
