@@ -146,9 +146,6 @@ hideMeta: true
   box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 12px 32px -16px rgba(0,0,0,0.25);
 }
 .qwm-root .qwm-fig--pad img { padding: 16px; }
-.qwm-root .qwm-fig--hero { margin-left: -18px; margin-right: -18px; }
-.qwm-root .qwm-fig--hero img { padding: 10px; }
-@media (max-width: 480px) { .qwm-root .qwm-fig--hero { margin-left: -8px; margin-right: -8px; } }
 .qwm-root .qwm-fig--sm { max-width: 65%; margin-left: auto; margin-right: auto; }
 @media (max-width: 640px) { .qwm-root .qwm-fig--sm { max-width: 100%; } }
 .qwm-root .qwm-fig figcaption {
@@ -160,11 +157,10 @@ hideMeta: true
 
 /* TL;DR panel */
 .qwm-tldr {
-  margin: 1.8rem -18px 2.2rem; padding: 1.4rem 1.5rem;
+  margin: 1.8rem 0 2.2rem; padding: 1.4rem 1.5rem;
   border-radius: var(--q-radius);
   background: var(--q-accent-soft); border: 1px solid var(--q-accent-bd);
 }
-@media (max-width: 480px) { .qwm-tldr { margin-left: -8px; margin-right: -8px; } }
 .qwm-tldr p { margin: 0; font-size: 1rem; line-height: 1.62; }
 .qwm-stats {
   display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
@@ -330,15 +326,6 @@ World models promise a paradigm shift in robotics, where an agent learns the phy
 </div>
 </details>
 
-<figure class="qwm-fig qwm-fig--pad qwm-fig--hero">
-  <a href="project_assets/overview.png" target="_blank" rel="noopener"><img src="project_assets/overview.png" alt="QWM training and deployment pipeline"></a>
-  <figcaption>
-    <b>QWM</b> conditions a single world model on a robot's <em>morphology vector</em> $\mu$: scale-invariant physical features pulled straight from its description file.
-    <b>Training:</b> the Physical Morphology Encoder (PME) extracts $\mu$, a DreamerV3-style world model learns locomotion dynamics that are shared across robots, and the Adaptive Reward Normalizer (ARN) keeps reward scales in check while the actor and critic learn entirely in imagination.
-    <b>Deployment:</b> we just swap in the $\mu$ of a new quadruped. That turns the frozen model into a neural simulator for that robot, and the frozen policy runs on it zero-shot.
-  </figcaption>
-</figure>
-
 <div class="qwm-tldr">
   <p><b>A robot's morphology should be routed <em>through</em> learned dynamics, not fed straight to a policy.</b> Dynamics within a morphological family change smoothly: stretch a limb or add some mass and the equations of motion shift continuously. But the best gait for that robot can change abruptly. A world model conditioned on $\mu$ can synthesize a coherent simulator for a robot it has never seen by interpolating in physical-feature space, and a policy trained against that simulator inherits the generalization for free. A policy that maps $\mu$ straight to actions has to learn a much rougher function instead, and it breaks.</p>
   <div class="qwm-stats">
@@ -384,8 +371,8 @@ World models promise a paradigm shift in robotics, where an agent learns the phy
 </div>
 
 <figure class="qwm-fig qwm-fig--pad">
-  <a href="project_assets/architecture.png" target="_blank" rel="noopener"><img src="project_assets/architecture.png" alt="QWM architecture: PME, ARN, and the morphology-conditioned dynamics cell"></a>
-  <figcaption><b>PME</b> maps a robot description to a normalized morphology vector $\mu$. <b>ARN</b> rescales each robot's rewards by an EMA of its own return spread. The <b>dynamics cell</b> fuses $\mu$ with proprioception in a dual-tower encoder and re-injects $\mu$ into the recurrent state at every step.</figcaption>
+  <a href="project_assets/training_deployment.png" target="_blank" rel="noopener"><img src="project_assets/training_deployment.png" alt="QWM training and deployment pipeline"></a>
+  <figcaption>During training, <b>PME</b> turns a robot's data into $\mu$, which QWM combines with Isaac Lab observations to learn dynamics, act, and critique, while <b>ARN</b> keeps the reward signal on a common scale. At deployment, the same PME reads $\mu$ from an unseen robot, and the frozen QWM maps it straight to an action, closing the loop with the real world.</figcaption>
 </figure>
 
 <div class="qwm-cards">
