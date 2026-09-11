@@ -160,10 +160,11 @@ hideMeta: true
 
 /* TL;DR panel */
 .qwm-tldr {
-  margin: 1.8rem auto 2.2rem; padding: 1.4rem 1.5rem;
+  margin: 1.8rem -18px 2.2rem; padding: 1.4rem 1.5rem;
   border-radius: var(--q-radius);
   background: var(--q-accent-soft); border: 1px solid var(--q-accent-bd);
 }
+@media (max-width: 480px) { .qwm-tldr { margin-left: -8px; margin-right: -8px; } }
 .qwm-tldr p { margin: 0; font-size: 1rem; line-height: 1.62; }
 .qwm-stats {
   display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
@@ -229,14 +230,6 @@ hideMeta: true
   border-radius: 0 var(--q-radius) var(--q-radius) 0; font-size: 0.9rem; line-height: 1.62;
 }
 .qwm-callout b { color: var(--primary); }
-
-/* equation */
-.qwm-eq {
-  margin: 1.3rem auto; padding: 0.9rem 1rem; max-width: 820px;
-  text-align: center; background: var(--entry);
-  border: 1px solid var(--border); border-radius: 10px;
-  font-size: 0.95rem; overflow-x: auto;
-}
 
 /* video */
 .qwm-video { margin: 1.5rem auto; }
@@ -340,14 +333,14 @@ World models promise a paradigm shift in robotics, where an agent learns the phy
 <figure class="qwm-fig qwm-fig--pad qwm-fig--hero">
   <a href="project_assets/overview.png" target="_blank" rel="noopener"><img src="project_assets/overview.png" alt="QWM training and deployment pipeline"></a>
   <figcaption>
-    <b>QWM</b> conditions a single world model on a robot's <em>morphology vector</em> $\mu$ — scale-invariant physical features read from its description file.
-    <b>Training:</b> the Physical Morphology Encoder (PME) extracts $\mu$; a DreamerV3-style world model learns the locomotion dynamics shared across robots while the Adaptive Reward Normalizer (ARN) balances reward scales; actor and critic are learned entirely in imagination.
-    <b>Deployment:</b> injecting the $\mu$ of an unseen quadruped turns the frozen model into a neural simulator for that robot, and the frozen policy runs on it zero-shot.
+    <b>QWM</b> conditions a single world model on a robot's <em>morphology vector</em> $\mu$: scale-invariant physical features pulled straight from its description file.
+    <b>Training:</b> the Physical Morphology Encoder (PME) extracts $\mu$, a DreamerV3-style world model learns locomotion dynamics that are shared across robots, and the Adaptive Reward Normalizer (ARN) keeps reward scales in check while the actor and critic learn entirely in imagination.
+    <b>Deployment:</b> we just swap in the $\mu$ of a new quadruped. That turns the frozen model into a neural simulator for that robot, and the frozen policy runs on it zero-shot.
   </figcaption>
 </figure>
 
 <div class="qwm-tldr">
-  <p><b>A robot's morphology should be routed <em>through</em> learned dynamics, not fed straight to a policy.</b> Dynamics within a morphological family vary smoothly — stretch a limb or add mass and the equations of motion move continuously — but the optimal gait can change abruptly. A world model conditioned on $\mu$ can therefore synthesize a coherent simulator for an unseen robot by interpolating in physical-feature space, and a policy re-derived against that simulator inherits the generalization. A policy that maps $\mu$ straight to actions has to generalize a much rougher function, and it breaks.</p>
+  <p><b>A robot's morphology should be routed <em>through</em> learned dynamics, not fed straight to a policy.</b> Dynamics within a morphological family change smoothly: stretch a limb or add some mass and the equations of motion shift continuously. But the best gait for that robot can change abruptly. A world model conditioned on $\mu$ can synthesize a coherent simulator for a robot it has never seen by interpolating in physical-feature space, and a policy trained against that simulator inherits the generalization for free. A policy that maps $\mu$ straight to actions has to learn a much rougher function instead, and it breaks.</p>
   <div class="qwm-stats">
     <div class="qwm-stat"><b>8</b><span>morphologies, one world model</span></div>
     <div class="qwm-stat"><b>0 falls</b><span>across 20 hardware trials on held-out robots</span></div>
@@ -359,7 +352,7 @@ World models promise a paradigm shift in robotics, where an agent learns the phy
 <h2 class="qwm-h2">Two ways to use a morphology spec</h2>
 
 <div class="qwm-prose">
-<p>Formalize a robot's physical traits — limb lengths, mass distribution, actuator limits — into a morphology vector $\mu$. A controller for a family of robots can use that blueprint in two ways.</p>
+<p>Take a robot's physical traits (limb lengths, mass distribution, actuator limits) and pack them into a morphology vector $\mu$. A controller for a whole family of robots can use that blueprint in two different ways.</p>
 </div>
 
 <div class="qwm-routes">
@@ -367,13 +360,13 @@ World models promise a paradigm shift in robotics, where an agent learns the phy
     <span class="tag">Model-free</span>
     <h4>μ&nbsp;→&nbsp;policy</h4>
     <p class="flow">μ, oₜ &nbsp;→&nbsp; π &nbsp;→&nbsp; aₜ</p>
-    <p>Feed μ straight to the policy and learn control directly. The policy must approximate a function that can change sharply between nearby morphologies. It matches QWM on the training cohort, but degrades on unseen robots and collapses on out-of-distribution ones.</p>
+    <p>Feed μ straight to the policy and learn control directly. The policy has to approximate a function that can change sharply between nearby morphologies, which is a hard ask. It matches QWM on the training cohort, but degrades on unseen robots and collapses on the ones that are truly out of distribution.</p>
   </div>
   <div class="qwm-route qwm-route--b">
     <span class="tag">QWM · model-based</span>
     <h4>μ&nbsp;→&nbsp;world model&nbsp;→&nbsp;policy in imagination</h4>
     <p class="flow">μ, oₜ &nbsp;→&nbsp; world model &nbsp;→&nbsp; π &nbsp;(in imagination)</p>
-    <p>Feed μ to a learned dynamics model, then recover the policy by training against it in imagination. The model only has to interpolate smooth physics; the policy inherits that generalization and transfers zero-shot to robots outside the training set.</p>
+    <p>Feed μ to a learned dynamics model instead, then recover the policy by training against it in imagination. The model only has to interpolate smooth physics, and the policy inherits that generalization for free, transferring zero-shot to robots that were never in the training set.</p>
   </div>
 </div>
 
@@ -400,13 +393,13 @@ World models promise a paradigm shift in robotics, where an agent learns the phy
     <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg></div>
     <h4>Physical Morphology Encoder</h4>
     <span class="abbr">robot description → μ ∈ [−1,1]¹⁰</span>
-    <p>Reads four feature groups from the robot's description — kinematics &amp; topology (limb lengths, knee configuration), geometry (stance footprint), dynamics (log-scaled mass, trunk fraction), and actuation (weight-normalized torque) — and min-max normalizes them to $\mu \in [-1,1]^{10}$. A shallow tower keeps this static signal from being washed out by high-variance proprioception.</p>
+    <p>It reads four feature groups from the robot's description: kinematics &amp; topology (limb lengths, knee configuration), geometry (stance footprint), dynamics (log-scaled mass, trunk fraction), and actuation (weight-normalized torque). Those get min-max normalized into $\mu \in [-1,1]^{10}$. A shallow tower keeps this static signal from getting washed out by the much noisier proprioception.</p>
   </div>
   <div class="qwm-card" style="--c: var(--q-purple); --cs: rgba(147,51,184,0.10);">
     <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0z"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg></div>
     <h4>Morphology-conditioned dynamics</h4>
-    <span class="abbr">hₜ = f(hₜ₋₁, zₜ₋₁, aₜ₋₁, μ)</span>
-    <p>$\mu$ is injected into the recurrent state every step, so the GRU tracks <em>dynamic</em> state (velocity, contact timing) while explicit conditioning carries the <em>static</em> physics (limb length, mass). The stochastic latent $z_t$ is then free to encode only morphology-independent dynamics.</p>
+    <span class="abbr">hₜ = f(hₜ₋₁, zₜ₋₁, aₜ₋₁, μ)<br>zₜ ~ q(zₜ ∣ hₜ, eₜ)</span>
+    <p>$\mu$ goes into the recurrent state at every step, so the GRU is free to track <em>dynamic</em> state (velocity, contact timing) while the explicit conditioning carries the <em>static</em> physics (limb length, mass). The stochastic latent $z_t$ is then free to encode only the morphology-independent part of the dynamics.</p>
   </div>
   <div class="qwm-card" style="--c: var(--q-blue); --cs: rgba(21,131,173,0.10);">
     <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></div>
@@ -416,12 +409,8 @@ World models promise a paradigm shift in robotics, where an agent learns the phy
   </div>
 </div>
 
-<div class="qwm-eq">
-$$h_t = f_\phi(h_{t-1},\, z_{t-1},\, a_{t-1},\, \mu) \qquad e_t = \mathrm{Linear}\big[\,\mathrm{MLP}_{\mathrm{dyn}}(o_t),\ \mathrm{MLP}_{\mathrm{stat}}(\mu)\,\big] \qquad z_t \sim q_\phi(z_t \mid h_t,\, e_t)$$
-</div>
-
 <div class="qwm-callout">
-  <b>Training QWM needs eight morphologies stepping inside one simulator</b> — distinct collision geometries, kinematic trees, actuator gains, and reward definitions — which Isaac Lab does not support out of the box. We built <b>Hetero-Isaac</b>, an Isaac Lab extension that runs a heterogeneous batch indexed per environment. The full infrastructure — joint-order unification, index mapping, padded reward functions — is described in the companion post: <a href="/blog/hetero-isaaclab/">Heterogeneous Environments in Isaac Lab</a>.
+  <b>Training QWM means running eight different robot morphologies inside one simulator at once</b>, each with its own collision geometry, kinematic tree, actuator gains, and reward definition. Isaac Lab doesn't support that out of the box, so we built <b>Hetero-Isaac</b>, an Isaac Lab extension that runs a heterogeneous batch indexed per environment. We cover the full infrastructure (joint-order unification, index mapping, padded reward functions) in the companion post: <a href="/blog/hetero-isaaclab/">Heterogeneous Environments in Isaac Lab</a>.
 </div>
 
 <figure class="qwm-video">
@@ -438,13 +427,13 @@ $$h_t = f_\phi(h_{t-1},\, z_{t-1},\, a_{t-1},\, \mu) \qquad e_t = \mathrm{Linear
 <figure class="qwm-fig qwm-fig--pad">
   <a href="project_assets/results_main.jpg" target="_blank" rel="noopener"><img src="project_assets/results_main.jpg" alt="Learning curves on the heterogeneous cohort and long-horizon dynamics prediction"></a>
   <figcaption>
-    <b>Left:</b> one QWM trained on the full 8-robot cohort vs. model-free (Vanilla PPO, PME-PPO, BoT-PPO) and world-model (DreamerV3, PWM, TWISTER) baselines. Methods given $\mu$ explicitly master the cohort; methods that must infer morphology from history settle for a mean-dynamics solution.
-    <b>Right:</b> 5-step context, then 85 steps of pure imagination — QWM's open-loop rollout (blue) stays locked to ground-truth physics (green) across scales, with NMSE accumulating gradually rather than diverging.
+    <b>Left:</b> one QWM trained on the full 8-robot cohort against model-free baselines (Vanilla PPO, PME-PPO, BoT-PPO) and world-model baselines (DreamerV3, PWM, TWISTER). Methods that get $\mu$ explicitly master the cohort, while methods that have to infer morphology from history settle for a mushy, averaged solution.
+    <b>Right:</b> starting from a 5-step context, we let QWM imagine 85 steps forward with no feedback. Its rollout (blue) stays locked to the ground truth (green) across every scale, and the error grows slowly instead of blowing up.
   </figcaption>
 </figure>
 
 <div class="qwm-prose">
-<p>Given the same $\mu$, PME-PPO eventually reaches QWM's asymptotic reward — but QWM gets there in about half the environment steps and leaves behind a reusable dynamics model. On the training cohort the two routes are a capability tie, which is exactly what makes the generalization comparison clean.</p>
+<p>Given the same $\mu$, PME-PPO eventually catches up to QWM's reward. But QWM gets there in about half the environment steps, and it leaves behind a reusable dynamics model as a bonus. On the training cohort, the two routes are basically tied on capability, which is exactly what makes the generalization comparison below a fair one.</p>
 </div>
 
 <figure class="qwm-video qwm-video--sm">
@@ -457,7 +446,7 @@ $$h_t = f_\phi(h_{t-1},\, z_{t-1},\, a_{t-1},\, \mu) \qquad e_t = \mathrm{Linear
 <h3 class="qwm-h3">Zero-shot transfer to unseen morphologies</h3>
 
 <div class="qwm-prose">
-<p>To evaluate a target robot, we train from scratch on the other seven and run the frozen model and policy on the target using only its $\mu$. Go1 and ANYmal-D sit inside the cohort's per-axis range; B2 is heavier, stronger, and longer-stanced all at once — each deviation individually bounded, but jointly unrepresented (a <em>combinatorial</em> gap).</p>
+<p>To test a target robot, we train from scratch on the other seven, then run the frozen model and policy on the target using only its $\mu$. Go1 and ANYmal-D both sit inside the cohort's normal range. B2 doesn't: it's heavier, stronger, and has a longer stance, all at the same time. Each of those traits is mild on its own, but no training robot combines all three, which makes B2 a genuine <em>combinatorial</em> gap.</p>
 </div>
 
 <div class="qwm-tw">
@@ -475,36 +464,31 @@ $$h_t = f_\phi(h_{t-1},\, z_{t-1},\, a_{t-1},\, \mu) \qquad e_t = \mathrm{Linear
 </div>
 
 <div class="qwm-prose">
-<p>PME-PPO, reading the identical $\mu$, trails by 350–600 steps of episode length and collapses entirely on B2. QWM stays within ~4% of specialist episode length and recovers 80–90% of specialist reward on the in-range robots, and still walks B2 zero-shot at near-specialist episode length.</p>
+<p>PME-PPO reads the exact same $\mu$ but still trails by 350–600 steps of episode length, and it collapses completely on B2. QWM stays within about 4% of specialist episode length and recovers 80–90% of specialist reward on the in-range robots, and it still walks B2 zero-shot at close to specialist episode length.</p>
 </div>
 
 <details class="qwm-details">
-  <summary>Per-feature morphology deviation — why B2 is the hard case</summary>
+  <summary>Per-feature morphology deviation: why B2 is the hard case</summary>
   <figure class="qwm-fig qwm-fig--pad">
     <img src="project_assets/morphology_zscores.png" alt="Per-feature leave-one-out z-scores for the robot cohort">
-    <figcaption>Leave-one-out $z$-scores per physical feature (value on top, signed deviation below). Go1 never exceeds $1.5\sigma$ on any axis. B2 crosses $2\sigma$ on torque capacity and $1.9\sigma$ on log-mass, with every elevated feature pushing the same direction — larger, heavier, stronger — so no single training robot combines them.</figcaption>
+    <figcaption>Leave-one-out $z$-scores per physical feature (raw value on top, signed deviation below). Go1 never crosses $1.5\sigma$ on any axis. B2 crosses $2\sigma$ on torque capacity and $1.9\sigma$ on log-mass, and every elevated feature points the same way: bigger, heavier, stronger. No single training robot combines all of that.</figcaption>
   </figure>
 </details>
 
 <h3 class="qwm-h3">Real-world deployment</h3>
 
 <div class="qwm-prose">
-<p>The frozen zero-shot ANYmal-D and Go1 policies run directly on hardware — exact simulation weights, 50&nbsp;Hz inference on each robot's onboard computer, no real-world fine-tuning. QWM produces a high-frequency trot on the agile Go1 and a slower, grounded gait on the heavier ANYmal-D.</p>
+<p>The frozen zero-shot ANYmal-D and Go1 policies run straight on hardware: the exact simulation weights, 50&nbsp;Hz inference on each robot's own onboard computer, and no real-world fine-tuning at all. QWM settles into a quick trot on the agile Go1 and a slower, more grounded gait on the heavier ANYmal-D.</p>
 </div>
-
-<figure class="qwm-fig qwm-fig--sm">
-  <a href="project_assets/real_robot.jpg" target="_blank" rel="noopener"><img src="project_assets/real_robot.jpg" alt="Zero-shot real-world deployment on Unitree Go1 and ANYmal-D"></a>
-  <figcaption>Zero-shot deployment on the held-out Unitree Go1 and ANYmal-D, both walking in an indoor corridor.</figcaption>
-</figure>
 
 <div class="qwm-video qwm-video--split">
   <figure style="margin:0;">
     <video autoplay muted loop playsinline preload="metadata" poster="project_assets/anymald-poster.jpg"><source src="project_assets/anymald.mp4" type="video/mp4"></video>
-    <figcaption>ANYmal-D — zero-shot, held out during training</figcaption>
+    <figcaption>ANYmal-D: zero-shot, held out during training</figcaption>
   </figure>
   <figure style="margin:0;">
     <video autoplay muted loop playsinline preload="metadata" poster="project_assets/go1-poster.jpg"><source src="project_assets/go1.mp4" type="video/mp4"></video>
-    <figcaption>Unitree Go1 — zero-shot, held out during training</figcaption>
+    <figcaption>Unitree Go1: zero-shot, held out during training</figcaption>
   </figure>
 </div>
 
@@ -529,7 +513,7 @@ $$h_t = f_\phi(h_{t-1},\, z_{t-1},\, a_{t-1},\, \mu) \qquad e_t = \mathrm{Linear
 <h3 class="qwm-h3">Why the model-based route wins</h3>
 
 <div class="qwm-prose">
-<p>Because $\mu$ is handed to the recurrent state $h_t$, the stochastic latent $z_t$ never has to re-infer physical identity — it encodes only dynamic state. Probing confirms it: $h_t$ splits cleanly into per-robot clusters, while $z_t$ collapses into one morphology-agnostic cloud (silhouette 0.033).</p>
+<p>Because $\mu$ is handed straight to the recurrent state $h_t$, the stochastic latent $z_t$ never has to re-infer the robot's physical identity. It only has to encode dynamic state. Probing backs this up: $h_t$ splits cleanly into per-robot clusters, while $z_t$ collapses into one shared, morphology-agnostic cloud (silhouette score 0.033).</p>
 </div>
 
 <figure class="qwm-fig qwm-fig--pad qwm-fig--sm">
@@ -538,20 +522,20 @@ $$h_t = f_\phi(h_{t-1},\, z_{t-1},\, a_{t-1},\, \mu) \qquad e_t = \mathrm{Linear
 </figure>
 
 <div class="qwm-prose">
-<p>That decoupling is a correction channel a spec-sheet policy structurally lacks. Corrupt $\mu$ by 20% and QWM keeps ~80% of its episode length while PME-PPO drops to ~33%, because $z_t$ re-reads the true dynamics from observations. Hold $\mu$ correct but degrade the real robot — 20% torque loss, or a trunk payload — and even a near-exact analytical rigid-body predictor diverges, while QWM stays within 75–84% of its nominal episode length.</p>
+<p>That decoupling gives QWM a correction channel that a spec-sheet policy simply doesn't have. Corrupt $\mu$ by 20% and QWM still keeps about 80% of its episode length, while PME-PPO drops to roughly 33%, because $z_t$ keeps reading the true dynamics from observations. Now flip it around: keep $\mu$ correct but degrade the real robot with 20% torque loss or an added payload. Even a near-exact analytical rigid-body predictor diverges here, while QWM stays within 75 to 84% of its normal episode length.</p>
 </div>
 
 <h3 class="qwm-h3">Ablations</h3>
 
 <figure class="qwm-fig qwm-fig--pad">
   <a href="project_assets/ablations.png" target="_blank" rel="noopener"><img src="project_assets/ablations.png" alt="Ablation learning curves on the heterogeneous cohort"></a>
-  <figcaption>Each component fails differently. <b>No ARN:</b> flatline near zero — heterogeneous reward scales alone prevent the world model from forming. <b>No encoder conditioning:</b> learns, then collapses late. <b>No RSSM conditioning:</b> slow, sub-optimal asymptote. <b>No explicit $\mu$:</b> stays upright but plateaus below refined gaits.</figcaption>
+  <figcaption>Each component fails in its own way. <b>No ARN:</b> flatlines near zero, since mismatched reward scales alone stop the world model from forming at all. <b>No encoder conditioning:</b> learns fine at first, then collapses later. <b>No RSSM conditioning:</b> slow, and settles for a worse asymptote. <b>No explicit $\mu$:</b> stays upright, but never reaches the more refined gaits.</figcaption>
 </figure>
 
 <h2 class="qwm-h2">Limitations</h2>
 
 <div class="qwm-prose">
-<p>$\mu$ encodes a fixed quadrupedal template — three-segment legs, a 12-DoF action space, and a hip-rooted stance — so generalization is parametric <em>within</em> that template, not across structural variants such as differing joints per leg or non-quadrupedal bodies. Evaluation is blind flat-ground velocity tracking, without exteroception or contact-rich terrain.</p>
+<p>$\mu$ encodes a fixed quadrupedal template: three-segment legs, a 12-DoF action space, and a hip-rooted stance. So generalization is parametric <em>within</em> that template, not across structural variants like a different number of joints per leg or a non-quadrupedal body. Evaluation is also limited to blind, flat-ground velocity tracking, without exteroception or contact-rich terrain.</p>
 </div>
 
 <h2 class="qwm-h2" id="bibtex">BibTeX</h2>
