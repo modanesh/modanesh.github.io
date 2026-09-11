@@ -17,8 +17,8 @@ hideMeta: true
 ---
 
 <style>
-/* ---- container: let this page breathe wider than the default column ---- */
-.main:has(.qwm-root) { max-width: 1060px; }
+/* container: let this page breathe wider than the default column */
+.main:has(.qwm-root) { max-width: 1220px; }
 .main:has(.qwm-root) .post-header { margin-bottom: 0; }
 .main:has(.qwm-root) .post-title {
   text-align: center;
@@ -30,7 +30,7 @@ hideMeta: true
   text-wrap: balance;
 }
 
-/* ---- scoped design tokens ---- */
+/* scoped design tokens */
 .qwm-root {
   --q-accent: #9a6a00;          /* readable gold on light bg (text, ticks, links) */
   --q-gold: #e3a017;            /* vivid gold for solid fills */
@@ -65,8 +65,18 @@ hideMeta: true
 .qwm-root .qwm-prose > p { margin: 0 0 1.05em; }
 .qwm-root .qwm-prose > p:last-child { margin-bottom: 0; }
 .qwm-root b, .qwm-root strong { color: var(--primary); font-weight: 700; }
+.qwm-root .qwm-prose > p,
+.qwm-root .qwm-abstract-body,
+.qwm-root .qwm-tldr p,
+.qwm-root .qwm-punch,
+.qwm-root .qwm-route p,
+.qwm-root .qwm-card p,
+.qwm-root .qwm-callout {
+  text-align: justify;
+  text-justify: inter-word;
+}
 
-/* ---- hero ---- */
+/* hero */
 .qwm-hero { text-align: center; max-width: 840px; margin: 0.6rem auto 2.2rem; }
 .qwm-venue {
   display: inline-block; margin-bottom: 1rem;
@@ -90,11 +100,13 @@ hideMeta: true
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.14);
 }
 .qwm-affils .logo img { height: 19px; width: auto; max-width: 132px; display: block; }
-.qwm-affils .logo--udem img { height: 13px; max-width: 165px; }
+.qwm-affils .logo--udem { height: 46px; }
+.qwm-affils .logo--udem img { height: 32px; max-width: 96px; }
 @media (max-width: 460px) {
   .qwm-affils .logo { height: 33px; padding: 0 0.65rem; }
   .qwm-affils .logo img { height: 15px; max-width: 104px; }
-  .qwm-affils .logo--udem img { height: 10px; max-width: 128px; }
+  .qwm-affils .logo--udem { height: 38px; }
+  .qwm-affils .logo--udem img { height: 26px; max-width: 78px; }
 }
 
 .qwm-btns { display: flex; flex-wrap: wrap; gap: 0.55rem; justify-content: center; margin-top: 1.5rem; }
@@ -111,7 +123,7 @@ hideMeta: true
 .qwm-root a.qwm-btn--primary { background: var(--q-gold); border-color: var(--q-gold); color: var(--q-on-gold) !important; }
 .qwm-root a.qwm-btn--primary:hover { filter: brightness(1.06); border-color: var(--q-gold); }
 
-/* ---- section headings ---- */
+/* section headings */
 .qwm-root .qwm-h2 {
   font-size: 1.34rem; font-weight: 750; letter-spacing: -0.01em;
   margin: 3rem 0 1rem; padding-bottom: 0.4rem;
@@ -125,7 +137,7 @@ hideMeta: true
 .qwm-root .qwm-h2, .qwm-root .qwm-h3 { text-wrap: balance; }
 .qwm-root .qwm-h3 { font-size: 1.06rem; font-weight: 700; margin: 2rem 0 0.6rem; color: var(--primary); }
 
-/* ---- figures ---- */
+/* figures */
 .qwm-root .qwm-fig { margin: 1.7rem auto 1.9rem; }
 .qwm-root .qwm-fig figure { margin: 0; }
 .qwm-root .qwm-fig a { box-shadow: none !important; display: block; }
@@ -136,6 +148,11 @@ hideMeta: true
   box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 12px 32px -16px rgba(0,0,0,0.25);
 }
 .qwm-root .qwm-fig--pad img { padding: 16px; }
+.qwm-root .qwm-fig--hero { margin-left: -18px; margin-right: -18px; }
+.qwm-root .qwm-fig--hero img { padding: 10px; }
+@media (max-width: 480px) { .qwm-root .qwm-fig--hero { margin-left: -8px; margin-right: -8px; } }
+.qwm-root .qwm-fig--sm { max-width: 65%; margin-left: auto; margin-right: auto; }
+@media (max-width: 640px) { .qwm-root .qwm-fig--sm { max-width: 100%; } }
 .qwm-root .qwm-fig figcaption {
   margin: 0.75rem auto 0; max-width: 780px;
   font-size: 0.82rem; font-weight: 400; line-height: 1.55;
@@ -143,7 +160,7 @@ hideMeta: true
 }
 .qwm-root .qwm-fig figcaption b { color: var(--primary); }
 
-/* ---- TL;DR panel ---- */
+/* TL;DR panel */
 .qwm-tldr {
   margin: 1.8rem auto 2.2rem; padding: 1.4rem 1.5rem;
   border-radius: var(--q-radius);
@@ -160,7 +177,7 @@ hideMeta: true
 .qwm-stat span { display: block; margin-top: 0.35rem; font-size: 0.75rem; color: var(--secondary); line-height: 1.4; }
 @media (max-width: 620px) { .qwm-stats { grid-template-columns: repeat(2, 1fr); } }
 
-/* ---- two routes ---- */
+/* two routes */
 .qwm-routes { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.6rem 0; }
 @media (max-width: 720px) { .qwm-routes { grid-template-columns: 1fr; } }
 .qwm-route { border: 1px solid var(--border); border-radius: var(--q-radius); padding: 1.2rem 1.25rem; background: var(--entry); }
@@ -185,7 +202,7 @@ hideMeta: true
   font-size: 0.94rem; color: var(--content);
 }
 
-/* ---- component cards ---- */
+/* component cards */
 .qwm-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.6rem 0; }
 @media (max-width: 820px) { .qwm-cards { grid-template-columns: 1fr; } }
 .qwm-card {
@@ -206,7 +223,7 @@ hideMeta: true
 }
 .qwm-card p { margin: 0; font-size: 0.845rem; color: var(--secondary); line-height: 1.62; }
 
-/* ---- callout ---- */
+/* callout */
 .qwm-callout {
   margin: 1.7rem 0; padding: 1.15rem 1.35rem;
   border-left: 3px solid var(--q-mu); background: var(--q-mu-soft);
@@ -214,7 +231,7 @@ hideMeta: true
 }
 .qwm-callout b { color: var(--primary); }
 
-/* ---- equation ---- */
+/* equation */
 .qwm-eq {
   margin: 1.3rem auto; padding: 0.9rem 1rem; max-width: 820px;
   text-align: center; background: var(--entry);
@@ -222,7 +239,7 @@ hideMeta: true
   font-size: 0.95rem; overflow-x: auto;
 }
 
-/* ---- video ---- */
+/* video */
 .qwm-video { margin: 1.5rem auto; }
 .qwm-video video {
   display: block; width: 100%; height: auto;
@@ -231,8 +248,10 @@ hideMeta: true
 .qwm-video figcaption { margin: 0.6rem 0 0; font-size: 0.8rem; color: var(--secondary); text-align: center; }
 .qwm-video--split { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 @media (max-width: 680px) { .qwm-video--split { grid-template-columns: 1fr; } }
+.qwm-video--sm { max-width: 82%; margin-left: auto; margin-right: auto; }
+@media (max-width: 640px) { .qwm-video--sm { max-width: 100%; } }
 
-/* ---- tables ---- */
+/* tables */
 .qwm-root .qwm-tw {
   display: block; width: 100%; overflow-x: auto; margin: 1.4rem 0;
   border: 1px solid var(--border); border-radius: var(--q-radius);
@@ -254,7 +273,7 @@ hideMeta: true
 .qwm-root .qwm-t .row-hl td:first-child { color: var(--q-accent); font-weight: 700; }
 .qwm-root .qwm-t .sep td { border-bottom: 2px solid var(--tertiary); }
 
-/* ---- details ---- */
+/* details */
 .qwm-root .qwm-details {
   margin: 1.4rem 0; border: 1px solid var(--border);
   border-radius: var(--q-radius); background: var(--entry); overflow: hidden;
@@ -275,7 +294,7 @@ hideMeta: true
 }
 .qwm-root .qwm-details--abstract .qwm-abstract-body b { color: var(--primary); }
 
-/* ---- footer links ---- */
+/* footer links */
 .qwm-foot {
   margin-top: 2.5rem; padding-top: 1.4rem; border-top: 1px solid var(--border);
   text-align: center; font-size: 0.86rem; color: var(--secondary);
@@ -313,7 +332,14 @@ hideMeta: true
   </div>
 </div>
 
-<figure class="qwm-fig qwm-fig--pad">
+<details class="qwm-details qwm-details--abstract">
+<summary>Abstract</summary>
+<div class="qwm-abstract-body">
+World models promise a paradigm shift in robotics, where an agent learns the physics of its environment once and then acquires behaviors efficiently. Yet the learned dynamics models at their core are typically morphology locked. In legged locomotion, a dynamics model trained on an ANYmal-D quadruped fails on a Unitree Go1 because it overfits to one robot's embodiment rather than capturing the locomotion dynamics shared across robots, so even a small change in actuator dynamics or limb length forces retraining from scratch. However, if we formalize a robot's unique physical traits into a morphology specification, a controller for a family of robots can utilize this blueprint in two ways. It can feed the specification to a model-free policy, or it can feed the specification to a learned dynamics model and extract the policy in imagination. We argue for the second route and introduce the <b>Quadrupedal World Model (QWM)</b>, which conditions a single generative dynamics model on scale-invariant physical features and trains policies entirely inside it, through a physical morphology encoder, an adaptive reward normalizer, and morphology conditioning in the latent dynamics. Holding the morphology information identical, a model-free policy matches QWM on the training cohort but degrades on unseen morphologies, while QWM transfers zero-shot with no fine-tuning, adaptation, or warm-up. To our knowledge, this is the first world model to demonstrate zero-shot cross-embodiment transfer within the quadrupedal family.
+</div>
+</details>
+
+<figure class="qwm-fig qwm-fig--pad qwm-fig--hero">
   <a href="project_assets/overview.png" target="_blank" rel="noopener"><img src="project_assets/overview.png" alt="QWM training and deployment pipeline"></a>
   <figcaption>
     <b>QWM</b> conditions a single world model on a robot's <em>morphology vector</em> $\mu$ — scale-invariant physical features read from its description file.
@@ -354,13 +380,6 @@ hideMeta: true
 </div>
 
 <p class="qwm-punch">Our experiments hold $\mu$ <b>identical</b> between the two routes. On the training cohort they are indistinguishable, so any later gap is a generalization gap, not a capability gap. Only the model-based route crosses it.</p>
-
-<details class="qwm-details qwm-details--abstract">
-<summary>Abstract</summary>
-<div class="qwm-abstract-body">
-World models promise a paradigm shift in robotics, where an agent learns the physics of its environment once and then acquires behaviors efficiently. Yet the learned dynamics models at their core are typically morphology locked. In legged locomotion, a dynamics model trained on an ANYmal-D quadruped fails on a Unitree Go1 because it overfits to one robot's embodiment rather than capturing the locomotion dynamics shared across robots, so even a small change in actuator dynamics or limb length forces retraining from scratch. However, if we formalize a robot's unique physical traits into a morphology specification, a controller for a family of robots can utilize this blueprint in two ways. It can feed the specification to a model-free policy, or it can feed the specification to a learned dynamics model and extract the policy in imagination. We argue for the second route and introduce the <b>Quadrupedal World Model (QWM)</b>, which conditions a single generative dynamics model on scale-invariant physical features and trains policies entirely inside it, through a physical morphology encoder, an adaptive reward normalizer, and morphology conditioning in the latent dynamics. Holding the morphology information identical, a model-free policy matches QWM on the training cohort but degrades on unseen morphologies, while QWM transfers zero-shot with no fine-tuning, adaptation, or warm-up. To our knowledge, this is the first world model to demonstrate zero-shot cross-embodiment transfer within the quadrupedal family.
-</div>
-</details>
 
 <figure class="qwm-fig qwm-fig--pad">
   <a href="project_assets/cohort.jpg" target="_blank" rel="noopener"><img src="project_assets/cohort.jpg" alt="The eight-robot heterogeneous quadruped cohort"></a>
@@ -430,7 +449,7 @@ $$h_t = f_\phi(h_{t-1},\, z_{t-1},\, a_{t-1},\, \mu) \qquad e_t = \mathrm{Linear
 <p>Given the same $\mu$, PME-PPO eventually reaches QWM's asymptotic reward — but QWM gets there in about half the environment steps and leaves behind a reusable dynamics model. On the training cohort the two routes are a capability tie, which is exactly what makes the generalization comparison clean.</p>
 </div>
 
-<figure class="qwm-video">
+<figure class="qwm-video qwm-video--sm">
   <video autoplay muted loop playsinline preload="metadata" poster="project_assets/imag-poster.jpg">
     <source src="project_assets/imag.mp4" type="video/mp4">
   </video>
@@ -515,7 +534,7 @@ $$h_t = f_\phi(h_{t-1},\, z_{t-1},\, a_{t-1},\, \mu) \qquad e_t = \mathrm{Linear
 <p>Because $\mu$ is handed to the recurrent state $h_t$, the stochastic latent $z_t$ never has to re-infer physical identity — it encodes only dynamic state. Probing confirms it: $h_t$ splits cleanly into per-robot clusters, while $z_t$ collapses into one morphology-agnostic cloud (silhouette 0.033).</p>
 </div>
 
-<figure class="qwm-fig qwm-fig--pad">
+<figure class="qwm-fig qwm-fig--pad qwm-fig--sm">
   <a href="project_assets/latent_disentangle.jpg" target="_blank" rel="noopener"><img src="project_assets/latent_disentangle.jpg" alt="PCA of the recurrent state h_t and stochastic state z_t, colored by robot"></a>
   <figcaption>PCA of the $\mu$-conditioned recurrent state $h_t$ (left) and the stochastic state $z_t$ (right), colored by robot. $h_t$ carries morphological identity; $z_t$ does not.</figcaption>
 </figure>
