@@ -14,12 +14,16 @@ menu:
     main:
         - name: Papers
           url: papers/
+          weight: 1
         - name: Blog
           url: blog/
+          weight: 2
         - name: Get in touch
           url: get_in_touch/
+          weight: 3
         - name: List 100
           url: 100/
+          weight: 4
 
 params:
     description: "This website hosts Mohamad H. Danesh's stuff."
