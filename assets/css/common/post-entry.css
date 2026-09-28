@@ -60,18 +60,19 @@
     display: inline-block;
     margin: 8px 0 0;
     padding: 0.2rem 0.6rem;
-    border: 1px solid var(--darkcolor);
+    border: 1px solid rgba(184, 134, 11, 0.55);
     border-radius: 999px;
-    background: rgba(106, 123, 162, 0.12);
-    color: var(--darkcolor);
+    background: rgba(230, 170, 20, 0.14);
+    color: #8a6100;
     font-size: 12.5px;
     font-weight: 700;
     letter-spacing: 0.02em;
 }
 
 .dark .entry-venue {
-    background: rgba(106, 123, 162, 0.25);
-    color: var(--lightcolor);
+    border-color: rgba(242, 180, 46, 0.45);
+    background: rgba(242, 180, 46, 0.2);
+    color: #f2b42e;
 }
 
 .entry-venue + .entry-content {
