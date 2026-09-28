@@ -32,11 +32,11 @@ hideMeta: true
 
 /* scoped design tokens */
 .qwm-root {
-  --q-accent: #9a6a00;          /* readable gold on light bg (text, ticks, links) */
-  --q-gold: #e3a017;            /* vivid gold for solid fills */
-  --q-on-gold: #241800;         /* text on a gold fill */
-  --q-accent-bd: rgba(199, 141, 20, 0.40);
-  --q-accent-soft: rgba(227, 160, 23, 0.13);
+  --q-accent: #b3184f;          /* readable pink-red on light bg (text, ticks, links) */
+  --q-gold: #d6336c;            /* vivid pink-red for solid fills */
+  --q-on-gold: #ffffff;         /* text on the accent fill */
+  --q-accent-bd: rgba(179, 24, 79, 0.40);
+  --q-accent-soft: rgba(179, 24, 79, 0.12);
   --q-mu: #0f9d58;
   --q-mu-bd: rgba(15, 157, 88, 0.30);
   --q-mu-soft: rgba(15, 157, 88, 0.09);
@@ -49,11 +49,11 @@ hideMeta: true
   color: var(--content);
 }
 .dark .qwm-root {
-  --q-accent: #f2b42e;
-  --q-gold: #f2b42e;
-  --q-on-gold: #241800;
-  --q-accent-bd: rgba(242, 180, 46, 0.36);
-  --q-accent-soft: rgba(242, 180, 46, 0.13);
+  --q-accent: #ff5d7a;
+  --q-gold: #ff5d7a;
+  --q-on-gold: #2a0510;
+  --q-accent-bd: rgba(255, 93, 122, 0.36);
+  --q-accent-soft: rgba(255, 93, 122, 0.13);
   --q-mu: #43d18f;
   --q-mu-bd: rgba(67, 209, 143, 0.32);
   --q-mu-soft: rgba(67, 209, 143, 0.13);
