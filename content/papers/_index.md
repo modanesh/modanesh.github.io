@@ -50,7 +50,7 @@ description: "Preprints and articles by Professor Dr von Igelfeld."
 
 <div class="scholar-callout">
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg>
-  <span>For a full list of my papers, please visit my <a href="https://scholar.google.com/citations?user=AsqcJtAAAAAJ&hl=en">Google Scholar</a>.</span>
+  <span>These are my most recent papers as first or corresponding author. For the full list, check my <a href="https://scholar.google.com/citations?user=AsqcJtAAAAAJ&hl=en">Google Scholar</a>.</span>
 </div>
 
 <div id="ext-papers">
