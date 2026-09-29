@@ -55,7 +55,7 @@ description: "Preprints and articles by Professor Dr von Igelfeld."
 
 <div id="ext-papers">
 <article class="post-entry">
-  <figure class="entry-cover"><img loading="lazy" src="/papers/driftql-corruption.png" alt="DriftQL robustness under corrupted offline data, compared to IFQL, FQL, and ReBRAC"></figure>
+  <figure class="entry-cover"><img loading="lazy" src="/papers/driftql-fig2.png" alt="Overview of DriftQL: sampling states and noise, forming positives and negatives, computing the conditional drift field, and the drift plus Q-learning loss"></figure>
   <header class="entry-header">
     <h2 class="entry-hint-parent">Drift Q-Learning</h2>
   </header>
