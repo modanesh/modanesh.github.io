@@ -530,13 +530,13 @@ World models promise a paradigm shift in robotics, where an agent learns the phy
 </div>
 
 ```bibtex
-@inproceedings{danesh2026qwm,
-  title     = {Morphology-Conditioned World Model for Cross-Embodiment Quadrupedal Locomotion},
-  author    = {Danesh, Mohamad H. and Li, Chenhao and Abyaneh, Amin and Houssaini, Anas
-               and Ellis, Kirsty and Berseth, Glen and Hutter, Marco and Lin, Hsiu-Chin},
-  booktitle = {Conference on Robot Learning (CoRL)},
-  year      = {2026},
-  url       = {https://arxiv.org/abs/2604.08780}
+@inproceedings{
+anonymous2026morphologyconditioned,
+title={Morphology-Conditioned World Model for Cross-Embodiment Quadrupedal Locomotion},
+author={Anonymous},
+booktitle={10th Annual Conference on Robot Learning},
+year={2026},
+url={https://openreview.net/forum?id=YQoaLlpDD3}
 }
 ```
 
