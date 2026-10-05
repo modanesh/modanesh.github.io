@@ -312,7 +312,7 @@ World models promise a paradigm shift in robotics, where an agent learns the phy
 </div>
 </details>
 
-<figure class="qwm-video">
+<figure class="qwm-video" style="max-width:80%;">
   <video autoplay muted loop playsinline controls preload="auto">
     <source src="project_assets/qwm_promo_voice.mp4" type="video/mp4">
   </video>
