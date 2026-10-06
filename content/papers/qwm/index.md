@@ -319,6 +319,12 @@ hideMeta: true
   </div>
 </div>
 
+<figure class="qwm-video">
+  <video autoplay muted loop playsinline preload="metadata" poster="project_assets/promo-poster.jpg">
+    <source src="project_assets/promo.mp4" type="video/mp4">
+  </video>
+</figure>
+
 <details class="qwm-details qwm-details--abstract">
 <summary>Abstract</summary>
 <div class="qwm-abstract-body">
@@ -401,8 +407,8 @@ World models promise a paradigm shift in robotics, where an agent learns the phy
 </div>
 
 <figure class="qwm-video">
-  <video autoplay muted loop playsinline preload="metadata" poster="project_assets/hetero_train-poster.jpg">
-    <source src="project_assets/hetero_train.mp4" type="video/mp4">
+  <video autoplay muted loop playsinline preload="metadata" poster="project_assets/all_quads-poster.jpg">
+    <source src="project_assets/all_quads.mp4" type="video/mp4">
   </video>
   <figcaption>Eight quadrupeds training in parallel in Hetero-Isaac.</figcaption>
 </figure>
