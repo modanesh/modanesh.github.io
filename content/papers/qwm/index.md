@@ -319,6 +319,12 @@ hideMeta: true
   </div>
 </div>
 
+<figure class="qwm-video" style="max-width:80%;">
+  <video autoplay muted loop playsinline controls preload="auto">
+    <source src="project_assets/qwm_promo_voice.mp4" type="video/mp4">
+  </video>
+</figure>
+
 <details class="qwm-details qwm-details--abstract">
 <summary>Abstract</summary>
 <div class="qwm-abstract-body">
