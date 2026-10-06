@@ -7,8 +7,8 @@ venue: "CoRL 2026"
 summary: "QWM conditions one world model on scale-invariant physical features and trains every policy inside it. Given the same morphology spec, a model-free policy collapses on unseen robots while QWM transfers zero-shot to new quadrupeds, in simulation and on hardware."
 tags: ["robotics", "world models", "reinforcement learning", "quadrupeds", "locomotion", "cross-embodiment", "zero-shot generalization", "sim-to-real"]
 cover:
-    image: "project_assets/overview.png"
-    alt: "QWM framework overview"
+    image: "project_assets/poster.jpg"
+    alt: "QWM conference poster"
     relative: true
     hidden: true
 showToc: false
