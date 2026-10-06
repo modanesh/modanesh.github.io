@@ -320,8 +320,8 @@ hideMeta: true
 </div>
 
 <figure class="qwm-video" style="max-width:80%;">
-  <video autoplay muted loop playsinline controls preload="auto">
-    <source src="project_assets/qwm_promo_voice.mp4" type="video/mp4">
+  <video autoplay muted loop playsinline controls preload="auto" poster="project_assets/promo-poster.jpg">
+    <source src="project_assets/promo.mp4" type="video/mp4">
   </video>
 </figure>
 
