@@ -186,7 +186,7 @@ hideMeta: true
 <div class="smm-root">
 
 <div class="smm-kicker">Preprint &middot; under review</div>
-<div class="smm-byline">Danilo&nbsp;Vucetic<sup>1,2,*</sup>, Mohamad&nbsp;H.&nbsp;Danesh<sup>1,3,*</sup>, Florence&nbsp;Clerc<sup>5</sup>, Hsiu-Chin&nbsp;Lin<sup>1,3</sup>, Jonathan&nbsp;Tremblay<sup>4</sup></div>
+<div class="smm-byline">Danilo&nbsp;Vucetic<sup>1,2,*</sup>, Mohamad&nbsp;H.&nbsp;Danesh<sup>2,3,*</sup>, Florence&nbsp;Clerc<sup>4</sup>, Hsiu-Chin&nbsp;Lin<sup>2,3</sup>, Jonathan&nbsp;Tremblay<sup>5</sup></div>
 <div class="smm-affilkey">*Equal contribution</div>
 <div class="smm-logos">
   <span class="chip"><img src="project_assets/logos/udem.svg" alt="Université de Montréal"></span>
