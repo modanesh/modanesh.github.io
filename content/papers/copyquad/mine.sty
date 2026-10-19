@@ -1,0 +1,748 @@
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage{colortbl}
+
+
+%Mine
+
+
+\usepackage{booktabs}
+\usepackage{varioref}
+% \labelformat{equation}{(#1)}
+\usepackage[colorlinks=true,
+            linkcolor=sbBlue,  % For internal links
+            citecolor=sbBlue, % For citations
+            urlcolor=sbBlue     % For URLs
+           ]{hyperref}
+% if you use cleveref..
+\usepackage[capitalize,noabbrev]{cleveref}
+
+% \usepackage[acronym]{glossaries}
+% \makeglossaries
+% \newacronym[longplural={\textbf{Q}uadrupedal \textbf{W}orld \textbf{M}odel}]{qwm}{QWM}{quadrupedal world model}
+% \glsdisablehyper
+
+\newcommand{\algorithmautorefname}{Alg.}
+\renewcommand{\figureautorefname}{Fig.}
+\renewcommand{\sectionautorefname}{Sec.}
+\renewcommand{\subsectionautorefname}{Subsec.}
+\renewcommand{\subsubsectionautorefname}{Subsubsec.}
+\renewcommand{\equationautorefname}{Eq.}
+\newcommand{\propref}[1]{\hyperref[#1]{Prop.~\ref*{#1}}}
+\newcommand{\assumref}[1]{\hyperref[#1]{Assum.~\ref*{#1}}}
+\newcommand{\corref}[1]{\hyperref[#1]{Cor.~\ref*{#1}}}
+\newcommand{\lemref}[1]{\hyperref[#1]{Lem.~\ref*{#1}}}
+% \newcommand{\aref}[1]{\hyperref[#1]{App.~\ref*{#1}}}
+\newcommand{\defref}[1]{\hyperref[#1]{Def.~\ref*{#1}}}
+\newcommand{\proofref}[1]{\hyperref[#1]{Proof~\ref*{#1}}}
+
+
+% Mine
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\usepackage[super]{nth}
+
+\newcommand{\e}{\epsilon}
+\newcommand{\y}{\gamma}
+\newcommand{\al}{\alpha}
+\newcommand{\s}{\sigma}
+\newcommand{\ta}{\theta}
+\newcommand{\w}{\omega}
+\newcommand{\g}{\nabla}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\lb}{\left [}
+\newcommand{\rb}{\right ]}
+\newcommand{\lp}{\left (}
+\newcommand{\rp}{\right )}
+\newcommand{\lv}{\left \Vert}
+\newcommand{\rv}{\right \Vert}
+\newcommand{\la}{\left |}
+\newcommand{\ra}{\right |}
+\newcommand{\B}{\mathcal{B}}
+\newcommand{\Loss}{\mathcal{L}}
+
+\newcommand{\ourMethod}{CopyQuad\xspace}
+\newcommand{\Ant}{\texttt{Ant-v4}\xspace}
+\newcommand{\ant}{\texttt{Ant}\xspace}
+\newcommand{\HalfCheetah}{\texttt{HalfCheetah-v4}\xspace}
+\newcommand{\halfCheetah}{\texttt{HalfCheetah}\xspace}
+\newcommand{\Hopper}{\texttt{Hopper-v4}\xspace}
+\newcommand{\hopper}{\texttt{Hopper}\xspace}
+\newcommand{\Swimmer}{\texttt{Swimmer-v4}\xspace}
+\newcommand{\swimmer}{\texttt{Swimmer}\xspace}
+\newcommand{\Walker}{\texttt{Walker2d-v4}\xspace}
+\newcommand{\walker}{\texttt{Walker2d}\xspace}
+
+
+\usepackage{xcolor}
+
+
+
+% Seaborn colors
+\definecolor{sbBlue}{RGB}{31,119,180}
+\definecolor{sbBlueEq}{RGB}{26,68,182}
+\definecolor{sbOrange}{RGB}{255,127,14}
+\definecolor{sbGreen}{RGB}{44,160,44}
+\definecolor{sbRed}{RGB}{214,39,40}
+\definecolor{sbPurple}{RGB}{148,103,189}
+\definecolor{sbBrown}{RGB}{140,86,75}
+\definecolor{sbPink}{RGB}{227,119,194}
+
+\definecolor{sbGray}{RGB}{234, 234, 242}
+
+\definecolor{sbBlue025}{RGB}{199, 221, 236}
+\definecolor{sbPurple025}{RGB}{211, 205, 222}
+\definecolor{sbOrange025}{RGB}{255, 224, 170}
+\definecolor{sbRed025}{RGB}{237, 145, 145}
+
+\definecolor{sbOrange02}{RGB}{255, 229, 207}
+\definecolor{sbBlue015}{RGB}{222, 235, 244}
+
+\definecolor{sublimegray}{RGB}{116,112,93}
+
+\definecolor{e_1}{RGB}{59,82,139}
+\definecolor{e_2}{RGB}{33,145,140}
+\definecolor{e_3}{RGB}{94,201,98}
+
+\definecolor{m_10}{RGB}{18,13,49,}
+\definecolor{m_9}{RGB}{51,16,103,}
+\definecolor{m_8}{RGB}{89,21,126,}
+\definecolor{m_7}{RGB}{126,36,130,}
+\definecolor{m_6}{RGB}{163,48,126,}
+\definecolor{m_5}{RGB}{200,62,115,}
+\definecolor{m_4}{RGB}{233,84,98,}
+\definecolor{m_3}{RGB}{250,125,94,}
+\definecolor{m_2}{RGB}{254,169,115,}
+\definecolor{m_1}{RGB}{254,211,149,}
+
+\definecolor{v_10}{RGB}{72,33,115,}
+\definecolor{v_9}{RGB}{67,62,133,}
+\definecolor{v_8}{RGB}{56,88,140,}
+\definecolor{v_7}{RGB}{45,112,142,}
+\definecolor{v_6}{RGB}{37,133,142,}
+\definecolor{v_5}{RGB}{30,155,138,}
+\definecolor{v_4}{RGB}{42,176,127,}
+\definecolor{v_3}{RGB}{82,197,105,}
+\definecolor{v_2}{RGB}{134,213,73,}
+\definecolor{v_1}{RGB}{194,223,35,}
+
+\definecolor{lhl}{RGB}{234, 245, 250}
+\definecolor{hl}{RGB}{205, 232, 248}
+\definecolor{lg}{RGB}{127, 127, 127}
+
+\definecolor{ab_m0}{RGB}{4, 4, 20}
+\definecolor{ab_m1}{RGB}{13, 10, 41}
+\definecolor{ab_m2}{RGB}{25, 16, 63}
+\definecolor{ab_m3}{RGB}{39, 18, 88}
+\definecolor{ab_m4}{RGB}{56, 16, 108}
+\definecolor{ab_m5}{RGB}{73, 16, 120}
+\definecolor{ab_m6}{RGB}{87, 21, 126}
+\definecolor{ab_m7}{RGB}{103, 27, 128}
+\definecolor{ab_m8}{RGB}{118, 33, 129}
+\definecolor{ab_m9}{RGB}{134, 39, 129}
+\definecolor{ab_m10}{RGB}{150, 44, 128}
+\definecolor{ab_m11}{RGB}{166, 49, 125}
+\definecolor{ab_m12}{RGB}{183, 55, 121}
+\definecolor{ab_m13}{RGB}{197, 60, 116}
+\definecolor{ab_m14}{RGB}{213, 68, 109}
+\definecolor{ab_m15}{RGB}{227, 78, 101}
+\definecolor{ab_m16}{RGB}{238, 91, 94}
+\definecolor{ab_m17}{RGB}{246, 108, 92}
+\definecolor{ab_m18}{RGB}{250, 127, 94}
+\definecolor{ab_m19}{RGB}{252, 144, 101}
+\definecolor{ab_m20}{RGB}{254, 163, 111}
+
+
+\usepackage{thmtools}
+\declaretheoremstyle[
+spaceabove=0pt, 
+spacebelow=0pt, 
+headfont=\color{white}\normalfont,
+bodyfont=\color{white}\normalfont,
+]{code}
+
+\theoremstyle{code}
+\newtheorem{codeblock}{Code Block}
+\newtheorem{pseudo}{Pseudocode}
+
+\usepackage{titletoc}
+% \usepackage{enumitem}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage[font=small,skip=0pt]{caption}
+\usepackage{subcaption}
+\usepackage{inconsolata}
+\usepackage[outline]{contour}
+\contourlength{.06em}% default is 0.03em
+% \setlength\con@length{2\con@length}
+% \setlength\con@length{0.99626400996\con@length}
+\usepackage{subfiles}
+
+\usepackage{placeins}
+
+\definecolor{codeBg}{HTML}{282822}
+%\definecolor{textBg}{HTML}{1c1c17}
+
+\usepackage[most, breakable]{tcolorbox}
+
+% \DeclareTCBListing{pycode}{O{}m!O{}}{%
+% listing only,
+% %breakable,
+% %enhanced,
+% minted language=python,
+% minted style=gruvbox-dark,
+% minted options={%
+% linenos,
+% numbersep=8pt,
+% %autogobble,
+% tabsize=4,
+% breaklines=true,
+% %mathescape,
+% %framesep=2mm,
+% encoding=utf8,
+% fontsize=\small%\footnotesize,
+% },
+% % Appearance tweaks
+% top=0pt,
+% bottom=0pt,
+% left=24pt,
+% %right=0pt,
+% % arc=0pt,
+% colframe=black,
+% colback=codeBg,
+% coltitle=white,
+% #1}
+
+% \renewcommand{\theFancyVerbLine}{\textcolor{sublimegray}{\footnotesize\arabic{FancyVerbLine}}}
+
+% \usepackage[toc,page,header]{appendix}
+% \usepackage{minitoc}
+\usepackage{soul}
+% \usepackage{algorithm}
+% \usepackage{algorithmic}
+\usepackage[indLines=false]{algpseudocodex}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18,
+every axis/.append style={
+    scale only axis,
+    enlargelimits=false,
+    ylabel near ticks,
+    xlabel near ticks,
+    title style={yshift=-8pt, font=\small},
+    label style={font=\small},
+    ylabel style={yshift=-2pt},
+    xlabel style={yshift=2pt},
+    tick label style={font=\scriptsize}}}
+%\usepackage{sidecap}
+\usepackage{wrapfig}
+
+\usepackage{fancyvrb,newverbs}
+\newverbcommand{\cverb}
+{\setbox\verbbox\hbox\bgroup}
+{\egroup\colorbox{cverbbg}{\box\verbbox}}
+\newenvironment{lcverbatim}
+{\SaveVerbatim{cverb}}
+{\endSaveVerbatim
+    \flushleft\fboxrule=0pt\fboxsep=.1em
+    \colorbox{gray!10}{%
+        \makebox[\dimexpr\linewidth-2\fboxsep][l]{\BUseVerbatim{cverb}}%
+    }
+    \endflushleft
+}
+
+% Make the "Part I" text invisible
+% \renewcommand \thepart{}
+\def \partname{}
+
+\usepackage{tikz}
+\usetikzlibrary{positioning, shapes, fit, calc, arrows.meta, patterns, chains, arrows, decorations.pathreplacing}
+%\usetikzlibrary{external}
+%\tikzexternalize[prefix=tikz_compile/]
+\newcommand{\tikzexternaldisable}{}
+\newcommand{\tikzexternalenable}{}
+
+\newcommand{\cblock}[1]{
+ \hspace{-6pt}
+ \tikzexternaldisable
+ \begin{tikzpicture}
+   [
+   node/.style={square, minimum size=10mm, thick, line width=2pt},
+   ]
+   %\node[fill={rgb,255:red,#1;green,#2;blue,#3}] () [] {};
+   \node[fill={#1}, draw={#1}, fill opacity=0.25] {};
+ \end{tikzpicture}%
+ \tikzexternalenable
+}
+
+\newcommand{\cblockfull}[1]{
+ \hspace{-6pt}
+ \tikzexternaldisable
+ \begin{tikzpicture}
+   [
+   node/.style={square, minimum size=10mm, thick, line width=2pt},
+   ]
+   \node[fill={#1}, draw={#1}] {};
+ \end{tikzpicture}%
+ \tikzexternalenable
+}
+
+\newcommand{\cblockhtml}[1]{
+ %\hspace{-1.5mm}
+ \definecolor{#1}{HTML}{#1}
+ \begin{tikzpicture}
+   [
+   node/.style={square, minimum size=10mm, thick, line width=0pt},
+   ]
+   \node[fill={#1}] {};
+ \end{tikzpicture}%
+}
+
+\newcommand{\cdashed}{
+\begin{tikzpicture}   
+\draw[fill=white, draw=white] (0,0) circle (3pt);
+\draw[color=black, ultra thick, densely dashed] (-0.2,0) -- (0.2,0);
+\end{tikzpicture}
+%\hspace{-5pt}
+}
+
+\newcommand{\ctriangle}[1]{
+\begin{tikzpicture}
+\draw[fill={#1}, draw={#1}] (0.1,0.1) -- (-0.1,0.1) -- (0,-0.1) -- cycle;
+\end{tikzpicture}
+}
+
+\newcommand{\cinvtriangle}[1]{
+\begin{tikzpicture}
+\draw[fill={#1}, draw={#1}] (-0.1,-0.1) -- (0.1,-0.1) -- (0,0.1) -- cycle;
+\end{tikzpicture}
+}
+
+\newcommand{\ccircle}[1]{
+\begin{tikzpicture}
+\draw[fill={#1}, draw=#1] (0,0) circle (3pt);
+\end{tikzpicture}
+}
+
+\newcommand{\po}{\phantom{0}}
+\newcommand{\mhl}[1]{\sethlcolor{hl}\hl{#1}}
+\newcommand{\mlhl}[1]{\sethlcolor{sb_orange_025}\hl{#1}}
+
+\hyphenation{OpenAI}
+\hyphenation{MuJoCo}
+
+\newcommand{\appendixfigure}[1]{
+\centering
+\hfill
+\hspace{14pt}
+\begin{tikzpicture}[trim axis right, trim axis left]
+\begin{axis}[
+    width=0.175\textwidth,
+    x tick label style={yshift=2pt},
+    y tick label style={xshift=2pt},
+    ylabel style={yshift=-3pt},
+    title={\phantom{p}HalfCheetah\phantom{p}},
+    ylabel={Total Reward (1k)},
+    xlabel={Time steps (1M)},
+    xtick={0, 0.5, 1.0},
+    xticklabels={0, 0.5, 1.0},
+    ytick={0, 4, 8, 12, 16, 20},
+    yticklabels={0, 4, 8, 12, 16, 20},
+]
+\addplot graphics [
+ymin=-0.6, ymax=20.6,
+xmin=-0.06, xmax=1.06,
+]{appendix_images/#1_0.png};
+\end{axis}
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hspace{-6pt}
+\begin{tikzpicture}[trim axis right]
+\begin{axis}[
+    width=0.175\textwidth,
+    x tick label style={yshift=2pt},
+    y tick label style={xshift=2pt},
+    title={Hopper},
+    xlabel={Time steps (1M)},
+    xtick={0, 0.5, 1.0},
+    xticklabels={0, 0.5, 1.0},
+    ytick={0, 1, 2, 3, 4},
+    yticklabels={0, 1, 2, 3, 4},
+]
+\addplot graphics [
+ymin=-0.13, ymax=4.33,
+xmin=-0.06, xmax=1.06,
+]{appendix_images/#1_1.png};
+\end{axis}
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hspace{-6pt}
+\begin{tikzpicture}[trim axis right]
+\begin{axis}[
+    width=0.175\textwidth,
+    x tick label style={yshift=2pt},
+    y tick label style={xshift=2pt},    
+    title={\phantom{p}Walker2d\phantom{p}},
+    xlabel={Time steps (1M)},
+    xtick={0, 0.5, 1.0},
+    xticklabels={0, 0.5, 1.0},
+    ytick={0, 2, 4, 6, 8},
+    yticklabels={0, 2, 4, 6, 8},
+]
+\addplot graphics [
+ymin=-0.21, ymax=7.21,
+xmin=-0.06, xmax=1.06,
+]{appendix_images/#1_2.png};
+\end{axis}
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hspace{-6pt}
+\begin{tikzpicture}[trim axis right]
+\begin{axis}[
+    width=0.175\textwidth,
+    x tick label style={yshift=2pt},
+    y tick label style={xshift=2pt},
+    title={\phantom{p}Ant\phantom{p}},
+    xlabel={Time steps (1M)},
+    xtick={0, 0.5, 1.0},
+    xticklabels={0, 0.5, 1.0},
+    ytick={0, 3, 6, 9},
+    yticklabels={0, 3, 6, 9},
+]
+\addplot graphics [
+ymin=-0.29, ymax=9.79,
+xmin=-0.06, xmax=1.06,
+]{appendix_images/#1_3.png};
+\end{axis}
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hspace{-6pt}
+\begin{tikzpicture}[trim axis right]
+\begin{axis}[
+    width=0.175\textwidth,
+    x tick label style={yshift=2pt},
+    y tick label style={xshift=2pt},
+    title={\phantom{p}Humanoid\phantom{p}},
+    xlabel={Time steps (1M)},
+    xtick={0, 0.5, 1.0},
+    xticklabels={0, 0.5, 1.0},
+    ytick={0, 2, 4, 6, 8, 10},
+    yticklabels={0, 2, 4, 6, 8, 10},
+]
+\addplot graphics [
+ymin=-0.26, ymax=8.76,
+xmin=-0.06, xmax=1.06,
+]{appendix_images/#1_4.png};
+\end{axis}
+\end{tikzpicture}
+}
+
+
+\newcommand{\appendixfigurefive}[1]{
+\centering
+\hspace{14pt}
+\begin{tikzpicture}[trim axis right, trim axis left]
+\begin{axis}[
+    width=0.175\textwidth,
+    x tick label style={yshift=2pt},
+    y tick label style={xshift=2pt},
+    ylabel style={yshift=-3pt},
+    title={\phantom{p}HalfCheetah\phantom{p}},
+    ylabel={Total Reward (1k)},
+    xlabel={Time steps (1M)},
+    xtick={0, 1, 2, 3, 4, 5},
+    xticklabels={0, 1, 2, 3, 4, 5},
+    ytick={0, 4, 8, 12, 16, 20},
+    yticklabels={0, 4, 8, 12, 16, 20},
+]
+\addplot graphics [
+ymin=-0.6, ymax=20.6,
+xmin=-0.15, xmax=5.15,
+]{appendix_images/#1_0.png};
+\end{axis}
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hspace{-6pt}
+\begin{tikzpicture}[trim axis right]
+\begin{axis}[
+    width=0.175\textwidth,
+    x tick label style={yshift=2pt},
+    y tick label style={xshift=2pt},
+    title={Hopper},
+    xlabel={Time steps (1M)},
+    xtick={0, 1, 2, 3, 4, 5},
+    xticklabels={0, 1, 2, 3, 4, 5},
+    ytick={0, 1, 2, 3, 4},
+    yticklabels={0, 1, 2, 3, 4},
+]
+\addplot graphics [
+ymin=-0.135, ymax=4.635,
+xmin=-0.15, xmax=5.15,
+]{appendix_images/#1_1.png};
+\end{axis}
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hspace{-6pt}
+\begin{tikzpicture}[trim axis right]
+\begin{axis}[
+    width=0.175\textwidth,
+    x tick label style={yshift=2pt},
+    y tick label style={xshift=2pt},    
+    title={\phantom{p}Walker2d\phantom{p}},
+    xlabel={Time steps (1M)},
+    xtick={0, 1, 2, 3, 4, 5},
+    xticklabels={0, 1, 2, 3, 4, 5},
+    ytick={0, 2, 4, 6, 8},
+    yticklabels={0, 2, 4, 6, 8},
+]
+\addplot graphics [
+ymin=-0.24, ymax=8.24,
+xmin=-0.15, xmax=5.15,
+]{appendix_images/#1_2.png};
+\end{axis}
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hspace{-8pt}
+\begin{tikzpicture}[trim axis right]
+\begin{axis}[
+    width=0.175\textwidth,
+    x tick label style={yshift=2pt},
+    y tick label style={xshift=2pt},
+    title={\phantom{p}Ant\phantom{p}},
+    xlabel={Time steps (1M)},
+    xtick={0, 1, 2, 3, 4, 5},
+    xticklabels={0, 1, 2, 3, 4, 5},
+    ytick={0, 3, 6, 9, 12},
+    yticklabels={0, 3, 6, 9, 12},
+]
+\addplot graphics [
+ymin=-0.36, ymax=12.36,
+xmin=-0.15, xmax=5.15,
+]{appendix_images/#1_3.png};
+\end{axis}
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hspace{-8pt}
+\begin{tikzpicture}[trim axis right]
+\begin{axis}[
+    width=0.175\textwidth,
+    x tick label style={yshift=2pt},
+    y tick label style={xshift=2pt},
+    title={\phantom{p}Humanoid\phantom{p}},
+    xlabel={Time steps (1M)},
+    xtick={0, 1, 2, 3, 4, 5},
+    xticklabels={0, 1, 2, 3, 4, 5},
+    ytick={0, 2, 4, 6, 8, 10},
+    yticklabels={0, 2, 4, 6, 8, 10},
+]
+\addplot graphics [
+ymin=-0.33, ymax=11.33,
+xmin=-0.15, xmax=5.15,
+]{appendix_images/#1_4.png};
+\end{axis}
+\end{tikzpicture}
+
+}
+
+\newcommand{\appendixfigurecheck}[1]{
+\centering
+\hspace{14pt}
+\begin{tikzpicture}[trim axis right, trim axis left]
+\begin{axis}[
+    width=0.175\textwidth,
+    x tick label style={yshift=2pt},
+    y tick label style={xshift=2pt},
+    ylabel style={yshift=-3pt},
+    title={\phantom{p}HalfCheetah\phantom{p}},
+    ylabel={Total Reward (1k)},
+    xlabel={Time steps (1M)},
+    xtick={0, 1, 2, 3, 4, 5},
+    xticklabels={0, 1, 2, 3, 4, 5},
+    ytick={0, 4, 8, 12, 16, 20},
+    yticklabels={0, 4, 8, 12, 16, 20},
+]
+\addplot graphics [
+ymin=-0.6, ymax=20.6,
+xmin=-0.15, xmax=5.15,
+]{appendix_images/#1_0.png};
+\end{axis}
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hspace{-6pt}
+\begin{tikzpicture}[trim axis right]
+\begin{axis}[
+    width=0.175\textwidth,
+    x tick label style={yshift=2pt},
+    y tick label style={xshift=2pt},
+    title={Hopper},
+    xlabel={Time steps (1M)},
+    xtick={0, 1, 2, 3, 4, 5},
+    xticklabels={0, 1, 2, 3, 4, 5},
+    ytick={0, 1, 2, 3, 4},
+    yticklabels={0, 1, 2, 3, 4},
+]
+\addplot graphics [
+ymin=-0.135, ymax=4.635,
+xmin=-0.15, xmax=5.15,
+]{appendix_images/#1_1.png};
+\end{axis}
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hspace{-6pt}
+\begin{tikzpicture}[trim axis right]
+\begin{axis}[
+    width=0.175\textwidth,
+    x tick label style={yshift=2pt},
+    y tick label style={xshift=2pt},    
+    title={\phantom{p}Walker2d\phantom{p}},
+    xlabel={Time steps (1M)},
+    xtick={0, 1, 2, 3, 4, 5},
+    xticklabels={0, 1, 2, 3, 4, 5},
+    ytick={0, 2, 4, 6, 8},
+    yticklabels={0, 2, 4, 6, 8},
+]
+\addplot graphics [
+ymin=-0.255, ymax=8.755,
+xmin=-0.15, xmax=5.15,
+]{appendix_images/#1_2.png};
+\end{axis}
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hspace{-8pt}
+\begin{tikzpicture}[trim axis right]
+\begin{axis}[
+    width=0.175\textwidth,
+    x tick label style={yshift=2pt},
+    y tick label style={xshift=2pt},
+    title={\phantom{p}Ant\phantom{p}},
+    xlabel={Time steps (1M)},
+    xtick={0, 1, 2, 3, 4, 5},
+    xticklabels={0, 1, 2, 3, 4, 5},
+    ytick={0, 3, 6, 9, 12},
+    yticklabels={0, 3, 6, 9, 12},
+]
+\addplot graphics [
+ymin=-0.36, ymax=12.36,
+xmin=-0.15, xmax=5.15,
+]{appendix_images/#1_3.png};
+\end{axis}
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hspace{-8pt}
+\begin{tikzpicture}[trim axis right]
+\begin{axis}[
+    width=0.175\textwidth,
+    x tick label style={yshift=2pt},
+    y tick label style={xshift=2pt},
+    title={\phantom{p}Humanoid\phantom{p}},
+    xlabel={Time steps (1M)},
+    xtick={0, 1, 2, 3, 4, 5},
+    xticklabels={0, 1, 2, 3, 4, 5},
+    ytick={0, 3, 6, 9, 12},
+    yticklabels={0, 3, 6, 9, 12},
+]
+\addplot graphics [
+ymin=-0.36, ymax=12.36,
+xmin=-0.15, xmax=5.15,
+]{appendix_images/#1_4.png};
+\end{axis}
+\end{tikzpicture}
+
+}
+
+
+
+
+\newcommand{\appendixextrapolation}[1]{
+\centering
+\begin{tikzpicture}[trim axis right]
+    \begin{axis}[
+        width=0.175\textwidth,
+%           x tick label style={yshift=2pt},
+%           y tick label style={xshift=2pt},
+        title={Performance by seed},
+        ylabel={Total Reward (1k)},
+        xlabel={Time steps (1M)},
+        xtick={0, 1, 2, 3, 4, 5},
+        xticklabels={0, 1, 2, 3, 4, 5},
+        ytick={0, 3, 6, 9, 12},
+        yticklabels={0, 3, 6, 9, 12},
+        ]
+        \addplot graphics [
+        ymin=-0.36, ymax=12.36,
+        xmin=-0.15, xmax=5.15,
+        ]{appendix_images/extrapolation_1M_perf_#1.png};
+    \end{axis}
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \begin{tikzpicture}[trim axis right]
+    \begin{axis}[
+        width=0.175\textwidth,
+%           x tick label style={yshift=2pt},
+%           y tick label style={xshift=2pt},
+        title={Value estimate by seed},
+        ylabel={Value Estimate (1k)},
+        xlabel={Time steps (1M)},
+        xtick={0, 1, 2, 3, 4, 5},
+        xticklabels={0, 1, 2, 3, 4, 5},
+        ytick={0, 1, 2, 3},
+        yticklabels={0, 1, 2, 3},
+        ]
+        \addplot graphics [
+        ymin=-0.06, ymax=2.06,
+        xmin=-0.15, xmax=5.15,
+        ]{appendix_images/extrapolation_1M_vals_#1.png};
+    \end{axis}
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \begin{tikzpicture}[trim axis right]
+    \begin{axis}[
+        width=0.175\textwidth,
+%           x tick label style={yshift=2pt},
+%           y tick label style={xshift=2pt},
+        title={Performance by seed},
+        ylabel={Total Reward (1k)},
+        xlabel={Time steps (1M)},
+        xtick={0, 1, 2, 3, 4, 5},
+        xticklabels={0, 1, 2, 3, 4, 5},
+        ytick={0, 3, 6, 9, 12},
+        yticklabels={0, 3, 6, 9, 12},
+        ]
+        \addplot graphics [
+        ymin=-0.36, ymax=12.36,
+        xmin=-0.15, xmax=5.15,
+        ]{appendix_images/extrapolation_100k_perf_#1.png};
+    \end{axis}
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \begin{tikzpicture}[trim axis right]
+    \begin{axis}[
+        width=0.175\textwidth,
+%           x tick label style={yshift=2pt},
+%           y tick label style={xshift=2pt},
+        title={Value estimate by seed},
+        ylabel={Value Estimate (1k)},
+        xlabel={Time steps (1M)},
+        xtick={0, 1, 2, 3, 4, 5},
+        xticklabels={0, 1, 2, 3, 4, 5},
+        ytick={0, 1, 2, 3},
+        yticklabels={0, 1, 2, 3},
+        ]
+        \addplot graphics [
+        ymin=-0.06, ymax=2.06,
+        xmin=-0.15, xmax=5.15,
+        ]{appendix_images/extrapolation_100k_vals_#1.png};
+    \end{axis}
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+}
