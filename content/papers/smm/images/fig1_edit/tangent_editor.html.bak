@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tangent Line Editor</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            padding: 20px;
+        }
+        h1 { text-align: center; margin-bottom: 20px; color: #00cc00; }
+        .container { max-width: 1600px; margin: 0 auto; }
+        .controls {
+            background: #16213e;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+        .control-group { display: flex; flex-direction: column; gap: 3px; }
+        .control-group label { font-size: 11px; color: #888; text-transform: uppercase; }
+        .control-group input { width: 70px; padding: 5px; border: 1px solid #444; border-radius: 4px; background: #0f0f23; color: #eee; }
+        .method-btn, .point-btn {
+            padding: 8px 15px;
+            border: 2px solid #444;
+            border-radius: 5px;
+            background: #0f0f23;
+            color: #eee;
+            cursor: pointer;
+        }
+        .method-btn.active { border-color: #ffcc00; background: #ffcc0022; }
+        .point-btn.active { border-color: #00cc00; background: #00cc0022; }
+        .image-container { position: relative; background: #000; border-radius: 10px; overflow: hidden; cursor: crosshair; }
+        .image-container img { display: block; width: 100%; height: auto; }
+        .circle { position: absolute; border: 4px solid #00cc00; border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%); }
+        .circle.large { border-width: 5px; }
+        .line { position: absolute; height: 5px; background: #00cc00; transform-origin: left center; pointer-events: none; }
+        .point { position: absolute; width: 16px; height: 16px; background: red; border-radius: 50%; transform: translate(-50%, -50%); cursor: move; z-index: 10; border: 2px solid white; }
+        .point.p2 { background: blue; }
+        .point.p3 { background: orange; }
+        .point.p4 { background: purple; }
+        .output-section { background: #16213e; padding: 15px; border-radius: 10px; margin-top: 20px; }
+        .command-output { background: #0f0f23; padding: 10px; border-radius: 5px; font-family: monospace; font-size: 11px; white-space: pre-wrap; }
+        .copy-btn { margin-top: 10px; padding: 8px 15px; background: #00cc00; color: #000; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .coords { position: fixed; top: 10px; right: 10px; background: #16213e; padding: 10px; border-radius: 5px; font-family: monospace; font-size: 12px; }
+        .instructions { background: #16213e; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-size: 13px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tangent Line Editor</h1>
+        
+        <div class="instructions">
+            <strong>Drag the colored points</strong> to position tangent lines. Red/Blue = top line endpoints, Orange/Purple = bottom line endpoints.
+            Select SAC or SMM to edit that zoom callout.
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label>Method</label>
+                <div style="display:flex;gap:8px;">
+                    <button class="method-btn active" data-method="sac">SAC</button>
+                    <button class="method-btn" data-method="smm">SMM-AC</button>
+                </div>
+            </div>
+            <div class="control-group">
+                <label>Active Point</label>
+                <div style="display:flex;gap:8px;">
+                    <button class="point-btn active" data-point="0" style="border-color:red;">P1</button>
+                    <button class="point-btn" data-point="1" style="border-color:blue;">P2</button>
+                    <button class="point-btn" data-point="2" style="border-color:orange;">P3</button>
+                    <button class="point-btn" data-point="3" style="border-color:purple;">P4</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="coords">
+            <div>Mouse: <span id="mousePos">-</span></div>
+            <div>Pixels: <span id="pixelPos">-</span></div>
+        </div>
+
+        <div class="image-container" id="imageContainer">
+            <img src="temp_with_zooms.png" id="mainImage" draggable="false">
+        </div>
+
+        <div class="output-section">
+            <h3 style="color:#00cc00;margin-bottom:10px;">ImageMagick Command</h3>
+            <div class="command-output" id="cmdOutput"></div>
+            <button class="copy-btn" onclick="copyCmd()">📋 Copy Command</button>
+        </div>
+    </div>
+
+    <script>
+        const img = document.getElementById('mainImage');
+        const container = document.getElementById('imageContainer');
+        const imgW = 3850, imgH = 1528;
+        
+        // Line endpoints in image pixels: [top_p1, top_p2, bot_p1, bot_p2]
+        const lines = {
+            sac: {
+                small: {x: 2826, y: 606, r: 69},
+                large: {x: 2572, y: 674, r: 138},
+                points: [
+                    {x: 2757, y: 570},  // top line start (on small circle)
+                    {x: 2434, y: 590},  // top line end (on large circle)
+                    {x: 2757, y: 642},  // bot line start
+                    {x: 2434, y: 758}   // bot line end
+                ]
+            },
+            smm: {
+                small: {x: 3738, y: 591, r: 69},
+                large: {x: 3500, y: 677, r: 138},
+                points: [
+                    {x: 3669, y: 555},
+                    {x: 3362, y: 575},
+                    {x: 3669, y: 627},
+                    {x: 3362, y: 779}
+                ]
+            }
+        };
+        
+        let currentMethod = 'sac';
+        let currentPoint = 0;
+        let dragging = null;
+        
+        // Create point elements
+        const pointEls = [];
+        const colors = ['red', 'blue', 'orange', 'purple'];
+        for (let i = 0; i < 4; i++) {
+            const el = document.createElement('div');
+            el.className = 'point' + (i > 0 ? ' p' + (i+1) : '');
+            el.style.background = colors[i];
+            el.dataset.idx = i;
+            container.appendChild(el);
+            pointEls.push(el);
+        }
+        
+        // Create line elements
+        const lineEls = [];
+        for (let i = 0; i < 2; i++) {
+            const el = document.createElement('div');
+            el.className = 'line';
+            container.appendChild(el);
+            lineEls.push(el);
+        }
+        
+        // Create circle elements
+        const circleEls = [];
+        for (let i = 0; i < 2; i++) {
+            const el = document.createElement('div');
+            el.className = 'circle' + (i === 1 ? ' large' : '');
+            container.appendChild(el);
+            circleEls.push(el);
+        }
+        
+        function pixelToPercent(px, total) { return (px / total) * 100; }
+        function percentToPixel(pct, total) { return (pct / 100) * total; }
+        
+        function updateDisplay() {
+            const rect = img.getBoundingClientRect();
+            const data = lines[currentMethod];
+            
+            // Update circles
+            circleEls[0].style.left = pixelToPercent(data.small.x, imgW) + '%';
+            circleEls[0].style.top = pixelToPercent(data.small.y, imgH) + '%';
+            circleEls[0].style.width = (data.small.r * 2 / imgW * rect.width) + 'px';
+            circleEls[0].style.height = (data.small.r * 2 / imgH * rect.height) + 'px';
+            
+            circleEls[1].style.left = pixelToPercent(data.large.x, imgW) + '%';
+            circleEls[1].style.top = pixelToPercent(data.large.y, imgH) + '%';
+            circleEls[1].style.width = (data.large.r * 2 / imgW * rect.width) + 'px';
+            circleEls[1].style.height = (data.large.r * 2 / imgH * rect.height) + 'px';
+            
+            // Update points
+            for (let i = 0; i < 4; i++) {
+                pointEls[i].style.left = pixelToPercent(data.points[i].x, imgW) + '%';
+                pointEls[i].style.top = pixelToPercent(data.points[i].y, imgH) + '%';
+            }
+            
+            // Update lines
+            for (let i = 0; i < 2; i++) {
+                const p1 = data.points[i * 2];
+                const p2 = data.points[i * 2 + 1];
+                const x1 = p1.x / imgW * rect.width;
+                const y1 = p1.y / imgH * rect.height;
+                const x2 = p2.x / imgW * rect.width;
+                const y2 = p2.y / imgH * rect.height;
+                const len = Math.sqrt((x2-x1)**2 + (y2-y1)**2);
+                const angle = Math.atan2(y2-y1, x2-x1) * 180 / Math.PI;
+                lineEls[i].style.left = x1 + 'px';
+                lineEls[i].style.top = y1 + 'px';
+                lineEls[i].style.width = len + 'px';
+                lineEls[i].style.transform = `rotate(${angle}deg)`;
+            }
+            
+            updateCommand();
+        }
+        
+        function updateCommand() {
+            const sac = lines.sac;
+            const smm = lines.smm;
+            const cmd = `cd images/fig1_edit && magick temp_with_zooms.png \\
+  -strokewidth 5 -stroke '#00CC00' -fill none \\
+  -draw "ellipse ${sac.small.x},${sac.small.y} ${sac.small.r},${sac.small.r} 0,360" \\
+  -draw "ellipse ${sac.large.x},${sac.large.y} ${sac.large.r},${sac.large.r} 0,360" \\
+  -draw "ellipse ${smm.small.x},${smm.small.y} ${smm.small.r},${smm.small.r} 0,360" \\
+  -draw "ellipse ${smm.large.x},${smm.large.y} ${smm.large.r},${smm.large.r} 0,360" \\
+  -draw "line ${sac.points[0].x},${sac.points[0].y} ${sac.points[1].x},${sac.points[1].y}" \\
+  -draw "line ${sac.points[2].x},${sac.points[2].y} ${sac.points[3].x},${sac.points[3].y}" \\
+  -draw "line ${smm.points[0].x},${smm.points[0].y} ${smm.points[1].x},${smm.points[1].y}" \\
+  -draw "line ${smm.points[2].x},${smm.points[2].y} ${smm.points[3].x},${smm.points[3].y}" \\
+  with_zoom_final.png`;
+            document.getElementById('cmdOutput').textContent = cmd;
+        }
+        
+        function copyCmd() {
+            navigator.clipboard.writeText(document.getElementById('cmdOutput').textContent);
+            document.querySelector('.copy-btn').textContent = '✅ Copied!';
+            setTimeout(() => document.querySelector('.copy-btn').textContent = '📋 Copy Command', 2000);
+        }
+        
+        // Event handlers
+        document.querySelectorAll('.method-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentMethod = btn.dataset.method;
+                updateDisplay();
+            });
+        });
+        
+        document.querySelectorAll('.point-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.point-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentPoint = parseInt(btn.dataset.point);
+            });
+        });
+        
+        container.addEventListener('mousedown', (e) => {
+            const rect = img.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width * imgW;
+            const y = (e.clientY - rect.top) / rect.height * imgH;
+            
+            // Check if clicking on a point
+            const data = lines[currentMethod];
+            for (let i = 0; i < 4; i++) {
+                const dx = x - data.points[i].x;
+                const dy = y - data.points[i].y;
+                if (Math.sqrt(dx*dx + dy*dy) < 30) {
+                    dragging = i;
+                    currentPoint = i;
+                    document.querySelectorAll('.point-btn').forEach((b,idx) => b.classList.toggle('active', idx === i));
+                    return;
+                }
+            }
+            
+            // Otherwise move current point
+            data.points[currentPoint].x = Math.round(x);
+            data.points[currentPoint].y = Math.round(y);
+            updateDisplay();
+        });
+        
+        container.addEventListener('mousemove', (e) => {
+            const rect = img.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width * imgW;
+            const y = (e.clientY - rect.top) / rect.height * imgH;
+            document.getElementById('mousePos').textContent = `${(x/imgW*100).toFixed(1)}%, ${(y/imgH*100).toFixed(1)}%`;
+            document.getElementById('pixelPos').textContent = `${Math.round(x)}, ${Math.round(y)}`;
+            
+            if (dragging !== null) {
+                lines[currentMethod].points[dragging].x = Math.round(x);
+                lines[currentMethod].points[dragging].y = Math.round(y);
+                updateDisplay();
+            }
+        });
+        
+        document.addEventListener('mouseup', () => { dragging = null; });
+        
+        img.onload = updateDisplay;
+        if (img.complete) updateDisplay();
+        window.addEventListener('resize', updateDisplay);
+    </script>
+</body>
+</html>

@@ -1,0 +1,838 @@
+
+\documentclass{article} % For LaTeX2e
+\usepackage{iclr2027_conference,times}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{amssymb} % For \checkmark
+\usetikzlibrary{positioning, shapes.geometric, arrows.meta, calc, fit}
+
+% Optional math commands from https://github.com/goodfeli/dlbook_notation.
+\input{math_commands.tex}
+\DeclareMathOperator*{\E}{\mathbb{E}}
+\DeclareMathOperator*{\V}{\mathbb{V}}
+\DeclareMathOperator*{\PROB}{\mathbb{P}}
+\newcommand\expect[1]{\E\left[ #1 \right]}
+\newcommand\expectwrt[2]{\E_{#2}\left[ #1 \right]}
+\newcommand\variance[1]{\V\left[ #1 \right]}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\prob}[1]{\PROB\left(#1\right)}
+\newcommand{\condprob}[2]{\PROB\left(\left. #1 \right| #2 \right)}
+
+\usepackage[table]{xcolor}
+\definecolor{highlight}{HTML}{A9D9DB}
+\newcommand{\sd}[1]{{\scriptsize$\pm$#1}}
+
+\newcommand{\eg}{\textit{e.g.}}
+\newcommand{\ie}{\textit{i.e.}}
+\newcommand{\cf}{\textit{c.f.}}
+
+\usepackage{hyperref}
+\usepackage{url}
+
+\usepackage{mine}
+
+\newcommand{\mo}[1]{{\footnotesize \color{magenta} Mo: {#1}}}
+\newcommand{\john}[1]{{\footnotesize \color{purple} John: {#1}}}
+\newcommand{\florence}[1]{{\footnotesize \color{blue} Florence: {#1}}}
+\newcommand{\hc}[1]{{\footnotesize\color{olive} HC: #1}}
+
+\title{Regularised RL improves sim-to-real transfer}
+
+% Authors must not appear in the submitted version. They should be hidden
+% as long as the \iclrfinalcopy macro remains commented out below.
+% Non-anonymous submissions will be rejected without review.
+
+\author{
+Danilo Vucetic$^{1,2}$\thanks{Equal contribution\\ \hspace*{1.8em}Correspondence: \texttt{danilo.vucetic@mila.quebec}, \texttt{mo.danesh@mail.mcgill.ca}}
+\quad
+Mohamad H. Danesh$^{1,3}$\footnotemark[1]
+\quad
+Florence Clerc$^{1,3}$
+\\
+\bfseries
+Hsiu-Chin Lin$^{1,3}$
+\quad
+Jonathan Tremblay$^{4}$
+\\[2mm]
+$^{1}$Mila -- Quebec AI Institute
+\quad
+$^{2}$Université de Montréal
+\quad
+$^{3}$McGill University
+\quad
+$^{4}$NVIDIA
+}
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to \LaTeX{} to determine where to break
+% the lines. Using \AND forces a linebreak at that point. So, if \LaTeX{}
+% puts 3 of 4 authors names on the first line, and the last on the second
+% line, try using \AND instead of \And before the third author name.
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}}
+
+\iclrfinalcopy % Uncomment for camera-ready version, but NOT for submission.
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+    Regularised reinforcement learning (RL) has provable robustness guarantees that should ease the transfer of policies from simulation to robots, known as sim-to-real.
+    Yet, weakly regularised algorithms like Proximal Policy Optimisation (PPO) remain the de facto choice in sim-to-real pipelines, while the practical benefits of regularisation for transfer remain poorly characterised.
+    In this work, we study the sim-to-real performance of commonly used RL algorithms, with the aim of characterising the effects of regularisation on robotic performance.
+    To that end, we derive Soft MellowMax Actor-Critic (\ourMethod), a novel regularised RL algorithm based on the soft mellowmax value function, which carries strong robustness guarantees.
+    On MuJoCo continuous control benchmarks, \ourMethod is competitive with baselines like Soft Actor-Critic (SAC).
+    On real robots, \ourMethod achieves higher return, while exhibiting greater robustness to perturbations in observations, the environment, and dynamics than baselines.
+    Together, these results demonstrate that regularised RL improves real-world policy deployment through better robustness to the sim-to-real gap, and changing real-world conditions. 
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+    Reinforcement learning (RL) has become a standard tool for robotic control, with on-policy, weakly regularised algorithms such as Proximal Policy Optimisation (PPO) \citep{schulman2017proximal_PPO} serving as the de facto choice in most sim-to-real pipelines.
+    Recent work has shown that carefully stabilised off-policy RL algorithms can match or outperform PPO in massively parallel simulators while also transferring to real legged robots, including humanoids and quadrupeds \citep{gallici2025simplifying_pqn, seo2025learning_fastsac, seo2025fasttd3, kim2026flashsac, rslrlsac2026bridging}.
+    However, these evaluations primarily focus on task performance: whether a policy can complete a task under the conditions for which it was trained. In real-world deployment, policies must contend with changes in observations, environment properties, and system dynamics that are difficult to model exhaustively in simulation a priori. Robustness to such perturbations is therefore an important aspect of reliable sim-to-real transfer.
+
+    Regularisation provides a principled way to induce robustness. Regularised RL has long dominated benchmarks in continuous control and arcade games, demonstrating superior sample efficiency and stable optimisation \citep{dam2024unified_tree_search, haarnoja2018soft, ahmed_le_roux_2019_entropy_impact_pol_opt}.
+    Beyond these practical benefits, the theoretical duality between regularised and robust RL suggests that regularisation can also provide implicit robustness to dynamics and task perturbations \citep{derman_twice_regularized, eysenbach2022maximum, pmlr-v130-husain21a_reg_pol_rew_rob, brekelmans2022_divergence_robustness}.
+    % Notably, robustness induced by regularised RL differs from techniques like Domain Randomisation (DR), which maximises average return across variations of an environment, by for instance, randomising the initial and target positions of a robot \citep{eysenbach2022maximum, Mittal_Isaac_Lab_2025}.
+    % While the two mechanisms are complementary, DR requires explicit design over the space of perturbations, whereas regularisation is automatic.
+    % This raises a natural empirical question: \textit{does the robustness induced by regularisation translate into more reliable real-world policy deployment?}
+    This mechanism is complementary to Domain Randomisation (DR), which explicitly trains policies over a user-specified distribution of environment variations, such as changes to initial conditions or physical parameters \citep{eysenbach2022maximum, Mittal_Isaac_Lab_2025}.
+    Whereas DR requires the practitioner to anticipate and specify the perturbations of interest, regularisation can induce robustness without explicitly enumerating them.
+    This raises a natural empirical question: \textit{does the robustness induced by regularisation translate into more reliable real-world policy deployment?}
+
+    Robotics is a natural testbed to evaluate the robustness of policies because the sim-to-real gap is precisely an unmodeled change in the dynamics under which the policy must achieve high return.
+    \textbf{We hypothesize that policies robust to a larger set of perturbations achieve 1) higher real-world return under sim-to-real transfer, and 2) higher retention of their performance under deployment-time dynamics perturbations.}
+    \citet{TGM_2025_jiralerspong} show that RL with the Soft MellowMax (SMM) value function is robust to a larger set of perturbations than entropy-regularised RL, making it a natural target for our investigation.
+    However, SMM has only been defined for discrete state-action spaces, usually in Q-learning algorithms \citep{asadi2017alternative_mellowmax, gan2021stabilizing_soft_mellowmax}.
+    Extending SMM to continuous continuous control is non-trivial, as the value function requires integrating over an intractable reference policy. To overcome this, we propose Soft MellowMax Actor-Critic (\ourMethod), which approximates the SMM reference policy using a dedicated, slowly updated reference network, ensuring stable actor-critic optimisation in continuous domains. 
+    
+    \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{images/SMM-AC.pdf}
+        \caption{Overview of the Sim-to-Real Robustness Evaluation. Top: Agents trained on the Franka Lift task in simulation are deployed with a cube with a different center-of-mass than the one seen during training. The first frame shows the initial state, while the second shows the outcome, where the policy either successfully lifts the cube or fails to grasp it.
+        Bottom: Agents trained on the ANYmal-D Rough task are deployed in the real world to climb up stairs. With noise added to the observation, non-regularised methods fail to climb the stairs.}
+        \label{fig:intro_our_method_rocks}
+    \end{figure}
+
+    To test our hypotheses, we evaluate \ourMethod alongside PPO, SAC, and TD3 in simulation and on real-world robots, including a Franka arm and an ANYmal-D quadruped.
+    In addition to real-world task performance, we evaluate policies under deployment-time perturbations to observations, environment properties, and system dynamics. Across these experiments, regularised methods maintain higher performance in sim-to-real transfer and under real-world perturbations, while \ourMethod achieves the strongest performance and robustness across tasks.
+    We also show that regularised methods are more likely to be deployable than standard RL policies, even under large sim-to-real gaps.
+    \autoref{fig:intro_our_method_rocks} illustrates this sim-to-real robustness in the Franka cube-lifting task and in ANYmal-D rough-terrain locomotion, showing that under real-world perturbations, regularised methods deploy successfully.
+    %For example, when the mass of the object in the Franka cube-lifting task is doubled, PPO and FastTD3 fail to complete the task, whereas regularised methods successfully lift the cube. Similarly, regularised policies demonstrate greater robustness during rough-terrain locomotion on ANYmal-D (\autoref{fig:intro_our_method_rocks}).
+    \textbf{Together, our results provide empirical evidence that the robustness induced by regularisation can translate into improved reliability during real-world deployment.}
+    % There, PPO and FastTD3 fail a pre-registered simulation safety screen and are not deployed under perturbation, so the locomotion comparison is between two regularised methods. The effect is also not uniform. On the contact-free Reach task PPO transfers best, and the advantage of regularisation is largest under observation noise rather than under the dynamics perturbations that the theory addresses. \textbf{These results provide empirical evidence that the robustness associated with regularisation can translate into improved reliability during real-world deployment, and delimit the conditions under which it does so.}
+    In this work we
+    \begin{itemize}[leftmargin=*, nosep]
+        \item extend soft mellowmax to continuous state-action spaces and derive \textbf{Soft MellowMax Actor-Critic (\ourMethod)}, a practical off-policy actor-critic algorithm based on SAC (\autoref{sec:smm_ac});
+        \item validate \ourMethod's performance in simulation on MuJoCo continuous-control benchmarks, showing that it achieves similar average returns to SAC and other baselines (\autoref{sec:mujoco});
+        \item characterise the sim-to-real performance and real-world perturbation robustness of RL policies on manipulation and locomotion tasks, showing that \ourMethod achieves higher real-world returns and maintains stronger performance under perturbations than the baselines (\autoref{sec:robotic}).
+        % while achieving high nominal task performance (\autoref{sec:robotic}).
+    \end{itemize}
+    
+    % We stress that our hypothesis is motivated by the theory rather than a corollary of it.
+    % Robustness guarantees concern sets of dynamics and reward functions, whose connection to the perturbations a robot encounters (such as a heavier payload, a shifted centre of mass, a target outside the training range, or an actuator's higher friction coefficients) are murky at best. Thus, characterising the sim-to-real performance of RL algorithms and their robustness to environmental perturbations fills an important gap in the literature and our understanding of performant robotic policies.
+    % \john{this paragraph does not add much to the intro, I would comment out}
+    % A natural extension to the above hypothesis follows from the above discussion: \textbf{a policy, robust to a larger set, will produce yet better sim-to-real performance}.
+
+    % In this work we
+    % \begin{itemize}[leftmargin=*, nosep]
+    %     % \item characterise the sim-to-real performance and real-world perturbation robustness of RL policies on manipulation and locomotion tasks, showing that \ourMethod achieves higher real-world returns and maintains stronger performance under perturbations than the baselines (\autoref{sec:robotic}).
+    %     % \item disentangle the two mechanisms inside \ourMethod. The mellowmax backup and the slowly updated reference network that stabilises the actor, showing which of them produces the robustness effect (\autoref{sec:ablations});
+    %     \item characterise the sim-to-real performance and real-world perturbation robustness of RL policies on manipulation and locomotion tasks, showing that \ourMethod attains the strongest nominal transfer on Lift and both locomotion tasks and retains the most of its return in every perturbation condition tested, while PPO transfers best on contact-free Reach (\autoref{sec:robotic}).
+    %     % while achieving high nominal task performance (\autoref{sec:robotic}).
+    % \end{itemize}
+
+\section{Background \& Related Work}
+\label{sec:background_and_related_work}
+
+    % \subsection{Background} \label{sec:background}
+
+        \textbf{Regularized Markov decision processes and RL}.
+            Regularized Markov Decision Processes (MDPs) append a strongly convex regulariser $\Omega: \Delta_\mathcal{A} \to \mathbb{R}$ to the MDP tuple: $(\mathcal{S}, \mathcal{A}, p, r, \gamma, \Omega, T)$ \citep{geist2019theory_regularizers}. Let $\mathcal{S}$ and $\mathcal{A}$ denote the state and action spaces, $p: \mathcal{S} \times \mathcal{A} \to \Delta_\mathcal{S}$ the transition function, $r: \mathcal{S} \times \mathcal{A} \to \mathbb{R}$ the reward function, $\gamma$ is the discount factor, and $T$ and horizon. By $\Delta_\mathcal{S}$ and $\Delta_\mathcal{A}$, we denote the probability simplices over the state and action spaces, respectively.
+
+            \autoref{equ:regularised_evaluation_funcs} shows the regularised policy evaluation functions $V^\pi_\Omega$ and $Q^\pi_\Omega$, defined over all states and state-action pairs, for policy $\pi(\cdot | s) \in \Delta_\mathcal{A}$ and inverse temperature $\omega$. In regularised RL, $\Omega(\pi(\cdot|s))$ is subtracted from the value function, penalising deviation from some desirable property of the policy. For instance, using negative entropy results in more uniform policies, whereas KL divergence results in policies that are closer to a reference \citep{neu2017unified, haarnoja2018soft, geist2019theory_regularizers}:
+            \begin{equation}
+            \label{equ:regularised_evaluation_funcs}
+                V^\pi_\Omega(s) = \expectwrt{Q^\pi_\Omega(s,a)}{a\sim \pi(\cdot|s)} - \frac{1}{\omega}\Omega(\pi(\cdot|s)), \quad Q^\pi_\Omega(s,a) = r(s,a) + \gamma \expectwrt{V_\Omega(s')}{s' \sim p(\cdot|s,a)}
+            \end{equation}
+            Maximising $V^\pi_\Omega$ with respect to the policy yields the optimal regularised value function. \autoref{table:back_regularised_RL_equations} lists the optimality equations for various regularised RL formulations in discrete action spaces. 
+            It should be noted that regularisation changes the optimal policy compared to standard RL, which can lead to performance failures in situations where deterministic policies are optimal \citep{zhang2025when}.
+
+            \begin{table}[t]
+            \centering
+            \small
+            \caption{Optimality equations for various regularised RL formulations, where $\pi^\text{ref}(\cdot|s) = \operatorname{softmax}(\alpha Q^\star_\Omega(s))$ is an SMM reference policy, and $Q^\star_\Omega(s) = Q^\star_\Omega(s, \cdot)$, for inverse temperatures $\alpha$ and $\omega$.}
+            \renewcommand{\arraystretch}{1.6}
+            \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} l l l l @{}}
+                \toprule
+                \textbf{Name} & \textbf{Regulariser} $\Omega(\pi)$ & \textbf{Value} $V^\star_\Omega(s)$ & \textbf{Policy} $\pi^\star_\Omega(s)$ \\
+                \midrule
+                Negative Entropy & 
+                $\sum_a \pi(a|s) \log \pi(a|s)$ & 
+                $\frac{1}{\omega}\operatorname{log-sum-exp}\bigl(\omega Q^\star_\Omega(s)\bigr)$ & 
+                $\operatorname{softmax}\bigl(\omega Q^\star_\Omega(s)\bigr)$ \\
+                
+                % KL Divergence & 
+                % $D_{\mathrm{KL}}\bigl(\pi(s) \parallel \pi_{\mathrm{ref}}(s)\bigr)$ & 
+                % $\frac{1}{\omega} \log \sum_a \pi_{\mathrm{ref}}(a|s) e^{\omega Q^\star_\Omega(s,a)}$ & 
+                % $\frac{\pi_{\mathrm{ref}}(a|s)e^{\omega Q^\star_\Omega(s,a)}}{\sum_b \pi_{\mathrm{ref}}(b|s)e^{\omega Q^\star_\Omega(s,b)}}$ \\
+                
+                Soft Mellowmax & 
+                $D_{\mathrm{KL}}\bigl(\pi(s) \parallel \pi^\alpha_Q(s)\bigr)$ & 
+                $\frac{1}{\omega} \log \sum_a \pi^\alpha_Q(a|s) e^{\omega Q^\star_\Omega(s,a)}$ & 
+                % $\frac{1}{\omega} \log \dfrac{\sum_a  e^{(\alpha+\omega) Q^\star_\Omega(s,a)}}{\sum_b  e^{\alpha Q^\star_\Omega(s,b)}}$
+                $\operatorname{softmax}\bigl((\alpha+\omega) Q^\star_\Omega(s)\bigr)$ \\
+                \bottomrule
+            \end{tabular*}
+            \label{table:back_regularised_RL_equations}
+            \end{table}
+            
+        \textbf{The benefits of regularisation}.
+            Regularisation confers certain benefits to both the learning process and the robustness of the policy. \citet{ahmed_le_roux_2019_entropy_impact_pol_opt} show that entropy regularisation smooths the loss landscape, leading to more stable and faster training.
+            % In addition, since entropy-regularised policies are more uniform, the policy is less likely to converge to an overly deterministic local minima.
+            \citet{haarnoja2018soft} demonstrate that SAC, an entropy-regularised off-policy RL algorithm, is significantly more sample efficient than standard RL.
+            Alongside the benefits to learning, many works have examined the theoretical duality between regularisation and robustness. For instance, \citet{eysenbach2022maximum} and \citet{brekelmans2022_divergence_robustness} show that entropy- and KL-regularised RL are robust to reward and dynamics perturbations, indicating that policy regularisation improves robustness overall. 
+            % \citet{eysenbach2022maximum} show that entropy-regularised RL is robust to both reward and dynamics perturbations, demonstrating that policy regularisation improves robustness overall. %through an equivalency between reward and dynamics robustness
+            % \citet{brekelmans2022_divergence_robustness} provide further robustness guarantees for divergence-based regularisation (including but not limited to KL).
+            
+            The duality between regularisation and robustness is useful in many application domains, 
+            % \textit{especially when reward functions cannot be perfectly specified, or when the environment is not perfectly modelled} 
+            \textit{especially when the environment is not perfectly modelled} 
+            \citep{derman_twice_regularized, TGM_2025_jiralerspong}.
+            Such is the case in robotics, making the sim-to-real transfer of robotic policies a natural evaluation of how theoretical robustness guarantees transfer to the real world.
+            % In robotics, the sim-to-real gap can also be thought of as an environmental perturbation, implying that a policy robust to perturbations would perform well.
+            % This is especially salient in robotics, where it has been demonstrated that different algorithms perform better under different reward functions, implying that robustness to the reward function may improve performance (because we cannot search for the optimal reward function for each algorithm, that would be insane) \citep{mock_2023_compare_PPO_TD3_SAC_sim_legged_robo}.
+            Theoretical robustness guarantees for regularised RL are stated as the sets of worst-case adversarial perturbations on the reward or dynamics for which the policy still achieves high return.
+            Thus, we hypothesize that the larger the robust set, the more robust a policy to perturbations, and the better the sim-to-real transfer. The size of these robust sets is controlled by the regulariser and its hyperparameters, like temperature \citep{eysenbach2022maximum, derman_twice_regularized, pmlr-v130-husain21a_reg_pol_rew_rob, brekelmans2022_divergence_robustness}.
+            % Theoretical robustness guarantees for regularised RL are often stated as robustness to sets of worst-case adversarial perturbations on the reward or dynamics. 
+            % These guarantees are often difficult to parse, stated as sets of reward or dynamics functions over which the policy will obtain a high return \citep{eysenbach2022maximum}.\footnote{More precisely, an adversary minimising over the (carefully constructed) set recovers the regularised RL objective under the original reward or dynamics. Robustness is not stated with respect to the reward or dynamics functions, but rather with respect to a set that is \textit{near} those functions.}
+            
+
+        \textbf{Mellowmax and soft mellowmax value functions}.
+            Regularised value functions often take the form of a soft maximum, such as the log-sum-exp function in entropy-regularised RL.
+            Mellowmax and SMM are alternative soft value functions (\autoref{table:back_regularised_RL_equations}) proposed to improve the convergence and stability properties of Q-learning algorithms in discrete action spaces \citep{asadi2017alternative_mellowmax, gan2021stabilizing_soft_mellowmax}.
+            % The SMM value function, shown in \autoref{table:back_regularised_RL_equations}, has been shown to alleviate overestimation bias in Q-learning, even without the use of double deep Q-network (DDQN), indicating that the value function is a strong stabilising force in Q-learning \citep{kim2019deepmellow_mellowmax_no_target}.
+            \citet{TGM_2025_jiralerspong} demonstrate that RL with SMM induces larger robust sets than entropy-regularised RL in tree-structured state-action spaces.
+            These benefits make SMM-based RL enticing for robotics, improving stability and expanding robustness guarantees, which we expect to improve 1) sim-to-real transfer and 2) performance under perturbations. 
+            Note that we do not expect SMM to dominate SAC in simulation. \textit{We expect SMM to achieve better sim-to-real properties}.
+            % We also note that these robustness guarantees are established in trees, not in continuous spaces, so we treat them as motivation for an empirical test rather than as guarantees inherited by \ourMethod.
+
+
+            
+    % \subsection{Related work} \label{sec:related_work}
+
+        \textbf{Soft actor-critic}.
+            \citet{haarnoja2018soft} proposed SAC, the go-to RL algorithm for learning stochastic entropy-regularised policies in continuous action spaces. In continuous action spaces, we are often required to take integrals over the action space, for instance, the log-sum-exp value function becomes log-integral-exp in continuous spaces, which is intractable and whose estimator would be biased. SAC designs around these integrals by instead constructing one-sample Monte Carlo estimators of the value function $V^\pi_\Omega$ (\autoref{equ:regularised_evaluation_funcs}), for use in the Q-value target:
+            \begin{equation}
+                \label{equ:q_val_target_sac}
+                \hat{Q}_\text{SAC}(s,a) = r(s,a) + \gamma \hat{V}_\text{SAC}(s'), \quad (s, a, s', r) \sim \mathcal{D},
+            \end{equation}
+            \begin{equation}
+                \label{equ:SAC_value_estimate}
+                \hat{V}_\text{SAC}(s') = Q_\theta(s', a') - \frac{1}{\omega}\log(\pi(a'|s')), \quad a' \sim \pi(\cdot|s'),
+            \end{equation}
+            where $\mathcal{D}$ is the replay buffer, storing previously sampled state, action, next state, and reward tuples, and $\omega$ is the inverse temperature. SAC parameterises its policy as a Gaussian whose mean and standard deviation are learned, so the log-probability in \autoref{equ:SAC_value_estimate} is available in closed form. Writing $Q_\theta$ for the critic network with parameters $\theta$, the critic is trained by constructing a loss based on this bootstrapped Q-value target:
+            \begin{equation}
+                \label{equ:sac_Q_loss}
+                J_Q(\theta) = \expectwrt{\frac{1}{2}\left(Q_\theta(s, a) - \operatorname{sg}\left( \hat{Q}_\text{SAC}(s,a) \right) \right)^2}{(s,a,s',r)\sim \mathcal{D}},
+            \end{equation}
+            where $\operatorname{sg}(\cdot)$ is the stop gradient function.
+            The stochastic policy is trained in the same fashion, with the policy target being the softmax of the Q-values, and the KL divergence as the loss function. Writing $\pi^\text{act}_{z}$ for the actor network with parameters $z$, and drawing actions through the reparameterisation trick for noise $\epsilon$, the policy loss without terms that would cancel under a gradient is:
+            % \footnote{We state the actor objectives multiplied through by the inverse temperature. This leaves the minimizer unchanged but scales the gradient by $\omega$ relative to the more common $\frac{1}{\omega}\log\pi^\text{act}_{z} - Q_\theta$ form, which is the form our implementation uses.}
+            \begin{equation}
+                \label{equ:sac_policy_loss_actor}
+                J_{\text{act}}(z) = \expectwrt{\log \pi^\text{act}_{z}(a|s) - \omega Q_\theta(s,a) }{\substack{s \sim \mathcal{D}, \epsilon \sim \mathcal{N}(0, I)}}, \quad a = f_z(s, \epsilon).
+            \end{equation}
+            Many subsequent works have improved SAC through techniques such as double Q-networks, delayed policy updates, larger training datasets, distributional critics, and architectural improvements \citep{haarnoja2018SAC_2, seo2025learning_fastsac, kim2026flashsac}.
+
+
+        \textbf{Accelerated off-policy algorithms}.
+            Off-policy learning with function approximation and bootstrapping is notoriously unstable, often referred to as the ``deadly triad'' \citep{van2018deep_rl_deadly_triad}. To address these instabilities while leveraging modern hardware, recent works have shifted toward massively parallel simulators \citep{Mittal_Isaac_Lab_2025, genesis2026genesisworld} and high-throughput training algorithms. Algorithms such as Parallel Q-learning \citep{li2023parallel_PQL} and Parallel Q-networks \citep{gallici2025simplifying_pqn} stabilise training by scaling batch sizes and network capacity. Building on these principles, FastTD3 \citep{seo2025fasttd3}, FastSAC \citep{seo2025learning_fastsac}, and FlashSAC \citep{kim2026flashsac} further improve stability and sample efficiency with distributional critics \citep{bellemare2017distributional}. We implement \ourMethod in both the CleanRL \citep{huang2022cleanrl} and FlashSAC frameworks, showing that its stability and scalability are preserved across implementations and training regimes.
+            
+            
+            % To ensure that \ourMethod works across computational scales, we evaluate in both the 
+            
+            
+
+            % A unifying feature of these highly parallelized methods is their use of distributional RL for the critic. By predicting the full distribution of expected returns rather than just a scalar expected value, distributional critics can stabilise standard Q-learning \citep{seo2025fasttd3, bellemare2017distributional}. 
+            
+            % While our primary algorithmic contribution lies in a novel application of the SMM value function, we ensure our findings are robust across computational scales. We evaluate our algorithm in both a massively parallel, FlashSAC-like framework to demonstrate scalability, and within the widely adopted CleanRL framework \citep{huang2022cleanrl} to establish rigorous baselines in standard settings.
+
+        \textbf{RL in robotics}.
+            The deployment of deep RL in robotics heavily relies on careful reward design and policy stability. For instance, \citet{mock_2023_compare_PPO_TD3_SAC_sim_legged_robo} compared PPO, TD3, and SAC on simulated legged robots, demonstrating that each algorithm's performance is highly sensitive to the chosen reward function. To improve stability independent of reward tuning, \citet{mysore2021regularizing} introduced a state-to-state KL regularisation scheme that minimizes the temporal and spatial variation of the policy to improve deployment in quadcopters.
+            The resulting regularised policies were more energy efficient and more often flight-worthy than standard PPO.
+            Entropy-regularised policies like SAC have also shown advantages over counterparts in robotics. For example, SAC consistently outperforms baselines in mobile robot navigation, and has been successfully deployed on real-world humanoid robots and in quadrupedal locomotion and dexterous manipulation tasks \citep{ddpg_sac_mobile_robots, haarnoja2018SAC_2, seo2025learning_fastsac, kim2026flashsac}.
+            % Furthermore, \citet{haarnoja2018SAC_2} demonstrated the viability of these methods by successfully deploying SAC directly on real-world quadrupedal locomotion and dexterous manipulation tasks. 
+            % FastSAC and FlashSAC later demonstrated that SAC could be used for humanoid policies as well \citep{seo2025learning_fastsac, kim2026flashsac}.
+            Building upon this foundation, our work demonstrates that regularisation, with its dynamics robustness, not only matches the performance of baselines in simulation, but also leads to better sim-to-real transfer.
+
+\section{Soft MellowMax Actor-Critic}
+\label{sec:smm_ac}
+
+    % \john{I would motivate this section more on the derivative we want to make when we do smm in continuous control and less on training robot.}
+    % Our goal is to train soft mellowmax robotic policies so as to verify the hypothesis that increased theoretical robustness improves sim-to-real transfer and resistance to perturbations. 
+    Given its stability and theoretical robustness guarantees, SMM is an attractive candidate for continuous control.
+    Adapting SMM into continuous state-action spaces for an actor-critic algorithm requires many of the same design choices as for SAC. However, SMM is KL-regularised against an intractable reference policy $ \pi^\text{ref}$ (\cf, \autoref{table:back_regularised_RL_equations}), which critically depends on the Q-values:
+    \begin{equation}
+    \label{eq:SMM_theoretical_ref}
+    \pi^\text{ref}(a|s) = \frac{\exp(\alpha Q(s, a))}{\int_{b\in\mathcal{A}} \exp(\alpha Q(s,b)) db}
+    \end{equation}
+     
+    The policy evaluation function for SMM is stated in \autoref{eq:SMM_value_estimate} for the SMM policy $\pi$. At each iteration, an SMM policy is rewarded for staying close to the drifting reference policy. Note the difference between SAC and SMM: SAC's policy is rewarded for being uniform over the action space, while SMM's policy follows a greedier softmax.
+    Compared to PPO, SMM's reference policy keeps the actor iterates anchored to a high-performing region, whereas PPO just keeps actor iterates close together \citep{schulman2017proximal_PPO}.
+    Intuitively, \ourMethod is thus a sort of interpolation between PPO and SAC: \ourMethod's policy can be sharper than SAC's, while still finding multiple high-return trajectories, because the reference provides a known, high-performing region.
+    %While PPO concentrates to a sharp policy, SMM-AC will be able to find multiple high-performing trajectories, because the reference provides a safe, high-performing region.
+    % Intuitively, this has important ramifications for robustness, namely that SMM's policy will allocate more probability mass to higher-Q-value actions meaning that the policy can find multiple high-return trajectories from any state.
+    Thus, even under dynamics perturbations, an SMM policy can likely find high-return trajectories to complete a task.
+    %It is clear from this equation that SAC's value estimator must be reformulated to reflect the intractable reference policy.
+    %In fact, SMM-AC could be easily implemented in the CleanRL \citep{huang2022cleanrl} and FlashSAC \citep{kim2026flashsac} codebases by making just a few modifications.
+    {\small
+    \begin{equation}
+    \label{eq:SMM_value_estimate}
+            V^{\pi}_\text{SMM}(s) = \expectwrt{Q(s, a)}{a \sim \pi(\cdot|s)} - \frac{1}{\omega} D_{KL}(\pi(\cdot|s) || \pi^\text{ref}(\cdot|s)) = \expectwrt{Q(s, a) - \frac{1}{\omega} \log \left( \frac{\pi(a|s)}{\pi^\text{ref}(a|s)} \right)}{a \sim \pi(\cdot|s)}
+    \end{equation}
+    }
+    
+    Neither \autoref{eq:SMM_theoretical_ref} nor these expectations can be evaluated exactly in continuous action spaces, because the integral of the reference policy is intractable. The rest of this section replaces each intractable quantity with a tractable estimator. In order to do so, we propose learning three networks: the actor $\pi^\text{act}_z$, the critic $Q_\theta$ and  the reference policy $\pi^\text{ref}_\phi$.
+
+\textbf{Critic.}
+    The critic network, $Q_\theta$, produces Q-value estimates of state-action pairs. Like in SAC, Q-value estimates are generated to train the critic using an estimator based on the regularised policy evaluation function: $V^\pi_\text{SMM}$.
+    Since we learn $\pi^\text{act}_z$ and $\pi^\text{ref}_\phi$, their log-probabilities can be obtained for any sampled action. The one-sample Monte Carlo Q-value target is generated as follows:
+    \begin{equation}
+        \label{equ:q_val_target_smm}
+        \hat{Q}_\text{SMM}(s,a) = r(s,a) + \gamma \hat{V}_\text{SMM}(s'), \quad (s, a, s', r) \sim \mathcal{D}
+    \end{equation}
+    \begin{equation}
+        \label{eq:SMM_AC_value_hat}
+        \hat{V}_\text{SMM}(s') = Q_\theta(s', a') - \frac{1}{\omega} \log \left( \frac{\pi^\text{act}_z(a'|s')}{\pi^\text{ref}_\phi(a'|s')} \right), \quad a' \sim \pi^\text{act}_z(\cdot|s')
+    \end{equation}
+   This value estimate serves only to bootstrap the temporal-difference target of the critic, which is trained by minimising the Q-value prediction error:
+    \begin{equation}
+    \label{eq:SMM_Q_loss}
+    J_Q(\theta) = \expectwrt{\frac{1}{2}\left( Q_\theta(s, a) - \operatorname{sg}\left( \hat{Q}_\text{SMM}(s,a) \right) \right)^2}{(s, a, r, s') \sim \mathcal{D}}
+    \end{equation}
+    where the gradient is stopped on $\hat{Q}_\text{SMM}(s,a)$ to avoid poor training dynamics, as is standard in off-policy actor-critic methods \citep{fujimoto2018addressing_TD3, haarnoja2018SAC_2}.
+
+    \textbf{Actor.}
+    Training the actor means fitting $\pi^\text{act}_z$ to the regularised policy: $\operatorname{softmax}((\alpha+\omega) Q_\theta(s))$ (\autoref{table:back_regularised_RL_equations}). However, naively learning the actor through a loss function like SAC's in \autoref{equ:sac_policy_loss_actor} leads to tremendous instability, often leading to divergence in the training process. Intuitively, the reason for this instability is a lack of grounding between the actor and the reference policy. In KL-regularised algorithms like PPO and TRPO, the actor is always trained with respect to a previous policy iterate, which provides improved stability and performance \citep{schulman2015trust, schulman2017proximal_PPO}.
+    Similarly, we found that using a slowly updated reference network as a low-variance surrogate of the softmax of the raw Q-values, insulated the actor from critic noise.
+    % Thus, we re-write SMM's regularised policy with respect to the reference policy, in order to construct the actor loss.
+    The actor's loss function is constructed as follows, where we use the reparameterisation trick \citep{kingma2013auto} to estimate the expectation with low variance, and remove terms whose gradient is zero (derivation in \aref{appendix:SMM_AC_DERIVATION}):
+    \begin{equation}
+    \label{eq:SMM_policy_loss}
+        J_\text{act}(z) = \expectwrt{\log\pi^\text{act}_z(a | s) - \log\pi^\text{ref}_\phi(a | s) - \omega Q_\theta(s, a) }{\substack{s \sim \mathcal{D}, \epsilon \sim \mathcal{N}(0, I)}}, \quad a = f_z(s, \epsilon)
+    \end{equation}
+    % Gradients from $J_\text{act}$ are not propagated into $\phi$, but the dependence of $\log\pi^\text{ref}_\phi$ on $z$ through the sampled action $a = f_z(s, \epsilon)$ is retained, since that path-wise term is what steers the actor towards the reference. 
+    \textbf{Reference network.}
+    The reference network must track the softmax distribution over the Q-values as shown in \autoref{eq:SMM_theoretical_ref}. We train $\pi^\text{ref}_\phi$ using the actor loss of SAC (\autoref{equ:sac_policy_loss_actor}), with a substantially smaller learning rate than the actor (\autoref{table:hyperparam_sweeps}). This ensures that the reference network is a stable, low-variance surrogate for the actor updates and for generating Q-values estimates. The reference policy's loss is constructed as follows, again using the reparameterisation trick:
+    \begin{equation}
+    \label{eq:SMM_ref_policy_loss}
+    J_\text{ref}(\phi) = \expectwrt{\log\pi^\text{ref}_\phi(a | s) - \alpha Q_\theta(s, a) }{\substack{s \sim \mathcal{D}, \epsilon \sim \mathcal{N}(0, I)}}, \quad a = f_\phi(s, \epsilon)
+    \end{equation}
+    % That projection is exactly what the SAC policy update performs at inverse temperature $\alpha$, so we train $\phi$ with the corresponding loss:
+    % We give $\pi^\text{ref}_\phi$ a substantially smaller learning rate than the actor (\autoref{table:hyperparam_sweeps}), which is what we mean by updating it on a slower timescale. A reference network that chased $Q_\theta$ as quickly as the actor does would introduce a sort of race condition between the policies, reintroducing the critic noise which the reference is there to filter. 
+    % Both $\pi^\text{act}_z$ and $\pi^\text{ref}_\phi$ are optimised with the 
+
+    \textbf{Putting it together.}
+    On each batch drawn from $\mathcal{D}$, \ourMethod descends \autoref{eq:SMM_Q_loss} for the critic, \autoref{eq:SMM_policy_loss} for the actor, and \autoref{eq:SMM_ref_policy_loss} for the reference network at its slower rate.
+    By keeping the replay buffer, target networks and critic architecture identical to SAC, the effect of the regulariser is isolated, allowing us to test our primary hypothesis: that SMM's expanded robust sets (\ie, from the greedier $\pi^\text{ref}$) translate into better sim-to-real performance and perturbation resistance.  
+    % , which is why the SAC and \ourMethod policies we deploy in \autoref{sec:mujoco} and \autoref{sec:robotic} differ primarily in their regularisers.
+    This also means that \ourMethod can be easily adapted to fit the FastSAC \citep{seo2025learning_fastsac}, and FlashSAC \citep{kim2026flashsac} frameworks, just with the addition of the reference network and its loss.
+
+% \hc{consider adding some theoretical justification. why does SMM performs better. 
+% (1) SMM is better than SAC under domain randomization (2) policy trained SMM is better than SAC at deployment. See notes.tex for an exmaple
+% }
+
+\section{Experimental results on MuJoCo} \label{sec:mujoco}
+    % Multi-joint dynamics with contact (MuJoCo) is a simulator often used for robotic learning and has become a standard baseline for continuous control tasks \citep{todorov2012mujoco}.\footnote{An up-to-date description of the MuJoCo tasks can be found \href{https://gymnasium.farama.org/environments/mujoco/}{here}.} 
+    % We implemented \ourMethod in the CleanRL framework, comparing its performance to standard baselines in continuous control: SAC, TD3, and PPO \citep{haarnoja2018SAC_2, fujimoto2018addressing_TD3, schulman2017proximal_PPO, huang2022cleanrl}. 
+    % We used the CleanRL library since it provides the simplest and cleanest implementations of RL algorithms.
+    % %, devoid of the optimisations that may bias the results.
+    % While other regularised RL methods exist for continuous control tasks (\aref{app:related_work_cont}), we did not implement and run those algorithms as the computational burden of this limited number of baselines was already high. 
+
+    We evaluate \ourMethod in simulation on MuJoCo continuous-control tasks \citep{todorov2012mujoco} to demonstrate that it achieves similar performance to widely used RL baselines: SAC, TD3, and PPO \citep{haarnoja2018SAC_2, fujimoto2018addressing_TD3, schulman2017proximal_PPO}. We implement \ourMethod in the CleanRL \citep{huang2022cleanrl} framework, to demonstrate its performance in basic RL setups (in contrast to FlashSAC, which employs many acceleration techniques). \autoref{table:hyperparam_sweeps} reports the hyperparameter settings we swept over for each algorithm, with five random seeds each.
+    We tried to keep the number of training runs the same between each baseline, but some algorithms had fewer hyperparameters to sweep across.  
+    We report the best-performing hyperparameter settings in \autoref{table:best_results}, see \aref{app:additional_mujoco_details} for more experiment details. For SMM-AC specifically, we set $\alpha=1$ (inverse temperature of the reference policy, $\pi^\text{ref}$) and sweep $\omega$ (inverse temperature of the SMM policy) values, for all experiments.
+    SAC uses temperature autotuning, which is not yet possible for SMM.\footnote{We found autotuning $\omega$ or $\alpha$ to be far too unstable, so we elected to fix $\alpha$ and sweep $\omega$.}
+    
+    \autoref{fig:MuJoCo_results} compares the performance of \ourMethod and the baselines across the MuJoCo tasks.
+    \ourMethod is competitive with SAC and TD3, the strongest baselines, although its performance collapses on \texttt{InvertedDoublePendulum-v4}.\footnote{We couldn't identify the reason for this failure, but the consistency with which it occurred suggests some learning instability, likely with the reference policy.}
+    Outside this failure case, \ourMethod reaches returns comparable to SAC at a similar rate, suggesting comparable sample efficiency on the evaluated tasks.
+    Additional experiments using the highly optimised FlashSAC library \citep{kim2026flashsac} show that \flashOurMethod (our method implemented on top of FlashSAC) achieves returns comparable to FlashSAC, with both outperforming FastTD3 \citep{seo2025fasttd3} and PPO (\aref{app:additional_mujoco_results_flash_fast}). Clearly, \ourMethod and \flashOurMethod are highly capable for continuous control. As the next section shows, however, higher average returns in simulation do not necessarily translate into better sim-to-real transfer.
+
+    % In \aref{app:additional_mujoco_results_flash_fast}, we report the results of implementations in the highly optimised FlashSAC library \citep{kim2026flashsac}, demonstrating that \flashOurMethod performs similarly to FlashSAC, with both beating FastTD3 \citep{seo2025fasttd3}. However, as is detailed in the next section, higher average returns in simulation are not necessarily indicative of higher sim-to-real performance.
+
+    
+    
+
+    \begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{images/mujoco_results_restyled.pdf}
+    \caption{Smoothed episodic returns of \ourMethod, SAC, PPO, and TD3 over the number of steps taken in the environment. The best results were selected according to the performance of the algorithm at the final step.}
+    \label{fig:MuJoCo_results}
+    \end{figure}
+
+\vspace{-6pt}
+\section{Robotic experiments}
+\label{sec:robotic}
+% The goal of this project from the start was to understand what regularization buys for sim-to-real transfer, which means measuring robustness rather than nominal return. We do this in two stages. All four methods are first characterized in simulation, which is how we select what to deploy and how we establish that nominal return alone does not separate these methods. Then we transfer them to hardware, provided they have earned the trip.
+% We compare \ourMethod against SAC \citep{haarnoja2018SAC_2}, PPO \citep{schulman2017proximal_PPO}, and FastTD3 \citep{seo2025fasttd3}. SAC and \ourMethod are both implemented on top of the FlashSAC codebase \citep{kim2026flashsac}, so the two differ only in the regularizer and share every architectural and optimisation detail. For SAC and \ourMethod we sweep the (inverse) temperature, that is \ourMethod's $\omega$ and SAC's entropy temperature. PPO and FastTD3 have no such knob and are each run at a single configuration.
+% Notably, for SAC and \ourMethod, the temperature sweep contains configurations that do not solve the task, and those are precisely the ones that cannot be put on a robot.
+% We characterize the whole sweep in simulation and then deploy only what has been shown to work.
+
+% We deploy on a Franka arm for the manipulation tasks and on an ANYmal-D quadrupedal robot for the locomotion tasks. Policies cross over exactly as they were trained, with no on-robot fine-tuning and no per-policy retuning of the low-level controller, so the hardware runs measure the sim-to-real gap itself rather than a partially closed version of it. Our central claim is that the practical value of regularization for sim-to-real is \textit{robustness}, which nominal return alone does not reveal.
+
+
+% \mo{TODOs:
+% \begin{itemize}
+%     \item add fasttd3 results and discussions to lift
+%     \item add locomotion experiment subsection
+%     \item add robot exp images
+% \end{itemize}
+% }
+
+% \textbf{Tasks and simulated evaluation protocol.} Policies are trained on four IsaacLab tasks \citep{Mittal_Isaac_Lab_2025}. Two are Franka-arm manipulation tasks, \texttt{Lift} and \texttt{Reach}, and two are ANYmal-D locomotion tasks, \texttt{Velocity-Flat} and \texttt{Velocity-Rough}. We train five seeds for every method. For SAC and \ourMethod, we sweep the method on various values for the temperature. We then evaluate each seed for 20 episodes in the simulator. Every simulated return reported below is taken over those episodes.
+
+% Throughout, the \textit{clean} condition means the task exactly as IsaacLab ships it, with the default DR ranges and unmodified dynamics, which is also the setting every policy was trained in. It is the reference point against which the perturbed and shifted conditions below are measured. On hardware the corresponding condition is the robot in its nominal state, with the object, the workspace and the terrain as the task describes them.
+
+% \textbf{Deployment protocol.} For SAC and \ourMethod we take the configuration with the highest clean simulated return. Then, among those and other baselines, we select the single best seed and deploy that one policy, which is then run for 20 episodes on the robot. A configuration is carried to hardware only when it solves the task reliably in simulation, for the reason given above. Because the IsaacLab reward is recomputed on the robot from the measured state, on-robot return is directly comparable to the simulated return of the same policy. 
+
+
+
+% \subsection{Nominal performance and temperature robustness}
+
+% \autoref{fig:temp_robustness} reports clean simulated return against the temperature the policy was trained at. Reading each panel at the best configuration of every method, except for PPO in \texttt{Velocity-Rough}, all land within a narrow band on every task, so nominal return does not separate them in a consistent way. As it can be seen, there is no overall clear winner in terms of best performance on any of these tasks, so raw return is not the axis on which regularization pays off. Also note that for all these methods and in all these tasks, the best obtained policies all solve it. However, the more telling signal is \textit{sensitivity}. On \texttt{Lift} and \texttt{Velocity-Rough}, \ourMethod sustains high return across a wider band of temperatures than SAC, \ie, it is less sensitive to the choice of regularization strength. On \texttt{Reach} and \texttt{Velocity-Flat}, the two are indistinguishable above the lowest temperatures. These are also the panels that motivate the deployment rule above, since the weakest configurations shown here are far from robot-ready. The remainder of this section therefore focuses on robustness, where the methods do separate.
+
+% \begin{figure}[t]
+% \centering
+% \includegraphics[width=\linewidth]{images/fig2_3_temp_return_combined.pdf}
+% \caption{Clean simulated return vs.\ the temperature the policy was trained at, on all four tasks. Every point is five seeds of that configuration, evaluated in IsaacLab. PPO, FastTD3 and autotuned SAC have no temperature parameter and appear as horizontal reference lines. \ourMethod maintains high return across a wider temperature band than SAC on \texttt{Lift} and \texttt{Velocity-Rough}, elsewhere the two track each other closely.}
+% \label{fig:temp_robustness}
+% \end{figure}
+
+% \subsection{Manipulation Robustness}
+
+% \textbf{Physical perturbation (\texttt{Lift}).} Every method is trained in the clean environment, and the best configuration of each is deployed on the arm by the protocol above. We then stress those deployed policies with physical perturbations of the cube that no policy saw during training, doubling its mass and, separately, shifting its center-of-mass (CoM) by loading it off-centre (\autoref{fig:robustness}-a). The same policy is re-run under each condition with nothing else about the setup changed, so the clean bar of \autoref{fig:robustness}-a is the on-robot counterpart of that method's best point in \autoref{fig:temp_robustness} and the two can be read against each other as a sim-to-real gap. \ourMethod degrades the least and PPO the most. The gap is widest under the harder CoM shift, where \ourMethod keeps a high success rate while PPO collapses and SAC falls below \ourMethod. This ordering under the CoM shift, \ourMethod $>$ SAC $>$ PPO, mirrors the theoretical prediction that (KL-/entropy-)regularized policies are robust to a class of dynamics perturbations \citep{eysenbach2022maximum, derman_twice_regularized}. The softer training distribution exposes the policy to a wider range of contact geometries and forces, whereas the near-deterministic PPO policy is brittle off-distribution.
+
+% \begin{figure}[t]
+% \centering
+% \includegraphics[width=\linewidth]{images/fig4_robustness_combined.pdf}
+% \caption{Manipulation robustness measured on the real arm. (a) shows \texttt{Lift} under physical perturbation of the cube, where \ourMethod degrades least and PPO most. (b) shows \texttt{Reach} under a train-to-deploy DR shift. \ourMethod retains the largest fraction of its in-distribution return, and FastTD3 falls below zero. The panels keep separate axes because the two rewards are on unrelated scales.}
+% \label{fig:robustness}
+% \end{figure}
+
+% \textbf{Train-to-deploy distribution shift (\texttt{Reach}).} This is the setting most directly tied to sim-to-real. Where the \texttt{Lift} perturbation changes the physics the deployed policy meets, here we change the \textit{training} distribution in simulation and hold the physical test conditions fixed. \texttt{Reach} randomizes two things, the commanded end-effector pose and the initial arm configuration, and we narrow both during training. The best configuration of each method is again selected in simulation and deployed on the arm, which is then commanded over the default, wider ranges, so roughly half the reachable target volume and the wider half of the start configurations are poses the policy never saw in training. \autoref{fig:robustness}-b reports both conditions on the arm, the in-distribution one in which the training ranges match what the arm is commanded to do, alongside the shifted one.
+% The methods separate sharply on hardware. Because they do not start from the same clean baseline, the quantity to read off the figure is the fraction of in-distribution return retained. \ourMethod retains ${\sim}47\%$ ($0.567 \rightarrow 0.269$), PPO ${\sim}30\%$ ($0.505 \rightarrow 0.155$), SAC ${\sim}20\%$ ($0.552 \rightarrow 0.110$), and FastTD3 degrades past zero ($0.525 \rightarrow -0.347$), meaning it drifts away from the commanded pose rather than tracking it. \ourMethod thus preserves the largest share of its performance, consistent with the KL regularizer's broader action coverage generalizing to the wider deployment range while SAC overfits the narrow training slice. 
+
+
+% \subsection{Locomotion Robustness}\label{sec:locomotion}
+
+% \mo{todo...}
+
+% \clearpage
+
+\input{ICLR27/robotics}
+
+
+\section{Conclusion}
+We introduced \ourMethod, which extends soft mellowmax to continuous control by approximating its intractable reference distribution with a slowly updated reference network. \ourMethod is competitive with SAC and TD3 on MuJoCo tasks. On a Franka arm and an ANYmal-D quadruped, regularised methods outperformed PPO and FastTD3 on lift cube and both locomotion tasks. Among regularised methods, \ourMethod's best configuration achieved the strongest sim-to-real transfer performance on Lift and both locomotion tasks, and it retained more of its return than SAC in every perturbation condition. 
+% However, the benefit is not universal. 
+% PPO transferred best on the contact-free Reach task, and robustness varied by perturbation. 
+Reducing training-time domain randomisation degraded all methods, suggesting that regularisation complements DR rather than replacing it. 
+% Because the best $\omega$ varied across tasks, future work should develop temperature adaptation that preserves robustness.
+Because the optimal temperature varied across tasks, future work should develop adaptive temperature scheduling that preserves robustness.
+
+
+
+
+
+
+\clearpage
+\section{AI disclosure}
+In this work, we used generative AI tools for a number of tasks including
+\begin{itemize}[nosep]
+    \item to transcribe hand-written notes to Latex
+    \item to check code for correctness
+    \item to help implement methods (like SMM in FlashSAC) and IsaacLab environments in CleanRL.
+    \item to write plotting and latex table generation code
+    \item to help write some experiment code, particularly boilerplate evaluation scripts and bash scripts
+    \item reviewing the writing of the paper, especially to focus narratives and reduce fluff
+\end{itemize}
+
+We took care to ensure that all the written work in this manuscript was human-generated. We have also not blindly followed the written code. We again, took great care to ensure that our work was sensible, and that it was honestly reported and conducted. The other AI disclosures are not relevant to this work.
+
+We have reviewed all AI-assisted work. In particular, the core codebase has been written entirely by humans, and has been thoroughly checked, tested, and debugged. We used AI tools to modify pre-written code so that it could work in different codebases. The plotting code was already written, but AI was used to modify it for different plots and objectives. These were always thoroughly vetted for correctness. All latex transcriptions were treated as a starting point, and modified to fit the math we wrote down. 
+
+We take responsibility for the final content of this work,
+including text, claims or artifacts produced with the aid of generative AI.
+
+\bibliography{ref}
+\bibliographystyle{iclr2027_conference}
+
+\clearpage
+\appendix
+
+\section{Related work continued} \label{app:related_work_cont}
+
+    \paragraph{Alternatively regularised actor-critic algorithms}
+        \citet{gong_KL_actor_critic_prev_policy} proposes a KL-regularised actor-critic algorithm that penalises deviation from the previous policy iterate. Similarly to \citet{kim2019deepmellow_mellowmax_no_target}, they find that KL-regularised actor-critic is able to mitigate overestimation bias without the need for two Q-networks.
+        % While the regularisation and resulting value function are not identical to mellowmax, this is an interesting finding, supporting the idea that KL regularisation is effective.
+        \citet{lee2020_tsallis_actor_critic_robotics} proposes a Tsallis entropy-regularised actor-critic algorithm, demonstrating improved performance over SAC in a number of MuJoCo environments and on a real mobile robot \citep{todorov2012mujoco}.
+
+\section{Derivation of \ourMethod} \label{appendix:SMM_AC_DERIVATION}
+    \begin{align*}
+        \operatorname{softmax}((\alpha+\omega) Q(s))(a) &= \frac{\exp(\alpha Q(s,a)) \exp(\omega Q(s,a))}{\int_\mathcal{A}\exp(\alpha Q(s,b)) \exp(\omega Q(s,b)) db} \\
+        &= \frac{\exp(\alpha Q(s,a)) \exp(\omega Q(s,a))}{\int_\mathcal{A}\exp(\alpha Q(s,b)) \exp(\omega Q(s,b)) db} \frac{\int_\mathcal{A}\exp(\alpha Q(s,c))dc}{\int_\mathcal{A}\exp(\alpha Q(s,c))dc} \\
+        &= \frac{\pi^\text{ref}(a|s) \exp(\omega Q(s,a))}{\int_\mathcal{A}\pi^\text{ref}(b|s) \exp(\omega Q(s,b)) db}
+    \end{align*}
+
+    Since the denominator does not depend on the action $a \sim \pi^\text{act}_z$, it can be discarded from the loss function since its gradient will be zero. 
+    \begin{align*}
+        J_\text{act}(z) &= \expectwrt{D_{KL}\left( \pi^\text{act}_z(\cdot | s) \parallel \operatorname{softmax}((\alpha + \omega) Q_\theta(s, \cdot)) \right) }{s \sim \mathcal{D}} \\
+        &= \expectwrt{ \log(\pi^\text{act}_z(a | s)) - \log(\pi^\text{ref}(a|s)) - \omega Q_\theta(s, a) + \log \int_\mathcal{A} \pi^\text{ref}(b|s) \exp(\omega Q_\theta(s,b))\, db }{\substack{s \sim \mathcal{D} \\  a \sim \pi^\text{act}_z(\cdot | s)}} \\
+    \end{align*}
+
+    Then, we can simply drop the last term in the expectation, and convert the $\pi^\text{ref}$ to the parameterised reference policy $\pi^\text{ref}_\phi$.
+    
+
+\section{Additional details on the MuJoCo experiments} \label{app:additional_mujoco_details}
+    \autoref{table:hyperparam_sweeps} lists the hyperparameters that we swept over for each algorithm. We tried to keep the number of experiments per algorithm roughly the same, but struggled to find useful hyperparameters to sweep over for PPO. Thus, we run 18 experiments per environment for PPO, and 54 experiments per environment for the rest. The ``Freq'' hyperparameter refers to the update frequency of the policy. It has been well-understood that delaying policy updates can improve the stability of learning in actor-critic methods \citep{fujimoto2018addressing_TD3}. We sweep the policy learning rates for all methods, but for \ourMethod we only sweep the reference policy's learning rate. For \ourMethod we use a cosine annealing learning rate scheduler, decreasing the learning rate by 10x by the end of training, for improved reference policy stability. This presents a limitation in the hyperparameter sweep, since \ourMethod has too many hyperparameters to fully sweep for optimal performance. As such, \ourMethod's policy and Q-function learning rates were fixed at 3e-4 and 1e-3 respectively. For \ourMethod we swept the $\omega$ hyperparameter, while fixing $\alpha=1$. For the Pusher-v5 and Swimmer-v4 tasks, we found that setting $\omega=400$ achieved the best performance, we consequently report that result. We used SAC's temperature autotuning instead of sweeping the hyperparameter.
+
+    \begin{table}[t]
+    \centering
+    \caption{Hyperparameter search spaces for MuJoCo experiments.
+    $^\ast$For Pusher-v5 and Swimmer-v4, we additionally evaluated $\omega=400$
+    to increase greediness, which was crucial for matching SAC performance.
+    Since such high inverse temperatures were not part of the general sweep,
+    the total number of experiments per method remains comparable.}
+    \label{table:hyperparam_sweeps}
+    \setlength{\tabcolsep}{5pt}
+    \begin{tabular}{@{}ll@{}}
+        \toprule
+        \textbf{Algorithm} & \textbf{Hyperparameter search space} \\
+        \midrule
+        PPO
+        & $\mathrm{LR} \in \{1\mathrm{e}{-5},\,3\mathrm{e}{-5},\,8\mathrm{e}{-5},\,
+        1\mathrm{e}{-4},\,3\mathrm{e}{-4},\,8\mathrm{e}{-4}\}$ \\
+        & $\mathrm{EntCoef} \in \{0,\,0.01,\,0.1\}$ \\[2pt]
+    \midrule
+        SAC
+        & $\mathrm{PolicyLR} \in \{1\mathrm{e}{-5},\,3\mathrm{e}{-5},\,8\mathrm{e}{-5},\,
+        1\mathrm{e}{-4},\,3\mathrm{e}{-4},\,8\mathrm{e}{-4}\}$ \\
+        & $\mathrm{QLR} \in \{5\mathrm{e}{-4},\,1\mathrm{e}{-3},\,5\mathrm{e}{-3}\}$ \\
+        & $\mathrm{Freq} \in \{2,\,4,\,6\}$ \\[2pt]
+    \midrule
+        TD3
+        & $\mathrm{LR} \in \{1\mathrm{e}{-5},\,3\mathrm{e}{-5},\,8\mathrm{e}{-5},\,
+        1\mathrm{e}{-4},\,3\mathrm{e}{-4},\,8\mathrm{e}{-4}\}$ \\
+        & $\mathrm{Freq} \in \{2,\,4,\,6\}$ \\
+        & $\mathrm{Noise} \in \{0.1,\,0.2,\,0.3\}$ \\[2pt]
+    \midrule
+        \ourMethod
+        & $\mathrm{RefLR} \in \{1\mathrm{e}{-6},\,3\mathrm{e}{-6},\,8\mathrm{e}{-6},\,
+        1\mathrm{e}{-5},\,3\mathrm{e}{-5},\,8\mathrm{e}{-5}\}$ \\
+        & $\mathrm{Freq} \in \{2,\,4,\,6\}$ \\
+        & $\omega \in \{5,\,10,\,15,\,400^\ast\}$ \\
+        \bottomrule
+    \end{tabular}
+    \end{table}
+
+    The best-performing hyperparameters from the above sweep are listed in \autoref{table:best_results}.
+
+    \begin{table}[t]
+    \centering
+    \caption{Best hyperparameters for each environment, selected based on final performance.
+    Each entry reports the learning rate and the corresponding algorithm-specific hyperparameter.}
+    \label{table:best_results}
+    \setlength{\tabcolsep}{5.5pt}
+    \begin{tabular}{@{}lcccc@{}}
+        \toprule
+        \textbf{Environment}
+        & \makecell{\textbf{PPO}\\[-1pt]\scriptsize LR / Ent.}
+        & \makecell{\textbf{SAC}\\[-1pt]\scriptsize Pol. LR / Freq.}
+        & \makecell{\textbf{\ourMethod}\\[-1pt]\scriptsize Ref. LR / $\omega$}
+        & \makecell{\textbf{TD3}\\[-1pt]\scriptsize LR / Noise} \\
+        \midrule
+        Ant-v4
+        & $3\mathrm{e}{-4}$ / 0.0
+        & $3\mathrm{e}{-4}$ / 2.0
+        & $1\mathrm{e}{-6}$ / 15.0
+        & $1\mathrm{e}{-4}$ / 0.3 \\
+        HalfCheetah-v4
+        & $1\mathrm{e}{-4}$ / 0.01
+        & $3\mathrm{e}{-4}$ / 2.0
+        & $8\mathrm{e}{-5}$ / 15.0
+        & $8\mathrm{e}{-4}$ / 0.3 \\
+        Hopper-v4
+        & $3\mathrm{e}{-4}$ / 0.0
+        & $3\mathrm{e}{-5}$ / 2.0
+        & $3\mathrm{e}{-6}$ / 15.0
+        & $8\mathrm{e}{-4}$ / 0.2 \\
+        Humanoid-v4
+        & $3\mathrm{e}{-5}$ / 0.0
+        & $1\mathrm{e}{-4}$ / 2.0
+        & $8\mathrm{e}{-5}$ / 10.0
+        & $3\mathrm{e}{-4}$ / 0.1 \\
+        Inverted Double Pendulum
+        & $1\mathrm{e}{-4}$ / 0.0
+        & $3\mathrm{e}{-5}$ / 6.0
+        & $8\mathrm{e}{-5}$ / 15.0
+        & $1\mathrm{e}{-4}$ / 0.1 \\
+        Pusher-v5
+        & $8\mathrm{e}{-4}$ / 0.0
+        & $1\mathrm{e}{-4}$ / 6.0
+        & $3\mathrm{e}{-5}$ / 400.0
+        & $8\mathrm{e}{-5}$ / 0.2 \\
+        Swimmer-v4
+        & $3\mathrm{e}{-4}$ / 0.01
+        & $8\mathrm{e}{-4}$ / 6.0
+        & $1\mathrm{e}{-5}$ / 400.0
+        & $8\mathrm{e}{-5}$ / 0.3 \\
+        Walker2d-v4
+        & $3\mathrm{e}{-4}$ / 0.01
+        & $8\mathrm{e}{-4}$ / 6.0
+        & $3\mathrm{e}{-5}$ / 15.0
+        & $8\mathrm{e}{-4}$ / 0.1 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\clearpage
+\section{Additional MuJoCo results with Flash and Fast algorithms} \label{app:additional_mujoco_results_flash_fast}
+    Initial implementation and testing of the SAC, \ourMethod, TD3, and PPO algorithms were done in CleanRL \citep{huang2022cleanrl}. Since then, we have transitioned over to the FlashSAC codebase for both SAC and \ourMethod \citep{kim2026flashsac}. We have similarly replaced TD3 with FastTD3 \citep{seo2025fasttd3}. Given these new codebases, we felt it necessary to re-run the MuJoCo experiments to again demonstrate that \flashOurMethod was competitive with FlashSAC and FastTD3. \autoref{fig:Flash_Fast_MuJoCo} illustrates the performance of FlashSAC, \flashOurMethod, and FastTD3 on five MuJoCo tasks. For FlashSAC and \flashOurMethod, we sweep the temperature hyperparameter, selecting the best-performing (at the end of training) setting for the figure. We also show FlashSAC-tune, which uses temperature autotuning to learn the temperature during training. It is clear that \flashOurMethod and FlashSAC perform similarly, with autotuning often outperforming static temperatures. \textbf{These results again support the idea that autotuning is important for achieving maximal average returns.} In most environments, FastTD3 performs competitively with FlashSAC and \flashOurMethod, but suffers from far greater instability in most environments (\ie, the average return curve is more jagged).
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=\linewidth]{images/flash_fast_restyled.pdf}
+        \caption{Average returns in MuJoCo tasks against environment steps. Each algorithm is run five times, for three million steps, with the shaded areas representing the standard deviation, and the solid line being the mean of the average return curves.}
+        \label{fig:Flash_Fast_MuJoCo}
+    \end{figure}
+
+    \autoref{table:Flash_Fast_table} lists the best-performing hyperparameters for FlashSAC and \flashOurMethod in each task. Note how the inverse temperatures here are significantly higher than those that were used in the CleanRL implementation. This indicates that the FlashSAC algorithm is capable of converging even when the optimal distribution is quite peaky, due to the high inverse temperature. Moreover, this indicates that FlashSAC and \flashOurMethod are stable, and capable of performing well in these high inverse temperature regimes. To find these optimal inverse temperatures, we swept $\omega \in \{ 15, 66, 100, 200, 400 \}$, with 15 commonly being the best inverse temperature in our prior MuJoCo tests, see \autoref{table:best_results}. Note also that we didn't need learning rate annealing techniques to stabilise learning as we did in the CleanRL MuJoCo experiments. This indicates that \flashOurMethod is significantly more stable.
+    \begin{table}[h]
+        \caption{Best-performing inverse temperature hyperparameters for FlashSAC and \flashOurMethod.}
+        \label{table:Flash_Fast_table}
+        \centering
+        \begin{tabular}{lrr}
+            \toprule
+            Environment & FlashSAC $w$ & \flashOurMethod $w$ \\
+            \midrule
+            Ant-v4 & 400 & 400 \\
+            HalfCheetah-v4 & 400 & 400 \\
+            Hopper-v4 & 400 & 400 \\
+            Humanoid-v4 & 200 & 400 \\
+            Walker2d-v4 & 400 & 400 \\
+            \bottomrule
+        \end{tabular}
+    \end{table}
+
+\section{Limiting domain randomisation in IsaacLab tasks}\label{sec:isaac_dr}
+    This experiment is designed to test how each algorithm's simulated and real-world performance changes with gradual limitations to DR in training. We hypothesize that regularised algorithms, given their robustness guarantees, would perform better than unregularised algorithms like PPO and TD3 under decreasing DR. Note that IsaacLab cannot support multiple environments running at the same time, so we could not evaluate the DR-limited models throughout the course of training on non-limited environments. This means that training-time evaluation curves showing the average return are doing so in the DR-limited environments.
+
+    \subsection{Limiting domain randomization in Isaac-Reach-Franka-v0}
+
+        We test three settings of DR, with index one in \autoref{tab:franka-reach-DR-limit-ranges} representing the normal DR ranges for this task from the IsaacLab configuration files.\footnote{Franka Reach configurations \href{https://github.com/isaac-sim/IsaacLab/blob/main/source/isaaclab_tasks/isaaclab_tasks/manager_based/manipulation/reach/reach_env_cfg.py\#L70}{available here.}} We gradually limit the boxes for both the arm's randomly selected target position and its randomly selected starting position. By index 3, the target positions are limited to a small box, the yaw target barely changes the wrist position of the robot, and the reset position barely changes.
+
+        \begin{table}[h]
+            \centering
+            \caption{Command (target position of the arm, first 4 columns) and reset-randomization (where the arm can start, last column) ranges swept for Isaac-Franka-Reach-v0. Each index corresponds to one of the three experiments.}
+            \label{tab:franka-reach-DR-limit-ranges}
+            \begin{tabular}{c cccc c}
+            \toprule
+            Index & $x$ (m) & $y$ (m) & $z$ (m) & yaw (rad) & Joint pos. scale \\
+            \midrule
+            DR 1 (Default) & $[0.35, 0.65]$ & $[-0.20, 0.20]$ & $[0.15, 0.50]$ & $[-3.14, 3.14]$ & $[0.50, 1.50]$ \\
+            DR 2 (Limited) & $[0.45, 0.65]$ & $[-0.10, 0.20]$ & $[0.25, 0.50]$ & $[-1.50, 1.50]$ & $[0.50, 1.00]$ \\
+            DR 3 (Severe) & $[0.55, 0.65]$ & $[0.00, 0.20]$  & $[0.35, 0.50]$ & $[-0.50, 0.50]$ & $[0.50, 0.75]$ \\
+            % 3 & $[0.60, 0.65]$ & $[0.10, 0.20]$  & $[0.45, 0.50]$ & $[-0.10, 0.10]$ & $[0.50, 0.55]$ \\
+            \bottomrule
+            \end{tabular}
+        \end{table}
+
+        % \autoref{fig:Reach_DR_limit} illustrates the performance of FlashSAC, \flashOurMethod, PPO, and TD3 on the four DR settings above. It is clear that as the DR index increases, performance on the Reach task in simulation generally drops. Interestingly, FastTD3 seems to suffer the most variance and the largest drop in average return as DR is limited.
+
+        % \begin{figure}[h]
+        %     \centering
+        %     \includegraphics[width=\linewidth]{images/Reach_DR_limit_cross_algos.pdf}
+        %     \caption{Limiting DR across algorithms. Performance generally drops with decreased DR.}
+        %     \label{fig:Reach_DR_limit}
+        % \end{figure}
+
+        \autoref{tab:dr_limits_reach} lists the evaluation performance of DR limited agents on the non-limited task. As the table shows, performance drastically drops as the DR index increases, indicating that domain randomisation improves task generalisation.
+
+        \begin{table}[ht]
+        \centering
+        \caption{Reach: mean $\pm$ standard deviation return over full episodes (pooled over 5 to 10 seeds and 32 envs per cell), where all models are evaluated on the fully randomised environments, DR 1.}
+        \label{tab:dr_limits_reach}
+        \begin{tabular}{llccc}
+        \toprule
+        Agent & $\omega$ & DR 1 (Default) & DR 2 (Limited) & DR 3 (Severe) \\
+        \midrule
+        \multirow{3}{*}{SAC} & 400 & 0.52 $\pm$ 0.26 & -0.05 $\pm$ 0.53 & -1.18 $\pm$ 0.63 \\
+         & 800 & 0.52 $\pm$ 0.25 & -0.18 $\pm$ 0.53 & -1.31 $\pm$ 0.61 \\
+         & 1200 & 0.56 $\pm$ 0.23 & 0.04 $\pm$ 0.42 & -1.46 $\pm$ 0.74 \\
+        \midrule
+        \multirow{3}{*}{\ourMethod} & 400 & 0.52 $\pm$ 0.23 & 0.17 $\pm$ 0.23 & -1.64 $\pm$ 0.71 \\
+         & 800 & 0.52 $\pm$ 0.25 & 0.03 $\pm$ 0.36 & -1.49 $\pm$ 0.73 \\
+         & 1200 & 0.53 $\pm$ 0.23 & 0.08 $\pm$ 0.24 & -1.57 $\pm$ 0.75 \\
+        \midrule
+        FastTD3 & N/A & 0.47 $\pm$ 0.26 & -0.26 $\pm$ 0.48 & -1.69 $\pm$ 0.73 \\
+        \midrule
+        PPO & N/A & 0.62 $\pm$ 0.22 & 0.13 $\pm$ 0.31 & -1.40 $\pm$ 0.61 \\
+        \bottomrule
+        \end{tabular}
+        \end{table}
+
+
+        % \textcolor{red}{The following figure plots performance for \flashOurMethod and FlashSAC across temperatures. It doesn't really show all that much of interest...}
+        % \begin{figure}[h]
+        %     \centering
+        %     \includegraphics[width=0.5\linewidth]{images/paper_perf_across_omega_DR.pdf}
+        %     \caption{Caption}
+        %     \label{fig:Reach_DR_across_temps}
+        % \end{figure}
+
+    \subsection{Limiting domain randomisation in Isaac-Lift-Cube-Franka-v0}
+
+
+        We again evaluate three DR limitations in Franka Lift, with similar restrictions to Reach, where the first DR index in \autoref{tab:franka-lift-cube-DR-limit-ranges} is the default randomisation from the IsaacLab configuration files.\footnote{Lift Cube configurations \href{https://github.com/isaac-sim/IsaacLab/blob/main/source/isaaclab_tasks/isaaclab_tasks/manager_based/manipulation/lift/lift_env_cfg.py}{available here}} We gradually limit the boxes for both the arm's randomly selected target position and the randomly selected starting position of the cube. By index 3, the target positions are limited to a small box and the object reset position barely changes.
+
+        \begin{table}[h]
+            \centering
+            \caption{Command (target position of the arm, first 3 columns) and reset-randomization (where the object can start, last two columns) ranges swept for Isaac-Lift-Cube-Franka-v0. Each index corresponds to one of the three experiments.}
+            \label{tab:franka-lift-cube-DR-limit-ranges}
+            \begin{tabular}{c cccc c}
+            \toprule
+            Index & target $x$ (m) & target $y$ (m) & target $z$ (m) & object $x$ (m) & object $y$ (m) \\
+            \midrule
+            DR 1 (Default) & $[0.4, 0.6]$ & $[-0.25, 0.25]$ & $[0.25, 0.50]$ & $[-0.1, 0.1]$ & $[-0.25, 0.25]$ \\
+            DR 2 (Limited) & $[0.475, 0.6]$ & $[-0.1, 0.25]$ & $[0.35, 0.50]$ & $[-0.025, 0.1]$ & $[-0.05, 0.25]$ \\
+            DR 3 (Severe) & $[0.55, 0.6]$ & $[0.05, 0.25]$ & $[0.45, 0.50]$ & $[0.05, 0.1]$ & $[0.15, 0.25]$ \\
+            \bottomrule
+            \end{tabular}
+        \end{table}
+
+        \begin{table}[ht]
+        \centering
+        \caption{Lift-Cube: mean $\pm$ standard deviation return over full episodes (pooled over 5 to 10 seeds and 32 envs per cell), where all models are evaluated on the fully randomised environment, DR 1}
+        \label{tab:dr_limits_lift_cube}
+        \begin{tabular}{llccc}
+        \toprule
+        Agent & $\omega$ & DR 1 & DR 2 & DR 3 \\
+        \midrule
+        \multirow{3}{*}{SAC} & 400 & 139.17 $\pm$ 37.56 & 59.23 $\pm$ 73.42 & 62.20 $\pm$ 65.76 \\
+         & 800 & 94.20 $\pm$ 76.37 & 90.80 $\pm$ 74.79 & 64.21 $\pm$ 67.76 \\
+         & 1200 & 157.67 $\pm$ 2.57 & 127.06 $\pm$ 50.64 & 47.21 $\pm$ 63.69 \\
+        \midrule
+        \multirow{3}{*}{\ourMethod} & 400 & 115.00 $\pm$ 65.88 & 111.52 $\pm$ 64.29 & 52.96 $\pm$ 63.27 \\
+         & 800 & 152.56 $\pm$ 3.44 & 108.16 $\pm$ 63.19 & 73.16 $\pm$ 62.76 \\
+         & 1200 & 153.05 $\pm$ 4.88 & 107.34 $\pm$ 66.51 & 39.61 $\pm$ 58.51 \\
+         \midrule
+        FastTD3 & N/A & 140.47 $\pm$ 6.94 & 125.09 $\pm$ 23.66 & 69.18 $\pm$ 55.33 \\
+        \midrule
+        PPO & N/A & 136.75 $\pm$ 45.60 & 92.26 $\pm$ 64.24 & 22.76 $\pm$ 31.43 \\
+        \bottomrule
+        \end{tabular}
+        \end{table}
+        
+    
+
+    \subsection{Limiting domain randomisation in Isaac ANYmal-D tasks}
+        We evaluate three distinct DR levels, where Level 1 corresponds to the full DR distribution specified in the baseline IsaacLab environment configurations, with added randomisation over friction.\footnote{ANYmal-D configurations \href{https://github.com/isaac-sim/IsaacLab/blob/release/3.0.0-beta2/source/isaaclab_tasks/isaaclab_tasks/manager_based/locomotion/velocity/velocity_env_cfg.py}{available here.}} 
+        % We restrict physical dynamics and external disturbance ranges by linearly interpolating parameters from full randomization at Level 1 down to nominal, zero-perturbation conditions at Level 3. Specifically, we contract the bounds for added base mass, center of mass (CoM) offsets along all three axes, and external linear push velocities applied to the robot's base. By Level 3, the payload additions are fixed to zero, the center of mass remains at its nominal origin, and external forces are completely disabled. The exact parameter ranges swept across each level are summarized in \autoref{tab:anymal-d-DR-limit-ranges}.
+        We restrict physical dynamics and external disturbance ranges by linearly interpolating parameters from full randomization at Level 1 down to nominal, zero-perturbation conditions at Level 3. Specifically, we contract the bounds for surface friction (static and dynamic coefficients), added base mass, and external linear push velocities applied to the robot's base. By Level 3, the friction coefficients are fixed at their nominal values, the added-mass perturbation is fixed to zero, and the periodic push disturbance is completely disabled.
+
+        Independently, we scale the magnitude of additive uniform observation noise applied to the policy's proprioceptive inputs — base linear velocity, base angular velocity, projected gravity, joint position, and joint velocity — halving each noise bound at every successive DR level, so that Level 3 noise is one quarter of its full, Level-1 magnitude.
+        
+        We further restrict the distribution of initial states sampled at each episode reset using the same linear-interpolation scheme as the dynamics terms, contracting the robot's initial base position, heading, and linear/angular velocity, together with the initial joint-position scale, toward their nominal, non-randomized values. By Level 3, every episode begins from an identical, fully deterministic nominal state, eliminating reset-state diversity entirely so as to induce a pronounced train/eval distribution shift when the resulting policy is evaluated under full randomization.
+        
+        The exact parameter ranges swept across each level are summarized in \autoref{tab:anymal-d-DR-limit-ranges}.
+    
+        \begin{table}[ht]
+        \centering
+        \caption{Anymal-D domain-randomization (DR) limits by level. Observation noise ranges are additive uniform noise on the policy input; reset ranges control the initial state distribution at episode start.}
+        \label{tab:anymal-d-DR-limit-ranges}
+        \begin{tabular}{lccc}
+        \toprule
+        Quantity & DR 1 (Default) & DR 2 (Limited) & DR 3 (Severe) \\
+        \midrule
+        \multicolumn{4}{l}{\textit{Observation noise (additive uniform)}} \\
+        Base linear velocity & $\pm$0.10 m/s & $\pm$0.05 m/s & $\pm$0.025 m/s \\
+        Base angular velocity & $\pm$0.20 rad/s & $\pm$0.10 rad/s & $\pm$0.05 rad/s \\
+        Projected gravity & $\pm$0.05 & $\pm$0.025 & $\pm$0.0125 \\
+        Joint position & $\pm$0.01 rad & $\pm$0.005 rad & $\pm$0.0025 rad \\
+        Joint velocity & $\pm$1.5 rad/s & $\pm$0.75 rad/s & $\pm$0.375 rad/s \\
+        \midrule
+        \multicolumn{4}{l}{\textit{Initial state (reset) randomization}} \\
+        Base position (x, y) & $\pm$0.50 m & $\pm$0.25 m & 0 m (fixed) \\
+        Base heading (yaw) & $\pm\pi$ rad & $\pm\pi/2$ rad & 0 rad (fixed) \\
+        Base velocity (all 6 DOF) & $\pm$0.50 (m/s, rad/s) & $\pm$0.25 (m/s, rad/s) & 0 (fixed) \\
+        Joint position scale ($\times$ default) & $\times[0.5, 1.5]$ & $\times[0.75, 1.25]$ & $\times1.0$ (fixed) \\
+        \midrule
+        \multicolumn{4}{l}{\textit{Physics-event randomization}} \\
+        Static friction coefficient & $[0.20, 1.25]$ & $[0.50, 1.025]$ & $0.8$ (fixed) \\
+        Dynamic friction coefficient & $[0.10, 1.00]$ & $[0.35, 0.80]$ & $0.6$ (fixed) \\
+        Added base mass multiplier & $[0.80, 1.25]$ & $[0.90, 1.125]$ & $1.0$ (fixed) \\
+        Push-robot velocity kick & $\pm$0.50 m/s & $\pm$0.25 m/s & 0 (fixed) \\
+        \bottomrule
+        \end{tabular}
+        \end{table}
+
+    \begin{table}[ht]
+    \centering
+    \caption{AnymalD-Flat: mean $\pm$ standard deviation return over full episodes (pooled over 5 to 10 seeds and 32 envs per cell), where all models are evaluated on the fully randomised environments, DR 1.}
+    \label{tab:dr_limits_anymald_flat}
+    \begin{tabular}{llccc}
+    \toprule
+    Agent & $\omega$ & DR 1 & DR 2 & DR 3 \\
+    \midrule
+    \multirow{3}{*}{SAC} & 400 & 24.75 $\pm$ 1.67 & 19.87 $\pm$ 8.58 & 9.48 $\pm$ 13.51 \\
+     & 800 & 25.35 $\pm$ 2.09 & 19.54 $\pm$ 10.17 & 4.93 $\pm$ 16.92 \\
+     & 1200 & 25.29 $\pm$ 2.82 & 17.48 $\pm$ 12.99 & -0.17 $\pm$ 22.83 \\
+    \midrule
+    \multirow{3}{*}{\ourMethod} & 400 & 24.60 $\pm$ 2.31 & 20.90 $\pm$ 7.93 & 9.53 $\pm$ 12.07 \\
+     & 800 & 25.64 $\pm$ 1.25 & 19.02 $\pm$ 9.96 & 8.98 $\pm$ 12.15 \\
+     & 1200 & 25.83 $\pm$ 0.94 & 18.30 $\pm$ 11.06 & 3.07 $\pm$ 19.64 \\
+     \midrule
+     FastTD3 & N/A & 25.36 $\pm$ 2.56 & 18.37 $\pm$ 13.47 & 1.78 $\pm$ 21.37 \\
+     \midrule
+     PPO & N/A & 21.73 $\pm$ 6.42 & 10.35 $\pm$ 16.57 & -1.51 $\pm$ 22.86 \\
+    \bottomrule
+    \end{tabular}
+    \end{table}
+
+    \begin{table}[ht]
+    \centering
+    \caption{AnymalD-Rough: mean $\pm$ standard deviation return over full episodes (pooled over 5 to 10 seeds and 32 envs per cell), where all models are evaluated on the fully randomised environments, DR 1.}
+    \label{tab:dr_limits_anymald_rough}
+    \begin{tabular}{llccc}
+    \toprule
+    Agent & $\omega$ & DR 1 & DR 2 & DR 3 \\
+    \midrule
+    \multirow{3}{*}{SAC} & 400 & 18.04 $\pm$ 6.75 & 20.85 $\pm$ 5.80 & 18.59 $\pm$ 7.39 \\
+     & 800 & 21.13 $\pm$ 4.56 & 19.96 $\pm$ 6.26 & 18.48 $\pm$ 7.42 \\
+     & 1200 & 19.61 $\pm$ 4.83 & 20.54 $\pm$ 5.55 & 17.76 $\pm$ 8.88 \\
+    \midrule
+    \multirow{3}{*}{\ourMethod} & 400 & 17.91 $\pm$ 7.21 & 20.18 $\pm$ 6.51 & 18.19 $\pm$ 7.08 \\
+     & 800 & 20.57 $\pm$ 4.87 & 20.21 $\pm$ 5.75 & 17.71 $\pm$ 8.32 \\
+     & 1200 & 19.96 $\pm$ 3.88 & 20.71 $\pm$ 4.91 & 17.45 $\pm$ 8.39 \\
+     \midrule
+    FastTD3 & N/A & 10.91 $\pm$ 5.45 & 7.26 $\pm$ 7.17 & 5.70 $\pm$ 8.40 \\
+    \midrule
+    PPO & N/A & 12.90 $\pm$ 7.14 & 14.52 $\pm$ 7.15 & 13.17 $\pm$ 11.22 \\
+    \bottomrule
+    \end{tabular}
+    \end{table}
+
+
+
+\input{ICLR27/robotics_app}
+
+
+\end{document}

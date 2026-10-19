@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circle Position Editor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #00cc00;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .controls {
+            background: #16213e;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .control-group label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+        }
+        .control-group input {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background: #0f0f23;
+            color: #eee;
+            font-size: 14px;
+        }
+        .circle-selector {
+            display: flex;
+            gap: 10px;
+        }
+        .circle-btn {
+            padding: 10px 20px;
+            border: 2px solid #444;
+            border-radius: 5px;
+            background: #0f0f23;
+            color: #eee;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .circle-btn.active {
+            border-color: #00cc00;
+            background: #00cc0022;
+        }
+        .circle-btn.small-circle {
+            border-color: #00cc00;
+        }
+        .circle-btn.large-circle {
+            border-color: #00ff00;
+        }
+        .method-selector {
+            display: flex;
+            gap: 10px;
+        }
+        .method-btn {
+            padding: 10px 20px;
+            border: 2px solid #444;
+            border-radius: 5px;
+            background: #0f0f23;
+            color: #eee;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .method-btn.active {
+            border-color: #ffcc00;
+            background: #ffcc0022;
+        }
+        .image-container {
+            position: relative;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: crosshair;
+        }
+        .image-container img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+        .circle-overlay {
+            position: absolute;
+            border: 4px solid #00cc00;
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+        }
+        .circle-overlay.large {
+            border-color: #00ff00;
+            border-width: 5px;
+        }
+        .circle-overlay.dragging {
+            opacity: 0.7;
+        }
+        .output-section {
+            background: #16213e;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .output-section h3 {
+            margin-bottom: 15px;
+            color: #00cc00;
+        }
+        .command-output {
+            background: #0f0f23;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .copy-btn {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: #00cc00;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .copy-btn:hover {
+            background: #00ff00;
+        }
+        .instructions {
+            background: #16213e;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .instructions strong {
+            color: #00cc00;
+        }
+        .coords-display {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #16213e;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: monospace;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Green Circle Position Editor</h1>
+        
+        <div class="instructions">
+            <strong>Instructions:</strong> 
+            1. Select which method (SAC or SMM-AC) you want to edit. 
+            2. Select circle type (small = source zoom area, large = zoomed view). 
+            3. Click on the image to position the circle, or drag to move it. 
+            4. Adjust size with the width/height inputs. 
+            5. Copy the ImageMagick command when done.
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label>Method</label>
+                <div class="method-selector">
+                    <button class="method-btn active" data-method="sac">SAC</button>
+                    <button class="method-btn" data-method="smm">SMM-AC</button>
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <label>Circle Type</label>
+                <div class="circle-selector">
+                    <button class="circle-btn small-circle active" data-type="small">Small (Source)</button>
+                    <button class="circle-btn large-circle" data-type="large">Large (Zoom)</button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Width</label>
+                <input type="number" id="widthInput" value="70" min="10" max="300">
+            </div>
+            
+            <div class="control-group">
+                <label>Height</label>
+                <input type="number" id="heightInput" value="50" min="10" max="300">
+            </div>
+
+            <div class="control-group">
+                <label>Stroke Width</label>
+                <input type="number" id="strokeInput" value="6" min="1" max="20">
+            </div>
+        </div>
+
+        <div class="coords-display">
+            <div>Mouse: <span id="mouseCoords">-</span></div>
+            <div>Image: <span id="imageCoords">-</span></div>
+        </div>
+
+        <div class="image-container" id="imageContainer">
+            <img src="brightened.png" id="mainImage" draggable="false">
+            <!-- SAC circles -->
+            <div class="circle-overlay" id="sac-small" style="left: 59%; top: 42%; width: 80px; height: 60px;"></div>
+            <div class="circle-overlay large" id="sac-large" style="left: 59%; top: 38%; width: 160px; height: 140px;"></div>
+            <!-- SMM-AC circles -->
+            <div class="circle-overlay" id="smm-small" style="left: 88%; top: 42%; width: 80px; height: 60px;"></div>
+            <div class="circle-overlay large" id="smm-large" style="left: 88%; top: 38%; width: 160px; height: 140px;"></div>
+        </div>
+
+        <div class="output-section">
+            <h3>ImageMagick Command</h3>
+            <div class="command-output" id="commandOutput"></div>
+            <button class="copy-btn" onclick="copyCommand()">📋 Copy Command</button>
+        </div>
+    </div>
+
+    <script>
+        const img = document.getElementById('mainImage');
+        const container = document.getElementById('imageContainer');
+        
+        // Circle data storage (in percentages for display, will convert to pixels for output)
+        const circles = {
+            sac: {
+                small: { x: 59, y: 42, w: 80, h: 60 },
+                large: { x: 59, y: 38, w: 160, h: 140 }
+            },
+            smm: {
+                small: { x: 88, y: 42, w: 80, h: 60 },
+                large: { x: 88, y: 38, w: 160, h: 140 }
+            }
+        };
+
+        let currentMethod = 'sac';
+        let currentType = 'small';
+        let isDragging = false;
+        let strokeWidth = 6;
+
+        // Image actual dimensions
+        const imgWidth = 3850;
+        const imgHeight = 1528;
+
+        function getCircleElement(method, type) {
+            return document.getElementById(`${method}-${type}`);
+        }
+
+        function updateCircleDisplay(method, type) {
+            const el = getCircleElement(method, type);
+            const data = circles[method][type];
+            el.style.left = data.x + '%';
+            el.style.top = data.y + '%';
+            el.style.width = data.w + 'px';
+            el.style.height = data.h + 'px';
+        }
+
+        function updateAllCircles() {
+            ['sac', 'smm'].forEach(method => {
+                ['small', 'large'].forEach(type => {
+                    updateCircleDisplay(method, type);
+                });
+            });
+            updateCommand();
+        }
+
+        function percentToPixel(percent, dimension) {
+            return Math.round((percent / 100) * dimension);
+        }
+
+        function updateCommand() {
+            const sacSmall = circles.sac.small;
+            const sacLarge = circles.sac.large;
+            const smmSmall = circles.smm.small;
+            const smmLarge = circles.smm.large;
+
+            // Convert percentages to actual image pixels
+            const sacSmallX = percentToPixel(sacSmall.x, imgWidth);
+            const sacSmallY = percentToPixel(sacSmall.y, imgHeight);
+            const sacLargeX = percentToPixel(sacLarge.x, imgWidth);
+            const sacLargeY = percentToPixel(sacLarge.y, imgHeight);
+            const smmSmallX = percentToPixel(smmSmall.x, imgWidth);
+            const smmSmallY = percentToPixel(smmSmall.y, imgHeight);
+            const smmLargeX = percentToPixel(smmLarge.x, imgWidth);
+            const smmLargeY = percentToPixel(smmLarge.y, imgHeight);
+
+            // Scale circle sizes based on display vs actual
+            const displayWidth = img.clientWidth;
+            const scale = imgWidth / displayWidth;
+
+            const sacSmallW = Math.round(sacSmall.w * scale / 2);
+            const sacSmallH = Math.round(sacSmall.h * scale / 2);
+            const sacLargeW = Math.round(sacLarge.w * scale / 2);
+            const sacLargeH = Math.round(sacLarge.h * scale / 2);
+            const smmSmallW = Math.round(smmSmall.w * scale / 2);
+            const smmSmallH = Math.round(smmSmall.h * scale / 2);
+            const smmLargeW = Math.round(smmLarge.w * scale / 2);
+            const smmLargeH = Math.round(smmLarge.h * scale / 2);
+
+            const sw = Math.round(strokeWidth * scale);
+
+            const cmd = `cd images/fig1_edit && magick brightened.png \\
+  -strokewidth ${sw} -stroke '#00CC00' -fill none \\
+  -draw "ellipse ${sacSmallX},${sacSmallY} ${sacSmallW},${sacSmallH} 0,360" \\
+  -draw "ellipse ${sacLargeX},${sacLargeY} ${sacLargeW},${sacLargeH} 0,360" \\
+  -draw "ellipse ${smmSmallX},${smmSmallY} ${smmSmallW},${smmSmallH} 0,360" \\
+  -draw "ellipse ${smmLargeX},${smmLargeY} ${smmLargeW},${smmLargeH} 0,360" \\
+  with_green_circles_final.png`;
+
+            document.getElementById('commandOutput').textContent = cmd;
+        }
+
+        function copyCommand() {
+            const cmd = document.getElementById('commandOutput').textContent;
+            navigator.clipboard.writeText(cmd).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.textContent = '✅ Copied!';
+                setTimeout(() => btn.textContent = '📋 Copy Command', 2000);
+            });
+        }
+
+        // Method selector
+        document.querySelectorAll('.method-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentMethod = btn.dataset.method;
+                
+                // Update size inputs to reflect current circle
+                const data = circles[currentMethod][currentType];
+                document.getElementById('widthInput').value = data.w;
+                document.getElementById('heightInput').value = data.h;
+            });
+        });
+
+        // Circle type selector
+        document.querySelectorAll('.circle-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.circle-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentType = btn.dataset.type;
+                
+                // Update size inputs to reflect current circle
+                const data = circles[currentMethod][currentType];
+                document.getElementById('widthInput').value = data.w;
+                document.getElementById('heightInput').value = data.h;
+            });
+        });
+
+        // Size inputs
+        document.getElementById('widthInput').addEventListener('input', (e) => {
+            circles[currentMethod][currentType].w = parseInt(e.target.value) || 50;
+            updateAllCircles();
+        });
+
+        document.getElementById('heightInput').addEventListener('input', (e) => {
+            circles[currentMethod][currentType].h = parseInt(e.target.value) || 50;
+            updateAllCircles();
+        });
+
+        document.getElementById('strokeInput').addEventListener('input', (e) => {
+            strokeWidth = parseInt(e.target.value) || 6;
+            document.querySelectorAll('.circle-overlay').forEach(el => {
+                el.style.borderWidth = (el.classList.contains('large') ? strokeWidth + 1 : strokeWidth) + 'px';
+            });
+            updateCommand();
+        });
+
+        // Mouse tracking and clicking
+        container.addEventListener('mousemove', (e) => {
+            const rect = img.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const percentX = (x / rect.width * 100).toFixed(1);
+            const percentY = (y / rect.height * 100).toFixed(1);
+            const pixelX = Math.round(x / rect.width * imgWidth);
+            const pixelY = Math.round(y / rect.height * imgHeight);
+            
+            document.getElementById('mouseCoords').textContent = `${percentX}%, ${percentY}%`;
+            document.getElementById('imageCoords').textContent = `${pixelX}, ${pixelY}`;
+
+            if (isDragging) {
+                circles[currentMethod][currentType].x = parseFloat(percentX);
+                circles[currentMethod][currentType].y = parseFloat(percentY);
+                updateAllCircles();
+            }
+        });
+
+        container.addEventListener('mousedown', (e) => {
+            const rect = img.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const percentX = (x / rect.width * 100);
+            const percentY = (y / rect.height * 100);
+
+            circles[currentMethod][currentType].x = percentX;
+            circles[currentMethod][currentType].y = percentY;
+            updateAllCircles();
+            
+            isDragging = true;
+            getCircleElement(currentMethod, currentType).classList.add('dragging');
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            document.querySelectorAll('.circle-overlay').forEach(el => el.classList.remove('dragging'));
+        });
+
+        // Initialize
+        img.onload = () => {
+            updateAllCircles();
+        };
+        
+        // In case image is cached
+        if (img.complete) {
+            updateAllCircles();
+        }
+    </script>
+</body>
+</html>
