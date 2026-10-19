@@ -186,12 +186,13 @@ hideMeta: true
 <div class="smm-root">
 
 <div class="smm-kicker">Preprint &middot; under review</div>
-<div class="smm-byline">Danilo&nbsp;Vucetic<sup>1,2,*</sup>, Mohamad&nbsp;H.&nbsp;Danesh<sup>1,3,*</sup>, Florence&nbsp;Clerc<sup>1,3</sup>, Hsiu-Chin&nbsp;Lin<sup>1,3</sup>, Jonathan&nbsp;Tremblay<sup>4</sup></div>
+<div class="smm-byline">Danilo&nbsp;Vucetic<sup>1,2,*</sup>, Mohamad&nbsp;H.&nbsp;Danesh<sup>1,3,*</sup>, Florence&nbsp;Clerc<sup>1,5</sup>, Hsiu-Chin&nbsp;Lin<sup>1,3</sup>, Jonathan&nbsp;Tremblay<sup>4</sup></div>
 <div class="smm-affilkey">*Equal contribution</div>
 <div class="smm-logos">
   <span class="chip"><img src="project_assets/logos/mcgill.png" alt="McGill University"></span>
   <span class="chip"><img src="project_assets/logos/mila.svg" alt="Mila – Quebec AI Institute"></span>
   <span class="chip"><img src="project_assets/logos/udem.svg" alt="Université de Montréal"></span>
+  <span class="chip"><img src="project_assets/logos/polytechnique.png" alt="Polytechnique Montréal"></span>
   <span class="chip"><img src="project_assets/logos/nvidia.svg" alt="NVIDIA"></span>
 </div>
 <div class="smm-actions">
